@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client
+    restart: always
+    volumes:
+      - ./client:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+  server:
+    build:
+        context: ./server
+        dockerfile: Dockerfile
+    container_name: server
+    restart: always
+    environment:
+      DB_CONNECTION_STRING: postgres://upskill_user:upskill_pw@host.docker.internal:5433/upskill_db
+    volumes:
+      - ./server:/app
+    ports:
+      - 4000:4000
+    depends_on:
+      - database
+  database:
+    image: postgres:12.7
+    container_name: database
+    restart: always
+    environment:
+      POSTGRES_USER: upskill_user
+      POSTGRES_PASSWORD: upskill_pw
+      POSTGRES_DB: upskill_db
+    volumes:
+      - ./server/migrations:/docker-entrypoint-initdb.d/
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+volumes:
+  db-data:

@@ -7,29 +7,28 @@ Greetings, this repository contains the source code of our project. For the clie
 2. Clone this repository
   
         git clone https://github.com/CS3219-SE-Principles-and-Patterns/cs3219-project-ay2122-2122-s1-g25.git
-    
-3. Launch all containers with Docker Compose
+
+3. Install npm module dependencies with this series of commands
+
+        cd client
+        yarn
+        cd ../server
+        yarn
+        cd .. 
+
+4. Launch all containers with Docker Compose
 
         docker-compose up
 
-4. Access the frontend client at [http://localhost:3000](http://localhost:3000), backend server at [http://localhost:4000](http://localhost:4000), and database at [http://localhost:5433](http://localhost:5433)
-5. Once development work is complete, tear down containers with Docker Compose
+5. Access the frontend client at [http://localhost:3000](http://localhost:3000), backend server at [http://localhost:4000](http://localhost:4000), and database at [http://localhost:5433](http://localhost:5433)
+6. Once development work is complete, tear down containers with Docker Compose
 
         docker-compose down
 
-## Development scenarios:
-- If you need to add npm modules to the project, follow this series of commands
-
-        docker-compose down
-        cd [client/server]
-        yarn add [module]
-        cd ..
-        docker-compose build [client/server]
-        docker-compose up
-
-- If you would like to remove Docker persistent volumes, add the -v flag
+7. If you would like to remove Docker persistent volumes as well, add the -v flag
 
         docker-compose down -v
+
 
 ## Instructions for Pull Requests:
 1. Ensure the branch you are working on is named semantically based on the task at hand. Eg. **add-faq-page**

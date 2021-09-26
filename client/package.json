@@ -11,7 +11,7 @@
     "lint": "npx eslint ./src"
   },
   "lint-staged": {
-    "*.js": "npx eslint --fix"
+    "*.{js,jsx}": "npx eslint --fix"
   },
   "husky": {
     "hooks": {
@@ -30,6 +30,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^7.16.0",
     "styled-components": "^5.1.1"
   },
   "devDependencies": {

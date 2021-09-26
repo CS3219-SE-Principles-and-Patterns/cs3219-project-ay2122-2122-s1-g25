@@ -1,24 +1,23 @@
-import React from 'react';
-import App from 'next/app';
-import Head from 'next/head';
-import { StylesProvider } from '@material-ui/styles';
-import { ThemeProvider as StyledComponentProvider } from 'styled-components';
-import { ThemeProvider as MaterialUiProvider } from '@material-ui/core/styles';
-
-import CssBaseline from '@material-ui/core/CssBaseline';
-
-import theme from '../themes/';
+import React from 'react'
+import App from 'next/app'
+import Head from 'next/head'
+import { StylesProvider } from '@material-ui/styles'
+import { ThemeProvider as StyledComponentProvider } from 'styled-components'
+import { ThemeProvider as MaterialUiProvider } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import theme from '../themes/'
+import './globals.css' // Fix extra spacing at top of page
 
 export default class MyApp extends App {
   componentDidMount() {
-    const jssStyles = document.querySelector('#jss-server-side');
+    const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
+      jssStyles.parentElement.removeChild(jssStyles)
     }
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps } = this.props
 
     return (
       <>
@@ -31,7 +30,11 @@ export default class MyApp extends App {
           <meta name="theme-color" content={theme.palette.primary.main} />
 
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="true"
+          />
           <link
             href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Raleway:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
@@ -46,6 +49,6 @@ export default class MyApp extends App {
           </MaterialUiProvider>
         </StyledComponentProvider>
       </>
-    );
+    )
   }
 }

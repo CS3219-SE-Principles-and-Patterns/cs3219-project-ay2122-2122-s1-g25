@@ -7,12 +7,14 @@ import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
+    maxHeight: '80%',
     backgroundColor: theme.palette.background.default,
     padding: '80px 56px',
     opacity: 0.9,
     borderRadius: theme.shape.borderRadius,
     textAlign: 'center',
     width: 500,
+    overflow: 'scroll',
   },
   form: {
     display: 'flex',
@@ -34,7 +36,15 @@ const useStyles = makeStyles((theme) => ({
 const Register = () => {
   const classes = useStyles()
   const router = useRouter()
-  const { handleSubmit, control } = useForm()
+  const { handleSubmit, control } = useForm({
+    defaultValues: {
+      email: '',
+      username: '',
+      firstName: '',
+      lastName: '',
+      password: '',
+    },
+  })
   const onSubmit = (data) => {
     console.log(data)
   }
@@ -111,12 +121,14 @@ const Register = () => {
                 onChange={onChange}
                 value={value}
                 label={'Password'}
+                type="password"
               />
             )}
           />
           <Button
             variant="contained"
             color="primary"
+            type="submit"
             className={classes.submitBtn}
             onClick={handleSubmit(onSubmit)}
           >

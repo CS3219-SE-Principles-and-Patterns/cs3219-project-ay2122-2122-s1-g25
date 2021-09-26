@@ -34,7 +34,11 @@ const useStyles = makeStyles((theme) => ({
 const ResetPassword = () => {
   const classes = useStyles()
   const router = useRouter()
-  const { handleSubmit, control } = useForm()
+  const { handleSubmit, control } = useForm({
+    defaultValues: {
+      email: '',
+    },
+  })
   const onSubmit = (data) => {
     console.log(data)
   }
@@ -65,6 +69,7 @@ const ResetPassword = () => {
           <Button
             variant="contained"
             color="primary"
+            type="submit"
             className={classes.submitBtn}
             onClick={handleSubmit(onSubmit)}
           >

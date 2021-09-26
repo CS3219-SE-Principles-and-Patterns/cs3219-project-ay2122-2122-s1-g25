@@ -1,8 +1,11 @@
 /client/node_modules
 /client/.next
 /client/build
+/client/.env.local
+/client/.env.production
 /client/.env
 
 /server/node_modules
-/server/.env.example
+/server/.env.local
+/server/.env.production
 /server/.env

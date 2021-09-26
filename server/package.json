@@ -1,22 +1,11 @@
 {
-  "name": "express-server-template",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
+  "name": "upskill-server",
+  "version": "0.0.1",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "nodemon src/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Ath3r/node-server.git"
-  },
-  "author": "Ather Hussain",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Ath3r/node-server/issues"
-  },
-  "homepage": "https://github.com/Ath3r/node-server#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^9.0.0",

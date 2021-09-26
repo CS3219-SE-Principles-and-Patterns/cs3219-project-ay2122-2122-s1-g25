@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import AuthLayout from '../../components/Layout/AuthLayout'
 import { useRouter } from 'next/router'
+import firebase from '../../config/firebase'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.9,
     borderRadius: theme.shape.borderRadius,
     textAlign: 'center',
-    width: 500,
+    width: 400,
   },
   form: {
     display: 'flex',
@@ -41,6 +42,16 @@ const ResetPassword = () => {
   })
   const onSubmit = (data) => {
     console.log(data)
+    const { email } = data
+    if (email) {
+      firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then(() => console.log('Password reset link sent!'))
+        .catch((error) => {
+          console.error(error.message)
+        })
+    }
   }
 
   const handleRedirectLogin = (e) => {

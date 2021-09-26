@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.9,
     borderRadius: theme.shape.borderRadius,
     textAlign: 'center',
-    width: 500,
+    width: 400,
   },
   form: {
     display: 'flex',
@@ -44,13 +44,15 @@ const Login = () => {
   const onSubmit = (data) => {
     console.log(data)
     const { email, password } = data
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => router.push('/logged_in'))
-      .catch((error) => {
-        console.error(error.message)
-      })
+    if (email && password) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => router.push('/logged_in'))
+        .catch((error) => {
+          console.error(error.message)
+        })
+    }
   }
 
   const handleRedirectRegister = (e) => {

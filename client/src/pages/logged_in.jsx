@@ -6,9 +6,9 @@ import { useRouter } from 'next/router'
 const createToken = async () => {
   const user = firebase.auth().currentUser
   const token = user && (await user.getIdToken())
-  console.log(user.uid)
-  console.log(user.email)
-  console.log(token)
+  console.log(`UID: ${user.uid}`)
+  console.log(`Email: ${user.email}`)
+  console.log(`JWT: ${token}`)
   return token
 }
 

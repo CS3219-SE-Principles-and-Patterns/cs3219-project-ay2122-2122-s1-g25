@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import AuthLayout from '../../components/Layout/AuthLayout'
 import { useRouter } from 'next/router'
+import firebase from '../../config/firebase'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.9,
     borderRadius: theme.shape.borderRadius,
     textAlign: 'center',
-    width: 500,
+    width: 400,
     overflow: 'scroll',
   },
   form: {
@@ -47,6 +48,16 @@ const Register = () => {
   })
   const onSubmit = (data) => {
     console.log(data)
+    const { email, password } = data
+    if (email && password) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(() => router.push('/'))
+        .catch((error) => {
+          console.error(error.message)
+        })
+    }
   }
 
   const handleRedirectLogin = (e) => {

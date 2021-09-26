@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import AuthLayout from '../../components/Layout/AuthLayout'
 import { useRouter } from 'next/router'
+import firebase from '../../config/firebase'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -42,6 +43,14 @@ const Login = () => {
   })
   const onSubmit = (data) => {
     console.log(data)
+    const { email, password } = data
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => router.push('/logged_in'))
+      .catch((error) => {
+        console.error(error.message)
+      })
   }
 
   const handleRedirectRegister = (e) => {

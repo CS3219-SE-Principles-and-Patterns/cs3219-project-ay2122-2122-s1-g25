@@ -24,14 +24,14 @@ const useStyles = makeStyles((theme) => ({
   linkWrapper: {
     marginTop: 8,
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   link: {
     cursor: 'pointer',
   },
 }))
 
-const Login = () => {
+const Register = () => {
   const classes = useStyles()
   const router = useRouter()
   const { handleSubmit, control } = useForm()
@@ -39,9 +39,9 @@ const Login = () => {
     console.log(data)
   }
 
-  const handleRedirectRegister = (e) => {
+  const handleRedirectLogin = (e) => {
     e.preventDefault()
-    router.push('/register')
+    router.push('/')
   }
 
   return (
@@ -59,6 +59,45 @@ const Login = () => {
                 onChange={onChange}
                 value={value}
                 label={'Email'}
+              />
+            )}
+          />
+          <Controller
+            name={'username'}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                onChange={onChange}
+                value={value}
+                label={'Username'}
+              />
+            )}
+          />
+          <Controller
+            name={'firstName'}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                onChange={onChange}
+                value={value}
+                label={'Firstname'}
+              />
+            )}
+          />
+          <Controller
+            name={'lastName'}
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                onChange={onChange}
+                value={value}
+                label={'Lastname'}
               />
             )}
           />
@@ -81,24 +120,16 @@ const Login = () => {
             className={classes.submitBtn}
             onClick={handleSubmit(onSubmit)}
           >
-            Sign In
+            Register
           </Button>
           <Box className={classes.linkWrapper}>
             <Typography
               color="primary"
               variant="body2"
               className={classes.link}
-              onClick={handleRedirectRegister}
+              onClick={handleRedirectLogin}
             >
-              Register
-            </Typography>
-            <Typography
-              color="primary"
-              variant="body2"
-              className={classes.link}
-              onClick={handleRedirectRegister}
-            >
-              Forgot Password?
+              Back to Login
             </Typography>
           </Box>
         </form>
@@ -107,4 +138,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register

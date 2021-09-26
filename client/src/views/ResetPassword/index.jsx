@@ -24,14 +24,14 @@ const useStyles = makeStyles((theme) => ({
   linkWrapper: {
     marginTop: 8,
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   link: {
     cursor: 'pointer',
   },
 }))
 
-const Login = () => {
+const ResetPassword = () => {
   const classes = useStyles()
   const router = useRouter()
   const { handleSubmit, control } = useForm()
@@ -39,14 +39,9 @@ const Login = () => {
     console.log(data)
   }
 
-  const handleRedirectRegister = (e) => {
+  const handleRedirectLogin = (e) => {
     e.preventDefault()
-    router.push('/register')
-  }
-
-  const handleRedirectReset = (e) => {
-    e.preventDefault()
-    router.push('/resetPassword')
+    router.push('/')
   }
 
   return (
@@ -67,43 +62,22 @@ const Login = () => {
               />
             )}
           />
-          <Controller
-            name={'password'}
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                onChange={onChange}
-                value={value}
-                label={'Password'}
-              />
-            )}
-          />
           <Button
             variant="contained"
             color="primary"
             className={classes.submitBtn}
             onClick={handleSubmit(onSubmit)}
           >
-            Sign In
+            Send Recovery Link
           </Button>
           <Box className={classes.linkWrapper}>
             <Typography
               color="primary"
               variant="body2"
               className={classes.link}
-              onClick={handleRedirectRegister}
+              onClick={handleRedirectLogin}
             >
-              Register
-            </Typography>
-            <Typography
-              color="primary"
-              variant="body2"
-              className={classes.link}
-              onClick={handleRedirectReset}
-            >
-              Forgot Password?
+              Back to Login
             </Typography>
           </Box>
         </form>
@@ -112,4 +86,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ResetPassword

@@ -1,8 +1,8 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import typography from './typography';
+import { createTheme } from '@material-ui/core/styles'
+import typography from './typography'
 
 // Create a theme instance.
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#059BE5',
@@ -33,6 +33,6 @@ const theme = createMuiTheme({
     borderRadius: 8,
   },
   typography: typography,
-});
+})
 
-export default theme;
+export default theme

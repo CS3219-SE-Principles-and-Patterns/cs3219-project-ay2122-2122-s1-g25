@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Divider } from '@material-ui/core'
+import { Divider, Button } from '@material-ui/core'
 import Navbar from '../../components/Navbar/HomeNavbar'
 import SessionHistory from '../../components/History/SessionHistory'
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
     maxHeight: '85vh',
 
     display: 'grid',
-    gridTemplateColumns: 'auto auto',
+    gridTemplateColumns: '50% auto',
     gridGap: '10px',
     padding: '10px',
   },
@@ -31,9 +31,11 @@ const useStyles = makeStyles(() => ({
     gridTemplateRows: 'auto 1fr',
   },
   gridRight: {
-    backgroundColor: 'aqua',
+    backgroundColor: '#e2e2e2',
     height: '100%',
     maxHeight: '100%',
+    padding: '10px',
+    borderRadius: '8px',
   },
   greetingsGrid: {
     padding: '10px',
@@ -64,6 +66,52 @@ const useStyles = makeStyles(() => ({
     bottom: '0',
     overflow: 'auto',
   },
+  mockInterviewTitle: {
+    fontWeight: 'bold',
+    fontSize: 'medium',
+  },
+  mockInterviewGreetings: {
+    marginTop: '10px',
+    marginBottom: '20px',
+  },
+  interviewButtonsContainer: {
+    position: 'relative',
+    height: '85%',
+  },
+  interviewButtonsWrapper: {
+    position: 'absolute',
+    left: '0',
+    right: '0',
+    top: '0',
+    bottom: '0',
+    overflow: 'auto',
+
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  interviewButtonDiv: {
+    width: '100%',
+    '& Button': {
+      width: '100%',
+      minHeight: '100px',
+      marginTop: '20px',
+      fontSize: '20px',
+      fontWeight: 'bold',
+    },
+  },
+  easyButton: {
+    backgroundColor: '#ffcb2b',
+  },
+  moderateButton: {
+    backgroundColor: '#ffa611',
+  },
+  hardButton: {
+    backgroundColor: '#f6820d',
+  },
+  matchButton: {
+    backgroundColor: '#059be5',
+  },
 }))
 
 const Home = () => {
@@ -92,7 +140,55 @@ const Home = () => {
           </div>
         </div>
         <div className={classes.gridRight}>
-          <div>Interview</div>
+          <div className={classes.mockInterviewTitle}>
+            Mock Interview Session
+          </div>
+          <Divider className={classes.sessionHistoryDivider} />
+          <div className={classes.mockInterviewGreetings}>
+            {" Let's get started by selecting your desired difficulty!"}
+          </div>
+          <div className={classes.interviewButtonsContainer}>
+            <div className={classes.interviewButtonsWrapper}>
+              <div>
+                <div className={classes.interviewButtonDiv}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    className={classes.easyButton}
+                  >
+                    Easy
+                  </Button>
+                </div>
+                <div className={classes.interviewButtonDiv}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    className={classes.moderateButton}
+                  >
+                    Moderate
+                  </Button>
+                </div>
+                <div className={classes.interviewButtonDiv}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    className={classes.hardButton}
+                  >
+                    Hard
+                  </Button>
+                </div>
+              </div>
+              <div className={classes.interviewButtonDiv}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  className={classes.matchButton}
+                >
+                  Find a Partner!
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

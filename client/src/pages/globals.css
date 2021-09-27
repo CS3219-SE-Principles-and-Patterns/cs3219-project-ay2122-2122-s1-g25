@@ -126,11 +126,11 @@
   font-size: medium;
   height: 5%;
 }
-
+/* 
 .content-interview-div {
   padding: 15px;
   height: 100%;
-}
+} */
 
 .content-interview-title {
   font-weight: bold;
@@ -141,24 +141,19 @@
   margin-top: 10px;
   background: #ffffff;
 } */
-.content-interview-buttons-container {
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.content-interview-button-div {
+/* .content-interview-button-div {
   width: 100%;
-}
+} */
 
-.content-interview-button-div button {
+/* .content-interview-button-div button {
   width: 100%;
   height: 120px;
-}
-
-.content-easy-button {
+} */
+/* content-easy-button {
+  background: green;
+} */
+/* .content-easy-button {
   background: var(--upskill-yellow-1);
 }
 .content-moderate-button {
@@ -174,7 +169,7 @@
 .content-history-title {
   min-height: 4vh;
   max-height: 4vh;
-}
+} */
 /* 
 .sessionHistory-history-list-container {
   margin-top: 10px;
@@ -184,19 +179,18 @@
 } */
 
 /* History Box */
-.history-box {
+/* .history-box {
   border-radius: 8px;
   background-color: #ffffff;
-  /* padding: 10px; */
   margin: 10px 10px 0px 0px;
 
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
-}
+} */
 
-.history-box-left {
+/* .history-box-left {
   margin: 10px;
   display: flex;
   flex-direction: column;
@@ -208,9 +202,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
-.history-box-difficulty {
+/* .history-box-difficulty {
   font-size: medium;
 }
 
@@ -225,7 +219,7 @@
 
 .history-box-partner {
   font-size: large;
-}
+} */
 
 /* Test */
 /* .flex-content {

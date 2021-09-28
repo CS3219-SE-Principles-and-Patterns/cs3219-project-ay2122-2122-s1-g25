@@ -116,6 +116,7 @@ const useStyles = makeStyles(() => ({
 const Home = () => {
   const classes = useStyles()
   const [buttonClicked, setButtonClicked] = useState(0)
+  const loops = Array.from(Array(50).keys())
 
   const onDifficultySelection = (buttonNo, event) => {
     console.log(event.currentTarget.id)
@@ -154,7 +155,7 @@ const Home = () => {
             <Divider className={classes.sessionHistoryDivider} />
             <div className={classes.sessionHistoryListContainer}>
               <div className={classes.sessionHistoryList}>
-                {[...Array(50)].map((i) => (
+                {loops.map((i) => (
                   <SessionHistory key={i} />
                 ))}
               </div>

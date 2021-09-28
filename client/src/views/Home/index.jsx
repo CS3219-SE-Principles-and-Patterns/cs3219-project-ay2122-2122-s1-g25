@@ -1,21 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Divider, Button } from '@material-ui/core'
-import Navbar from '../../components/Navbar/HomeNavbar'
+// import Navbar from '../../components/Navbar/HomeNavbar'
 import SessionHistory from '../../components/History/SessionHistory'
+import HomeLayout from '../../components/Layout/HomeLayout'
 
 const useStyles = makeStyles(() => ({
-  homepageWrapper: {
-    height: '100vh',
-    minHeight: '100vh',
-    maxHeight: '100vh',
-  },
-  navbarWrapper: {
-    height: '15%',
-    minHeight: '100px',
-  },
   contentWrapper: {
-    height: '85%',
+    height: '100%',
     width: '100%',
     maxHeight: '85vh',
 
@@ -40,6 +32,10 @@ const useStyles = makeStyles(() => ({
   greetingsGrid: {
     padding: '10px',
   },
+  greetingsDiv: {
+    fontSize: '28px',
+    fontWeight: 'bold',
+  },
   sessionHistoryGrid: {
     padding: '10px',
     borderRadius: '8px',
@@ -48,7 +44,7 @@ const useStyles = makeStyles(() => ({
   },
   sessionHistoryTitle: {
     fontWeight: 'bold',
-    fontSize: 'medium',
+    fontSize: '20px',
   },
   sessionHistoryDivider: {
     marginTop: '10px',
@@ -68,7 +64,7 @@ const useStyles = makeStyles(() => ({
   },
   mockInterviewTitle: {
     fontWeight: 'bold',
-    fontSize: 'medium',
+    fontSize: '20px',
   },
   mockInterviewGreetings: {
     marginTop: '10px',
@@ -112,20 +108,46 @@ const useStyles = makeStyles(() => ({
   matchButton: {
     backgroundColor: '#059be5',
   },
+  activeButton: {
+    backgroundColor: 'grey',
+  },
 }))
 
 const Home = () => {
   const classes = useStyles()
+  const [buttonClicked, setButtonClicked] = useState(0)
+
+  const onDifficultySelection = (buttonNo, event) => {
+    console.log(event.currentTarget.id)
+    if (buttonClicked == 0) {
+      setButtonClicked(buttonNo)
+      document
+        .getElementById(event.currentTarget.id)
+        .classList.add(classes.activeButton)
+    } else {
+      if (buttonNo == buttonClicked) {
+        setButtonClicked(0)
+        document
+          .getElementById(event.currentTarget.id)
+          .classList.remove(classes.activeButton)
+      } else {
+        document
+          .getElementById(buttonClicked + '')
+          .classList.remove(classes.activeButton)
+        document
+          .getElementById(event.currentTarget.id)
+          .classList.add(classes.activeButton)
+        setButtonClicked(buttonNo)
+      }
+    }
+  }
 
   return (
-    <div className={classes.homepageWrapper}>
-      <div className={classes.navbarWrapper}>
-        <Navbar currPage={'Home Page'} />
-      </div>
+    <HomeLayout currPage="Home Page">
       <div className={classes.contentWrapper}>
         <div className={classes.gridLeft}>
           <div className={classes.greetingsGrid}>
-            <div className="content-greetings-div">Welcome, Bobby!</div>
+            <div className={classes.greetingsDiv}>Welcome, Bobby!</div>
           </div>
           <div className={classes.sessionHistoryGrid}>
             <div className={classes.sessionHistoryTitle}>Session History</div>
@@ -152,27 +174,33 @@ const Home = () => {
               <div>
                 <div className={classes.interviewButtonDiv}>
                   <Button
+                    id="1"
                     variant="contained"
                     size="large"
                     className={classes.easyButton}
+                    onClick={(e) => onDifficultySelection(1, e)}
                   >
                     Easy
                   </Button>
                 </div>
                 <div className={classes.interviewButtonDiv}>
                   <Button
+                    id="2"
                     variant="contained"
                     size="large"
                     className={classes.moderateButton}
+                    onClick={(e) => onDifficultySelection(2, e)}
                   >
                     Moderate
                   </Button>
                 </div>
                 <div className={classes.interviewButtonDiv}>
                   <Button
+                    id="3"
                     variant="contained"
                     size="large"
                     className={classes.hardButton}
+                    onClick={(e) => onDifficultySelection(3, e)}
                   >
                     Hard
                   </Button>
@@ -191,7 +219,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </div>
+    </HomeLayout>
   )
 }
 

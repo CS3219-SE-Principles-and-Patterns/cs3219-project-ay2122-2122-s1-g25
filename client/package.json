@@ -4,7 +4,7 @@
   "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "test": "npx jest ./src",
     "lint-staged": "npx lint-staged",

@@ -1,6 +1,6 @@
 /client/node_modules
 /client/.next
-/client/build
+/client/out
 /client/.env.local
 /client/.env.production
 /client/.env

@@ -39,6 +39,7 @@ export default class MyApp extends App {
             href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Raleway:wght@300;400;500;600;700&display=swap"
             rel="stylesheet"
           />
+          <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <StyledComponentProvider theme={theme}>
           <MaterialUiProvider theme={theme}>

@@ -1,4 +1,4 @@
-const headerFontFamily = 'Raleway';
+const headerFontFamily = 'Raleway'
 const typography = {
   fontFamily: 'Nunito',
   h1: {
@@ -74,9 +74,8 @@ const typography = {
     fontSize: 12,
     fontWeight: 400,
     letterSpacing: '1px',
-    textTransform: 'uppercase',
     color: '#000000',
   },
-};
+}
 
-export default typography;
+export default typography

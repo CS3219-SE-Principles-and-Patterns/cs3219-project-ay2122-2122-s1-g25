@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
   gridWrapper: {
     height: '100%',
     display: 'flex',
-    // alignItems: 'center',
     justifyContent: 'space-between',
   },
   buttonWrapper: {

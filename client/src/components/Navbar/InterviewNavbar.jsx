@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const navbar = (props) => {
   const classes = useStyles()
+  const router = useRouter()
 
   Role.propTypes = {
     currPage: PropTypes.string,
@@ -52,6 +54,14 @@ const navbar = (props) => {
   const onRotate = () => {
     // allow only 1 call / interview in the future
     role == 0 ? setRole(1) : setRole(0)
+  }
+
+  const exitInterview = (currPage) => {
+    if (currPage == 'interview') {
+      router.push('/feedback')
+    } else {
+      router.push('/home')
+    }
   }
 
   function Role(props) {
@@ -88,6 +98,7 @@ const navbar = (props) => {
             size="small"
             color="secondary"
             type="submit"
+            onClick={() => exitInterview(props.currPage)}
           >
             Exit
           </Button>

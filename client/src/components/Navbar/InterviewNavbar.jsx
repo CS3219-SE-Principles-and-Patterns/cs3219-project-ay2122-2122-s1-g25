@@ -74,7 +74,7 @@ const navbar = (props) => {
         </Box>
       )
     }
-    return <div></div>
+    return <Box></Box>
   }
 
   return (

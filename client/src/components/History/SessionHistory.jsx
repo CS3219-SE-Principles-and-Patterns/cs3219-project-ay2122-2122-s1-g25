@@ -16,11 +16,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   dateWrapper: {
-    // height: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // justifyContent: 'center',
   },
   difficultyTypo: {
     fontWeight: 600,
@@ -31,23 +29,6 @@ const sessionHistory = () => {
   const classes = useStyles()
 
   return (
-    // <div className={classes.historyWrapper}>
-    //   <div className={classes.leftDiv}>
-    //     <div className={classes.difficultyDiv}>Hard</div>
-    //     <div className={classes.dateDiv}>15 Sep 2021</div>
-    //     <div className={classes.timeDiv}>10.34pm - 11.15pm</div>
-    //   </div>
-    //   <Divider orientation="vertical" flexItem />
-    //   <div className={classes.rightDiv}>
-    //     <div className={classes.partnerDiv}>Praticed with @jiahua!</div>
-    //     <div className={classes.problemDiv}>
-    //       <ol>
-    //         <li>Two Sum</li>
-    //         <li>Maximum Subarray</li>
-    //       </ol>
-    //     </div>
-    //   </div>
-    // </div>
     <ListItem className={classes.sessionHistoryItem}>
       <Grid container className={classes.gridWrapper}>
         <Grid item xs={3} className={classes.dateWrapper}>

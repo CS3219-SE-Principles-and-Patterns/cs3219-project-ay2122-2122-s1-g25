@@ -8,7 +8,6 @@ import {
   Grid,
   List,
 } from '@material-ui/core'
-// import Navbar from '../../components/Navbar/HomeNavbar'
 import SessionHistory from '../../components/History/SessionHistory'
 import HomeLayout from '../../components/Layout/HomeLayout'
 
@@ -24,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
   },
   leftGridWrapper: {
     height: '100%',
-    // background: 'orange',
     padding: '10px',
   },
   rightGridWrapper: {

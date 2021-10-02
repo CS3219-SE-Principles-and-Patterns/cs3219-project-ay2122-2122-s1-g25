@@ -7,9 +7,12 @@ import {
   Container,
   Grid,
   List,
+  Snackbar,
 } from '@material-ui/core'
+import { Alert } from '@material-ui/lab'
 import SessionHistory from '../../components/History/SessionHistory'
 import HomeLayout from '../../components/Layout/HomeLayout'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,6 +87,7 @@ const Home = () => {
   const classes = useStyles()
   const [buttonClicked, setButtonClicked] = useState(0)
   const loops = Array.from(Array(50).keys())
+  const router = useRouter()
 
   const onDifficultySelection = (buttonNo, event) => {
     console.log(event.currentTarget.id)
@@ -110,12 +114,28 @@ const Home = () => {
     }
   }
 
+  // snackbar
+  const [open, setOpen] = React.useState(false)
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
+  }
+
   const findAPartner = () => {
     if (buttonClicked != 0) {
       document
         .getElementById(buttonClicked)
         .classList.remove(classes.activeButton)
       setButtonClicked(0)
+      // send matching data to db
+      // modal screen to load 30s
+      // matching success
+      router.push('/interview')
+    } else {
+      // toast msg
+      setOpen(true)
     }
   }
 
@@ -186,6 +206,15 @@ const Home = () => {
               >
                 Find a Partner!
               </Button>
+              <Snackbar
+                open={open}
+                autoHideDuration={3000}
+                onClose={handleClose}
+              >
+                <Alert severity="error">
+                  Select a difficulty before finding a Partner!
+                </Alert>
+              </Snackbar>
             </Grid>
           </Grid>
         </Grid>

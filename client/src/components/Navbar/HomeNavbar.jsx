@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
+import { useRouter } from 'next/router'
 
 let upskillHomepageRoutes = ['Home Page', 'Profile'] // hardcoded route
 
@@ -68,10 +69,27 @@ const useStyles = makeStyles((theme) => ({
 
 const navbar = (props) => {
   const classes = useStyles()
+  const router = useRouter()
 
   RoutePointer.propTypes = {
     currPage: PropTypes.string,
     currCheckedRoute: PropTypes.string,
+  }
+
+  const handleRedirect = (e, clickedRoute) => {
+    e.preventDefault()
+    console.log(clickedRoute + ' ' + props.currPage)
+    if (props.currPage !== clickedRoute) {
+      if (clickedRoute === 'Profile') {
+        router.push('/profile')
+      } else {
+        router.push('/home')
+      }
+    }
+  }
+
+  const signOut = () => {
+    router.push('/')
   }
 
   function RoutePointer(props) {
@@ -90,7 +108,11 @@ const navbar = (props) => {
           </Box>
           <Grid item className={classes.routerWrapper}>
             {upskillHomepageRoutes.map((currRoute) => (
-              <Box key={currRoute} className={classes.routeGroup}>
+              <Box
+                key={currRoute}
+                className={classes.routeGroup}
+                onClick={(e) => handleRedirect(e, currRoute)}
+              >
                 <Typography variant="caption" className={classes.routeTypo}>
                   {currRoute}
                 </Typography>
@@ -103,7 +125,12 @@ const navbar = (props) => {
           </Grid>
         </Grid>
         <Box className={classes.buttonWrapper}>
-          <Button variant="contained" color="secondary" type="submit">
+          <Button
+            variant="contained"
+            color="secondary"
+            type="submit"
+            onClick={() => signOut()}
+          >
             Sign Out
           </Button>
         </Box>

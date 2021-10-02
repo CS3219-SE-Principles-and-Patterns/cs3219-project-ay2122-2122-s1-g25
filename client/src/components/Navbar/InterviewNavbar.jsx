@@ -1,50 +1,41 @@
 import React, { useState } from 'react'
-import { Button } from '@material-ui/core'
+import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
-const useStyles = makeStyles(() => ({
-  navbarDiv: {
-    position: 'relative',
-    backgroundColor: '#059be5',
+const useStyles = makeStyles((theme) => ({
+  root: {
     height: '100%',
-    padding: '10px',
-
+    backgroundColor: theme.palette.primary.main,
+  },
+  upskillLogo: {
+    height: '35px',
+    width: 'auto',
+  },
+  gridWrapper: {
+    height: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
   },
-  logoutButtonDiv: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  logoutButton: {
-    backgroundColor: '#ffcb2b',
-  },
-  logoDiv: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  logoImg: {
-    height: '35px',
-    width: 'auto',
-  },
-  interviewRoleWrapper: {
-    height: '100%',
+  buttonWrapper: {
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
   },
-  roleDiv: {
-    height: '100%',
-    color: 'white',
-    paddingRight: '10px',
+  switchRoleContainer: {
     display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
     alignItems: 'center',
   },
-  switchButton: {
-    backgroundColor: '#ffcb2b',
+  rotateButton: {
+    marginLeft: '10px',
+  },
+  roleDisplay: {
+    color: 'white',
   },
 }))
 
@@ -66,38 +57,43 @@ const navbar = (props) => {
   function Role(props) {
     if (props.currPage == 'interview') {
       return (
-        <div className={classes.interviewRoleWrapper}>
-          <div className={classes.roleDiv}>Role: {roles[role]}</div>
+        <Box className={classes.switchRoleContainer}>
+          <Typography variant="caption" className={classes.roleDisplay}>
+            Role: {roles[role]}
+          </Typography>
           <Button
             variant="contained"
             size="small"
-            className={classes.switchButton}
+            color="secondary"
+            type="submit"
+            className={classes.rotateButton}
             onClick={() => onRotate()}
           >
             Rotate
           </Button>
-        </div>
+        </Box>
       )
     }
-    return <div></div>
+    return <Box></Box>
   }
 
   return (
-    <div className={classes.navbarDiv}>
-      <div className={classes.logoDiv}>
-        <img className={classes.logoImg} src={'/Upskill-Logo-White.png'} />
-      </div>
-      <Role currPage={props.currPage} />
-      <div className={classes.logoutButtonDiv}>
-        <Button
-          variant="contained"
-          size="small"
-          className={classes.logoutButton}
-        >
-          Exit
-        </Button>
-      </div>
-    </div>
+    <Container className={classes.root} maxWidth="xl">
+      <Grid container className={classes.gridWrapper}>
+        <img src={'/Upskill-Logo-White.png'} className={classes.upskillLogo} />
+        <Role currPage={props.currPage} />
+        <Box className={classes.buttonWrapper}>
+          <Button
+            variant="contained"
+            size="small"
+            color="secondary"
+            type="submit"
+          >
+            Exit
+          </Button>
+        </Box>
+      </Grid>
+    </Container>
   )
 }
 

@@ -1,49 +1,48 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
 let upskillHomepageRoutes = ['Home Page', 'Profile'] // hardcoded route
 
-const useStyles = makeStyles(() => ({
-  navbarDiv: {
-    position: 'relative',
-    backgroundColor: '#059be5',
+const useStyles = makeStyles((theme) => ({
+  root: {
     height: '100%',
+    backgroundColor: theme.palette.primary.main,
   },
-  logoutButtonDiv: {
-    float: 'right',
-    margin: '10px',
-  },
-  logoutButton: {
-    backgroundColor: '#ffcb2b',
-  },
-  logoDiv: {
-    padding: '10px',
+  gridWrapper: {
     height: '100%',
-    paddingTop: '20px',
-    paddingBottom: '10px',
-  },
-  routesDiv: {
     display: 'flex',
-    position: 'absolute',
-    bottom: '0',
+    justifyContent: 'space-between',
+  },
+  buttonWrapper: {
+    paddingTop: '20px',
+  },
+  leftWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  logoWrapper: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  routerWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   routeGroup: {
     marginRight: '10px',
-    marginLeft: '10px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-
     '&:hover': {
       opacity: '80%',
       cursor: 'pointer',
     },
-  },
-  routeFont: {
-    fontSize: 'small',
-    color: 'white',
   },
   routePointer: {
     width: '50px',
@@ -61,6 +60,9 @@ const useStyles = makeStyles(() => ({
     borderTopRightRadius: '10px',
     border: '1px solid white',
     backgroundColor: 'white',
+  },
+  routeTypo: {
+    color: 'white',
   },
 }))
 
@@ -80,33 +82,33 @@ const navbar = (props) => {
   }
 
   return (
-    <div className={classes.navbarDiv}>
-      <div className={classes.logoutButtonDiv}>
-        <Button
-          variant="contained"
-          size="small"
-          className={classes.logoutButton}
-        >
-          Sign Out
-        </Button>
-      </div>
-      <div>
-        <div className={classes.logoDiv}>
-          <img src={'/Upskill-Logo-White.png'} />
-        </div>
-        <div className={classes.routesDiv}>
-          {upskillHomepageRoutes.map((currRoute) => (
-            <div key={currRoute} className={classes.routeGroup}>
-              <div className={classes.routeFont}>{currRoute}</div>
-              <RoutePointer
-                currPage={props.currPage}
-                currCheckedRoute={currRoute}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <Container className={classes.root} maxWidth="xl">
+      <Grid container className={classes.gridWrapper}>
+        <Grid item className={classes.leftWrapper}>
+          <Box className={classes.logoWrapper}>
+            <img src={'/Upskill-Logo-White.png'} />
+          </Box>
+          <Grid item className={classes.routerWrapper}>
+            {upskillHomepageRoutes.map((currRoute) => (
+              <Box key={currRoute} className={classes.routeGroup}>
+                <Typography variant="caption" className={classes.routeTypo}>
+                  {currRoute}
+                </Typography>
+                <RoutePointer
+                  currPage={props.currPage}
+                  currCheckedRoute={currRoute}
+                />
+              </Box>
+            ))}
+          </Grid>
+        </Grid>
+        <Box className={classes.buttonWrapper}>
+          <Button variant="contained" color="secondary" type="submit">
+            Sign Out
+          </Button>
+        </Box>
+      </Grid>
+    </Container>
   )
 }
 

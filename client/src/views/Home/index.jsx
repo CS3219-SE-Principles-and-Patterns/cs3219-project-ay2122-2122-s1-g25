@@ -1,93 +1,51 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Divider, Button } from '@material-ui/core'
+import {
+  Divider,
+  Button,
+  Typography,
+  Container,
+  Grid,
+  List,
+} from '@material-ui/core'
 // import Navbar from '../../components/Navbar/HomeNavbar'
 import SessionHistory from '../../components/History/SessionHistory'
 import HomeLayout from '../../components/Layout/HomeLayout'
 
-const useStyles = makeStyles(() => ({
-  contentWrapper: {
-    height: '100%',
-    width: '100%',
-    maxHeight: '85vh',
-
-    display: 'grid',
-    gridTemplateColumns: '50% auto',
-    gridGap: '10px',
-    padding: '10px',
-  },
-  gridLeft: {
-    height: '100%',
-    maxHeight: '100%',
-    display: 'grid',
-    gridTemplateRows: 'auto 1fr',
-  },
-  gridRight: {
-    backgroundColor: '#e2e2e2',
-    height: '100%',
-    maxHeight: '100%',
-    padding: '10px',
-    borderRadius: '8px',
-  },
-  greetingsGrid: {
-    padding: '10px',
-  },
-  greetingsDiv: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-  },
-  sessionHistoryGrid: {
-    padding: '10px',
-    borderRadius: '8px',
-    backgroundColor: '#e2e2e2',
+const useStyles = makeStyles((theme) => ({
+  root: {
     height: '100%',
   },
-  sessionHistoryTitle: {
-    fontWeight: 'bold',
-    fontSize: '20px',
+  gridWrapper: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  sessionHistoryDivider: {
-    marginTop: '10px',
+  leftGridWrapper: {
+    height: '100%',
+    // background: 'orange',
+    padding: '10px',
+  },
+  rightGridWrapper: {
+    height: '100%',
+    padding: '10px',
+  },
+  sessionHistoryWrapper: {
+    height: '90%',
+    backgroundColor: theme.palette.background.secondary,
+    borderRadius: theme.shape.borderRadius,
+    padding: 16,
+    overflow: 'auto',
+  },
+  homeDivider: {
     background: '#ffffff',
   },
-  sessionHistoryListContainer: {
-    position: 'relative',
-    height: '95%',
-  },
-  sessionHistoryList: {
-    position: 'absolute',
-    left: '0',
-    right: '0',
-    top: '0',
-    bottom: '0',
-    overflow: 'auto',
-  },
-  mockInterviewTitle: {
-    fontWeight: 'bold',
-    fontSize: '20px',
-  },
-  mockInterviewGreetings: {
-    marginTop: '10px',
-    marginBottom: '20px',
-  },
-  interviewButtonsContainer: {
-    position: 'relative',
-    height: '85%',
-  },
-  interviewButtonsWrapper: {
-    position: 'absolute',
-    left: '0',
-    right: '0',
-    top: '0',
-    bottom: '0',
-    overflow: 'auto',
-
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  interviewButtonDiv: {
-    width: '100%',
+  mockInterviewWrapper: {
+    height: '100%',
+    backgroundColor: theme.palette.background.secondary,
+    borderRadius: theme.shape.borderRadius,
+    padding: 16,
     '& Button': {
       width: '100%',
       minHeight: '100px',
@@ -96,17 +54,28 @@ const useStyles = makeStyles(() => ({
       fontWeight: 'bold',
     },
   },
+  interviewGreetings: {
+    paddingTop: '10px',
+  },
+  buttonWrapper: {
+    height: '70%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   easyButton: {
-    backgroundColor: '#ffcb2b',
+    width: '100%',
   },
   moderateButton: {
-    backgroundColor: '#ffa611',
+    width: '100%',
+    backgroundColor: theme.palette.tertiary.main,
   },
   hardButton: {
-    backgroundColor: '#f6820d',
+    width: '100%',
+    backgroundColor: '#FF8964',
   },
   matchButton: {
-    backgroundColor: '#059be5',
+    width: '100%',
   },
   activeButton: {
     backgroundColor: 'grey',
@@ -143,83 +112,86 @@ const Home = () => {
     }
   }
 
+  const findAPartner = () => {
+    if (buttonClicked != 0) {
+      document
+        .getElementById(buttonClicked)
+        .classList.remove(classes.activeButton)
+      setButtonClicked(0)
+    }
+  }
+
   return (
     <HomeLayout currPage="Home Page">
-      <div className={classes.contentWrapper}>
-        <div className={classes.gridLeft}>
-          <div className={classes.greetingsGrid}>
-            <div className={classes.greetingsDiv}>Welcome, Bobby!</div>
-          </div>
-          <div className={classes.sessionHistoryGrid}>
-            <div className={classes.sessionHistoryTitle}>Session History</div>
-            <Divider className={classes.sessionHistoryDivider} />
-            <div className={classes.sessionHistoryListContainer}>
-              <div className={classes.sessionHistoryList}>
+      <Container className={classes.root} maxWidth="xl">
+        <Grid container className={classes.gridWrapper}>
+          <Grid item xs={6} className={classes.leftGridWrapper}>
+            <Typography variant="h6">Welcome, Bobby!</Typography>
+            <Grid item className={classes.sessionHistoryWrapper}>
+              <Typography variant="subtitle2">Session History</Typography>
+              <Divider className={classes.homeDivider} />
+              <List>
                 {loops.map((i) => (
                   <SessionHistory key={i} />
                 ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={classes.gridRight}>
-          <div className={classes.mockInterviewTitle}>
-            Mock Interview Session
-          </div>
-          <Divider className={classes.sessionHistoryDivider} />
-          <div className={classes.mockInterviewGreetings}>
-            {" Let's get started by selecting your desired difficulty!"}
-          </div>
-          <div className={classes.interviewButtonsContainer}>
-            <div className={classes.interviewButtonsWrapper}>
-              <div>
-                <div className={classes.interviewButtonDiv}>
-                  <Button
-                    id="1"
-                    variant="contained"
-                    size="large"
-                    className={classes.easyButton}
-                    onClick={(e) => onDifficultySelection(1, e)}
-                  >
-                    Easy
-                  </Button>
-                </div>
-                <div className={classes.interviewButtonDiv}>
-                  <Button
-                    id="2"
-                    variant="contained"
-                    size="large"
-                    className={classes.moderateButton}
-                    onClick={(e) => onDifficultySelection(2, e)}
-                  >
-                    Moderate
-                  </Button>
-                </div>
-                <div className={classes.interviewButtonDiv}>
-                  <Button
-                    id="3"
-                    variant="contained"
-                    size="large"
-                    className={classes.hardButton}
-                    onClick={(e) => onDifficultySelection(3, e)}
-                  >
-                    Hard
-                  </Button>
-                </div>
-              </div>
-              <div className={classes.interviewButtonDiv}>
+              </List>
+            </Grid>
+          </Grid>
+          <Grid item xs={6} className={classes.rightGridWrapper}>
+            <Grid item className={classes.mockInterviewWrapper}>
+              <Typography variant="subtitle2">
+                Mock Interview Session
+              </Typography>
+              <Divider className={classes.homeDivider} />{' '}
+              <Typography
+                variant="body2"
+                className={classes.interviewGreetings}
+              >
+                {" Let's get started by selecting your desired difficulty!"}
+              </Typography>
+              <Grid item className={classes.buttonWrapper}>
                 <Button
+                  id="1"
                   variant="contained"
-                  size="large"
-                  className={classes.matchButton}
+                  color="secondary"
+                  type="submit"
+                  className={classes.easyButton}
+                  onClick={(e) => onDifficultySelection(1, e)}
                 >
-                  Find a Partner!
+                  Easy
                 </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                <Button
+                  id="2"
+                  variant="contained"
+                  type="submit"
+                  className={classes.moderateButton}
+                  onClick={(e) => onDifficultySelection(2, e)}
+                >
+                  Moderate
+                </Button>
+                <Button
+                  id="3"
+                  variant="contained"
+                  type="submit"
+                  className={classes.hardButton}
+                  onClick={(e) => onDifficultySelection(3, e)}
+                >
+                  Hard
+                </Button>
+              </Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                className={classes.matchButton}
+                onClick={() => findAPartner()}
+              >
+                Find a Partner!
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Container>
     </HomeLayout>
   )
 }

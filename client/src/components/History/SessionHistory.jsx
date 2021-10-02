@@ -55,7 +55,7 @@ const sessionHistory = () => {
       </div>
       <Divider orientation="vertical" flexItem />
       <div className={classes.rightDiv}>
-        <div className={classes.partnerDiv}>Praticed with jiahua!</div>
+        <div className={classes.partnerDiv}>Praticed with @jiahua!</div>
         <div className={classes.problemDiv}>
           <ol>
             <li>Two Sum</li>

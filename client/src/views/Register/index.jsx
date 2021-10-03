@@ -5,6 +5,8 @@ import { Controller, useForm } from 'react-hook-form'
 import AuthLayout from '../../components/Layout/AuthLayout'
 import { useRouter } from 'next/router'
 import firebase from '../../config/firebase'
+import toast, { Toaster } from 'react-hot-toast'
+import { ERROR, SUCCESS } from '../../utils/message'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -62,10 +64,15 @@ const Register = () => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(() => router.push('/'))
-        .catch((error) => {
-          console.error(error.message)
+        .then(() => {
+          router.push('/')
+          toast.success(SUCCESS.register)
         })
+        .catch((error) => {
+          toast.error(error.message)
+        })
+    } else {
+      toast.error(ERROR.incompleteFields)
     }
   }
 
@@ -76,6 +83,7 @@ const Register = () => {
 
   return (
     <AuthLayout>
+      <Toaster position="top-right" />
       <Box className={classes.cardWrapper}>
         <img src={'/Upskill-Logo-Black.png'} />
         <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>

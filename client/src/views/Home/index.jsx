@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     padding: '10px',
   },
+  sectionHeader: {
+    fontWeight: 700,
+  },
   sessionHistoryWrapper: {
     height: '90%',
     backgroundColor: theme.palette.background.secondary,
@@ -148,7 +151,12 @@ const Home = () => {
             <Grid item xs={6} className={classes.leftGridWrapper}>
               <Typography variant="h6">Welcome, Bobby!</Typography>
               <Grid item className={classes.sessionHistoryWrapper}>
-                <Typography variant="subtitle2">Session History</Typography>
+                <Typography
+                  variant="subtitle2"
+                  className={classes.sectionHeader}
+                >
+                  Session History
+                </Typography>
                 <Divider className={classes.homeDivider} />
                 <List>
                   {loops.map((i) => (
@@ -159,7 +167,10 @@ const Home = () => {
             </Grid>
             <Grid item xs={6} className={classes.rightGridWrapper}>
               <Grid item className={classes.mockInterviewWrapper}>
-                <Typography variant="subtitle2">
+                <Typography
+                  variant="subtitle2"
+                  className={classes.sectionHeader}
+                >
                   Mock Interview Session
                 </Typography>
                 <Divider className={classes.homeDivider} />{' '}

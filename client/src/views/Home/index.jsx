@@ -7,13 +7,13 @@ import {
   Container,
   Grid,
   List,
-  Snackbar,
 } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
 import SessionHistory from '../../components/History/SessionHistory'
 import HomeLayout from '../../components/Layout/HomeLayout'
 import { useRouter } from 'next/router'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
+import toast, { Toaster } from 'react-hot-toast'
+import { ERROR } from '../../utils/message'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,15 +118,6 @@ const Home = () => {
     }
   }
 
-  // snackbar
-  const [open, setOpen] = React.useState(false)
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setOpen(false)
-  }
-
   const findAPartner = () => {
     if (buttonClicked != 0) {
       document
@@ -138,14 +129,14 @@ const Home = () => {
       // matching success
       router.push('/interview')
     } else {
-      // toast msg
-      setOpen(true)
+      toast.error(ERROR.missingDifficulty)
     }
   }
 
   return (
     <AuthWrapper>
       <HomeLayout currPage="Home Page">
+        <Toaster position="top-right" />
         <Container className={classes.root} maxWidth="xl">
           <Grid container className={classes.gridWrapper}>
             <Grid item xs={6} className={classes.leftGridWrapper}>
@@ -219,15 +210,6 @@ const Home = () => {
                 >
                   Find a Partner!
                 </Button>
-                <Snackbar
-                  open={open}
-                  autoHideDuration={3000}
-                  onClose={handleClose}
-                >
-                  <Alert severity="error">
-                    Select a difficulty before finding a Partner!
-                  </Alert>
-                </Snackbar>
               </Grid>
             </Grid>
           </Grid>

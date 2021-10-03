@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core'
 import HomeLayout from '../../components/Layout/HomeLayout'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,12 +85,18 @@ const Review = () => {
 
 const Profile = () => {
   const classes = useStyles()
+  const router = useRouter()
 
   const profileData = {
     first_name: 'Bobby',
     last_name: 'Tan',
     username: 'bobbiebob',
     email: 'bob@u.nus.edu',
+  }
+
+  const handleRedirectReset = (e) => {
+    e.preventDefault()
+    router.push('/resetPassword')
   }
 
   return (
@@ -113,7 +120,11 @@ const Profile = () => {
               >
                 Joined On: 26/12/20
               </Typography>
-              <Button color="primary" variant="contained">
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleRedirectReset}
+              >
                 Reset Password
               </Button>
             </Grid>

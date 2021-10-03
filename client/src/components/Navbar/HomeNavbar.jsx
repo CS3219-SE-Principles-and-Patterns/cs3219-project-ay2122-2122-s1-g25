@@ -3,6 +3,7 @@ import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
+import firebase from '../../config/firebase'
 
 let upskillHomepageRoutes = ['Home Page', 'Profile'] // hardcoded route
 
@@ -88,7 +89,8 @@ const navbar = (props) => {
     }
   }
 
-  const signOut = () => {
+  const handleSignOut = () => {
+    firebase.auth().signOut()
     router.push('/')
   }
 
@@ -129,7 +131,7 @@ const navbar = (props) => {
             variant="contained"
             color="secondary"
             type="submit"
-            onClick={() => signOut()}
+            onClick={() => handleSignOut()}
           >
             Sign Out
           </Button>

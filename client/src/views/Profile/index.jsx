@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import HomeLayout from '../../components/Layout/HomeLayout'
+import AuthWrapper from '../../components/Authentication/AuthWrapper'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,46 +93,51 @@ const Profile = () => {
   }
 
   return (
-    <HomeLayout currPage="Profile">
-      <Container className={classes.root} maxWidth="lg">
-        <Grid container className={classes.gridWrapper}>
-          <Grid item xs={4} className={classes.profileWrapper}>
-            <Avatar
-              className={classes.avatar}
-              alt={`${profileData.username}`}
-              src={`https://avatars.dicebear.com/api/initials/${profileData.first_name} ${profileData.last_name}.svg`}
-            />
-            <Typography variant="h6">{`${profileData.first_name} ${profileData.last_name}`}</Typography>
-            <Typography variant="subtitle1">{`@${profileData.username}`}</Typography>
-            <Typography variant="subtitle1">{profileData.email}</Typography>
-            <Rating name="disabled" value={4} disabled />
-            <Typography variant="caption" className={classes.registrationText}>
-              Joined On: 26/12/20
-            </Typography>
-            <Button color="primary" variant="contained">
-              Reset Password
-            </Button>
+    <AuthWrapper>
+      <HomeLayout currPage="Profile">
+        <Container className={classes.root} maxWidth="lg">
+          <Grid container className={classes.gridWrapper}>
+            <Grid item xs={4} className={classes.profileWrapper}>
+              <Avatar
+                className={classes.avatar}
+                alt={`${profileData.username}`}
+                src={`https://avatars.dicebear.com/api/initials/${profileData.first_name} ${profileData.last_name}.svg`}
+              />
+              <Typography variant="h6">{`${profileData.first_name} ${profileData.last_name}`}</Typography>
+              <Typography variant="subtitle1">{`@${profileData.username}`}</Typography>
+              <Typography variant="subtitle1">{profileData.email}</Typography>
+              <Rating name="disabled" value={4} disabled />
+              <Typography
+                variant="caption"
+                className={classes.registrationText}
+              >
+                Joined On: 26/12/20
+              </Typography>
+              <Button color="primary" variant="contained">
+                Reset Password
+              </Button>
+            </Grid>
+            <Grid item xs={8} className={classes.reviewWrapper}>
+              <Typography variant="subtitle2" className={classes.reviewHeader}>
+                Reviews
+              </Typography>
+              <List>
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+                <Review />
+              </List>
+            </Grid>
           </Grid>
-          <Grid item xs={8} className={classes.reviewWrapper}>
-            <Typography variant="subtitle2" className={classes.reviewHeader}>
-              Reviews
-            </Typography>
-            <List>
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-              <Review />
-            </List>
-          </Grid>
-        </Grid>
-      </Container>
-    </HomeLayout>
+        </Container>
+      </HomeLayout>
+    </AuthWrapper>
   )
 }
 

@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react'
+import { Button } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import firebase from '../../config/firebase'
 import AuthLayout from '../Layout/AuthLayout'
+import { useRouter } from 'next/router'
 
 const Unauthenticated = () => {
+  const router = useRouter()
+
   return (
     <AuthLayout>
-      <div>
+      <div style={{ textAlign: 'center' }}>
         <h1>401 - You are not authenticated</h1>
-        <a href="/">Login</a>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => router.push('/')}
+        >
+          Login
+        </Button>
       </div>
     </AuthLayout>
   )

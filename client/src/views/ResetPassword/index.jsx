@@ -49,7 +49,7 @@ const ResetPassword = () => {
       firebase
         .auth()
         .sendPasswordResetEmail(email)
-        .then(() => toast.success.apply(SUCCESS.reset))
+        .then(() => toast.success(SUCCESS.reset))
         .catch((error) => {
           toast.error(error.message)
         })

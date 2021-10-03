@@ -13,6 +13,7 @@ import { Alert } from '@material-ui/lab'
 import SessionHistory from '../../components/History/SessionHistory'
 import HomeLayout from '../../components/Layout/HomeLayout'
 import { useRouter } from 'next/router'
+import AuthWrapper from '../../components/Authentication/AuthWrapper'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -140,86 +141,88 @@ const Home = () => {
   }
 
   return (
-    <HomeLayout currPage="Home Page">
-      <Container className={classes.root} maxWidth="xl">
-        <Grid container className={classes.gridWrapper}>
-          <Grid item xs={6} className={classes.leftGridWrapper}>
-            <Typography variant="h6">Welcome, Bobby!</Typography>
-            <Grid item className={classes.sessionHistoryWrapper}>
-              <Typography variant="subtitle2">Session History</Typography>
-              <Divider className={classes.homeDivider} />
-              <List>
-                {loops.map((i) => (
-                  <SessionHistory key={i} />
-                ))}
-              </List>
-            </Grid>
-          </Grid>
-          <Grid item xs={6} className={classes.rightGridWrapper}>
-            <Grid item className={classes.mockInterviewWrapper}>
-              <Typography variant="subtitle2">
-                Mock Interview Session
-              </Typography>
-              <Divider className={classes.homeDivider} />{' '}
-              <Typography
-                variant="body2"
-                className={classes.interviewGreetings}
-              >
-                {" Let's get started by selecting your desired difficulty!"}
-              </Typography>
-              <Grid item className={classes.buttonWrapper}>
-                <Button
-                  id="1"
-                  variant="contained"
-                  color="secondary"
-                  type="submit"
-                  className={classes.easyButton}
-                  onClick={(e) => onDifficultySelection(1, e)}
-                >
-                  Easy
-                </Button>
-                <Button
-                  id="2"
-                  variant="contained"
-                  type="submit"
-                  className={classes.moderateButton}
-                  onClick={(e) => onDifficultySelection(2, e)}
-                >
-                  Moderate
-                </Button>
-                <Button
-                  id="3"
-                  variant="contained"
-                  type="submit"
-                  className={classes.hardButton}
-                  onClick={(e) => onDifficultySelection(3, e)}
-                >
-                  Hard
-                </Button>
+    <AuthWrapper>
+      <HomeLayout currPage="Home Page">
+        <Container className={classes.root} maxWidth="xl">
+          <Grid container className={classes.gridWrapper}>
+            <Grid item xs={6} className={classes.leftGridWrapper}>
+              <Typography variant="h6">Welcome, Bobby!</Typography>
+              <Grid item className={classes.sessionHistoryWrapper}>
+                <Typography variant="subtitle2">Session History</Typography>
+                <Divider className={classes.homeDivider} />
+                <List>
+                  {loops.map((i) => (
+                    <SessionHistory key={i} />
+                  ))}
+                </List>
               </Grid>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                className={classes.matchButton}
-                onClick={() => findAPartner()}
-              >
-                Find a Partner!
-              </Button>
-              <Snackbar
-                open={open}
-                autoHideDuration={3000}
-                onClose={handleClose}
-              >
-                <Alert severity="error">
-                  Select a difficulty before finding a Partner!
-                </Alert>
-              </Snackbar>
+            </Grid>
+            <Grid item xs={6} className={classes.rightGridWrapper}>
+              <Grid item className={classes.mockInterviewWrapper}>
+                <Typography variant="subtitle2">
+                  Mock Interview Session
+                </Typography>
+                <Divider className={classes.homeDivider} />{' '}
+                <Typography
+                  variant="body2"
+                  className={classes.interviewGreetings}
+                >
+                  {" Let's get started by selecting your desired difficulty!"}
+                </Typography>
+                <Grid item className={classes.buttonWrapper}>
+                  <Button
+                    id="1"
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    className={classes.easyButton}
+                    onClick={(e) => onDifficultySelection(1, e)}
+                  >
+                    Easy
+                  </Button>
+                  <Button
+                    id="2"
+                    variant="contained"
+                    type="submit"
+                    className={classes.moderateButton}
+                    onClick={(e) => onDifficultySelection(2, e)}
+                  >
+                    Moderate
+                  </Button>
+                  <Button
+                    id="3"
+                    variant="contained"
+                    type="submit"
+                    className={classes.hardButton}
+                    onClick={(e) => onDifficultySelection(3, e)}
+                  >
+                    Hard
+                  </Button>
+                </Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  className={classes.matchButton}
+                  onClick={() => findAPartner()}
+                >
+                  Find a Partner!
+                </Button>
+                <Snackbar
+                  open={open}
+                  autoHideDuration={3000}
+                  onClose={handleClose}
+                >
+                  <Alert severity="error">
+                    Select a difficulty before finding a Partner!
+                  </Alert>
+                </Snackbar>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Container>
-    </HomeLayout>
+        </Container>
+      </HomeLayout>
+    </AuthWrapper>
   )
 }
 

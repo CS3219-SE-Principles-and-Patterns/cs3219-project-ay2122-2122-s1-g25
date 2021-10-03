@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, TextField, Typography } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
@@ -35,6 +35,15 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const classes = useStyles()
   const router = useRouter()
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        router.push('/home')
+      }
+    })
+  }, [])
+
   const { handleSubmit, control } = useForm({
     defaultValues: {
       email: '',
@@ -48,7 +57,7 @@ const Login = () => {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => router.push('/logged_in'))
+        .then(() => router.push('/home'))
         .catch((error) => {
           console.error(error.message)
         })

@@ -4,7 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 require('dotenv').config();
 const { errorHandler, notFound } = require('./middleware/middleware');
-const doctorRoutes = require('./routes/doctor')
+const userRoutes = require('./routes/users')
 const userMatchingRoutes = require('./routes/userMatchingRoutes')
 
 const app = express();
@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
     route: 'Welcome to application server!',
   });
 });
-// app.use('/api', doctorRoutes)
+app.use('/api', userRoutes)
 app.use('/api/matching', userMatchingRoutes);
 
 app.use(notFound);

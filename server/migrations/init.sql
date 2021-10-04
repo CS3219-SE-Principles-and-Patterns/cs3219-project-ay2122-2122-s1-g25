@@ -1,7 +1,9 @@
+DROP TABLE IF EXISTS Users, InterviewSessions, Questions, Rotations, Feedback, UserMatching cascade;
+
 CREATE TABLE IF NOT EXISTS Users (
    	userId TEXT PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
-    createdAt TIMESTAMP,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     username TEXT UNIQUE NOT NULL,
     firstName TEXT NOT NULL,
     lastName TEXT NOT NULL
@@ -23,8 +25,8 @@ CREATE TABLE IF NOT EXISTS Questions (
 );
 
 CREATE TABLE IF NOT EXISTS Rotations (
-    interviewerId INTEGER,
-    intervieweeId INTEGER,
+    interviewerId TEXT,
+    intervieweeId TEXT,
     questionId INTEGER,
     iSessionId INTEGER,
     attempt TEXT,
@@ -37,20 +39,19 @@ CREATE TABLE IF NOT EXISTS Rotations (
 
 CREATE TABLE IF NOT EXISTS Feedback (
   	feedbackId SERIAL PRIMARY KEY,
-    giverId INTEGER, 
-    receiverId INTEGER, 
+    giverId TEXT, 
+    receiverId TEXT, 
     iSessionId INTEGER,
     rating SMALLINT NOT NULL,
     comment TEXT,
-    FOREIGN KEY(user_one) REFERENCES Users,
-    FOREIGN KEY(user_two) REFERENCES Users,
-    FOREIGN KEY(interview_session_id) REFERENCES InterviewSessions
+    FOREIGN KEY(giverId) REFERENCES Users,
+    FOREIGN KEY(receiverId) REFERENCES Users,
+    FOREIGN KEY(iSessionId) REFERENCES InterviewSessions
 );
 
 CREATE TABLE IF NOT EXISTS UserMatching (
   	userId TEXT PRIMARY KEY,
     startedMatchingAt TIMESTAMP, 
     difficulty SMALLINT, 
-    matchId TEXT UNIQUE,
-    isSearch BOOLEAN NOT NULL DEFAULT 1,
+    matchId TEXT UNIQUE
 );

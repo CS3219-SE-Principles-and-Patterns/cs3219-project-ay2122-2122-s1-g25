@@ -9,3 +9,5 @@
 /server/.env.local
 /server/.env.production
 /server/.env
+
+/node_modules

@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     maxHeight: '100vh',
   },
   navbarWrapper: {
-    height: '50px',
+    height: '5%',
     width: '100%',
   },
   contentWrapper: {

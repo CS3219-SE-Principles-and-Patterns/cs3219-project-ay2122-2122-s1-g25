@@ -4,8 +4,7 @@ const router = express.Router()
 
 
 router.get('/:id', getUser)
-router.post('/create', createUser)
-// router.put('/update', updateUser)
+router.post('/', createUser)
 router.delete('/:id', deleteUser)
 
 module.exports = router

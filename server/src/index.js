@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
     route: 'Welcome to application server!',
   });
 });
-app.use('/api', userRoutes)
+app.use('/api/users', userRoutes)
 app.use('/api/matching', userMatchingRoutes);
 
 app.use(notFound);

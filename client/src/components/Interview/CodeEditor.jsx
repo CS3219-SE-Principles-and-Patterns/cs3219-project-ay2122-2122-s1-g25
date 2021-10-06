@@ -7,7 +7,11 @@ import PropTypes from 'prop-types'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
 
-import { Controlled } from 'react-codemirror2'
+require('codemirror/mode/python/python.js') // can choose language to highlight
+
+import { Controlled as CodeMirror } from 'react-codemirror2'
+
+// imports
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -28,7 +32,7 @@ const Editor = (props) => {
   const { value, onChange } = props
   Editor.propTypes = {
     value: PropTypes.string,
-    onChange: PropTypes.string, // is a function a string?
+    onChange: PropTypes.string, // is function a string?
   }
 
   const classes = useStyles()
@@ -38,8 +42,7 @@ const Editor = (props) => {
 
   return (
     <Box className={classes.editorWrapper}>
-      <Box className={classes.languageWrapper}></Box>
-      <Controlled
+      <CodeMirror
         onBeforeChange={handleChange}
         value={value}
         options={{
@@ -47,6 +50,7 @@ const Editor = (props) => {
           lint: true,
           theme: 'material',
           lineNumbers: true,
+          mode: 'python',
         }}
         className={classes.codeMirrorWrapper}
       />
@@ -54,6 +58,7 @@ const Editor = (props) => {
   )
 }
 
+// make it dragabble in the future
 const CodeEditor = () => {
   const classes = useStyles()
   const [code, setCode] = useState('')

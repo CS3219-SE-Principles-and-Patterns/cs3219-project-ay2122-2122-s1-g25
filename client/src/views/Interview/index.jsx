@@ -4,7 +4,12 @@ import { Container, Grid, Box } from '@material-ui/core'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
-import CodeEditor from '../../components/Interview/CodeEditor'
+
+// import CodeEditor from '../../components/Interview/CodeEditor'
+import dynamic from 'next/dynamic'
+const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
+  ssr: false,
+})
 
 const useStyles = makeStyles(() => ({
   root: {

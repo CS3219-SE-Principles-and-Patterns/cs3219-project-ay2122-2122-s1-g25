@@ -5,7 +5,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 const { errorHandler, notFound } = require('./middleware/middleware');
 const userRoutes = require('./routes/users')
-const userMatchingRoutes = require('./routes/userMatchingRoutes')
+const userMatchingRoutes = require('./routes/userMatching')
 
 const app = express();
 

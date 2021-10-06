@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { Container, Typography, Box } from '@material-ui/core'
+import { Container, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
 // code editor imports
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
-require('codemirror/mode/javascript/javascript')
 
 import { Controlled } from 'react-codemirror2'
 
@@ -17,17 +16,19 @@ const useStyles = makeStyles(() => ({
   editorWrapper: {
     height: '100%',
   },
+  languageWrapper: {
+    display: 'flex',
+  },
   codeMirrorWrapper: {
     height: '100%',
   },
 }))
 
 const Editor = (props) => {
-  const { language, value, onChange } = props
+  const { value, onChange } = props
   Editor.propTypes = {
-    language: PropTypes.string,
     value: PropTypes.string,
-    onChange: PropTypes.string, // is function a string?
+    onChange: PropTypes.string, // is a function a string?
   }
 
   const classes = useStyles()
@@ -37,14 +38,13 @@ const Editor = (props) => {
 
   return (
     <Box className={classes.editorWrapper}>
-      <Typography> {language} </Typography>
+      <Box className={classes.languageWrapper}></Box>
       <Controlled
         onBeforeChange={handleChange}
         value={value}
         options={{
           lineWrapping: true,
           lint: true,
-          mode: language,
           theme: 'material',
           lineNumbers: true,
         }}
@@ -54,13 +54,12 @@ const Editor = (props) => {
   )
 }
 
-// make it dragabble in the future
 const CodeEditor = () => {
   const classes = useStyles()
-  const [js, setJs] = useState('')
+  const [code, setCode] = useState('')
   return (
     <Container disableGutters className={classes.root} maxWidth="xl">
-      <Editor language="javascript" value={js} onChange={setJs} />
+      <Editor value={code} onChange={setCode} />
     </Container>
   )
 }

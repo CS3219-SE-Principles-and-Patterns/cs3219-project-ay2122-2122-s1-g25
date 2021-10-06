@@ -1,3 +1,5 @@
+SET TIMEZONE = 'Asia/Singapore';
+
 DROP TABLE IF EXISTS Users, InterviewSessions, Questions, Rotations, Feedback, UserMatching cascade;
 
 CREATE TABLE IF NOT EXISTS Users (

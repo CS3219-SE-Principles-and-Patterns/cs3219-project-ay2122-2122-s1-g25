@@ -1,6 +1,5 @@
 const pool = require('../db')
 class Users {
-    // constructor() { }
     getUser(userId) {
         return pool.query("SELECT * FROM Users WHERE userId = $1", [userId])
     }

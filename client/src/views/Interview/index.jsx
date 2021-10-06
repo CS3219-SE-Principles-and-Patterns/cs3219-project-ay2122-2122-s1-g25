@@ -4,11 +4,11 @@ import { Container, Grid, Box } from '@material-ui/core'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
+import CodeEditor from '../../components/Interview/CodeEditor'
 
 const useStyles = makeStyles(() => ({
   root: {
     height: '100%',
-    // background: 'pink',
   },
   gridWrapper: {
     height: '100%',
@@ -24,19 +24,15 @@ const useStyles = makeStyles(() => ({
   },
   codeWrapper: {
     height: '70%',
-    // backgroundColor: 'yellow',
   },
   questionWrapper: {
     height: '30%',
-    // backgroundColor: 'orange',
   },
   videoWrapper: {
     height: '30%',
-    // backgroundColor: 'green',
   },
   chatWrapper: {
     height: '70%',
-    // backgroundColor: 'aqua',
   },
 }))
 
@@ -49,10 +45,12 @@ const Interview = () => {
         <Container className={classes.root} disableGutters maxWidth="xl">
           <Grid container className={classes.gridWrapper}>
             <Grid item xs={9} className={classes.gridLeft}>
-              <Box className={classes.codeWrapper}>Code Here</Box>
+              <Box className={classes.codeWrapper}>
+                <CodeEditor />
+              </Box>
               <Box
                 className={classes.questionWrapper}
-                border={2}
+                border={1}
                 borderColor="black"
               >
                 <AlgorithmQuestion />

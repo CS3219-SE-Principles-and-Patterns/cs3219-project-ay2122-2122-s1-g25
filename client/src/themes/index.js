@@ -27,6 +27,7 @@ const theme = createTheme({
     background: {
       main: '#FFFFFF',
       secondary: '#F0F0F0',
+      tertiary: '#C0C0C0',
     },
   },
   shape: {

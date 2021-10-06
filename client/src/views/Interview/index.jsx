@@ -7,6 +7,7 @@ import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
 
 // import CodeEditor from '../../components/Interview/CodeEditor'
 import dynamic from 'next/dynamic'
+import ChatBox from '../../components/Interview/ChatBox'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
@@ -63,7 +64,9 @@ const Interview = () => {
             </Grid>
             <Grid item xs={3} className={classes.gridRight}>
               <Box className={classes.videoWrapper}>Video Here</Box>
-              <Box className={classes.chatWrapper}>Chat here</Box>
+              <Box className={classes.chatWrapper}>
+                <ChatBox />
+              </Box>
             </Grid>
           </Grid>
         </Container>

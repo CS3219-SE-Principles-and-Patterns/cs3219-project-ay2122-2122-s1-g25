@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import firebase from '../../config/firebase'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR, SUCCESS } from '../../utils/message'
+import { createUser } from '../../api/users'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -51,22 +52,35 @@ const Register = () => {
   const { handleSubmit, control } = useForm({
     defaultValues: {
       email: '',
-      username: '',
       firstName: '',
       lastName: '',
       password: '',
     },
   })
   const onSubmit = (data) => {
-    console.log(data)
-    const { email, password } = data
-    if (email && password) {
+    const { email, password, firstName, lastName } = data
+    if (email && password && firstName && lastName) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          router.push('/')
-          toast.success(SUCCESS.register)
+        .then((res) => {
+          const newUser = {
+            userId: res.user.uid,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+          }
+          createUser(newUser)
+            .then(() => {
+              router.push('/')
+              toast.success(SUCCESS.register)
+            })
+            .catch(() => {
+              // TODO: implement a more effective error handler, possibly let outer promise catch it
+              toast.error(ERROR.userCreationFailure, {
+                duration: 15000,
+              })
+            })
         })
         .catch((error) => {
           toast.error(error.message)
@@ -97,19 +111,6 @@ const Register = () => {
                 onChange={onChange}
                 value={value}
                 label={'Email'}
-              />
-            )}
-          />
-          <Controller
-            name={'username'}
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                onChange={onChange}
-                value={value}
-                label={'Username'}
               />
             )}
           />

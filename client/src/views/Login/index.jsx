@@ -64,7 +64,7 @@ const Login = () => {
           getUser(res.user.uid)
             .then((apiRes) => {
               const user = apiRes.data[0]
-              saveStorage('user', JSON.stringify(user))
+              saveStorage('user', user)
               router.push('/home')
               toast.success(SUCCESS.login)
             })

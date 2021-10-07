@@ -74,7 +74,7 @@ const Register = () => {
           createUser(newUser)
             .then((apiRes) => {
               const user = apiRes.data[0]
-              saveStorage('user', JSON.stringify(user))
+              saveStorage('user', user)
               router.push('/')
               toast.success(SUCCESS.register)
             })

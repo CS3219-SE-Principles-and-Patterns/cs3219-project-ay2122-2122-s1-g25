@@ -2,8 +2,8 @@
   "name": "upskill-server",
   "version": "0.0.1",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "nodemon src/index.js"
+    "dev": "NODE_ENV=DEV nodemon src/index.js",
+    "start": "NODE_ENV=PROD nodemon src/index.js"
   },
   "license": "ISC",
   "dependencies": {

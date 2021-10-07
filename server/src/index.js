@@ -17,7 +17,7 @@ app.use(helmet());
 
 app.get('/', (req, res) => {
   res.json({
-    route: 'Welcome to application server!',
+    data: 'Welcome! Let\'s Upskill now!',
   });
 });
 app.use('/api/users', userRoutes)

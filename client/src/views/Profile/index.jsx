@@ -15,6 +15,7 @@ import {
 import HomeLayout from '../../components/Layout/HomeLayout'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import { useRouter } from 'next/router'
+import { fetchStorage } from '../../storage'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,12 +87,10 @@ const Review = () => {
 const Profile = () => {
   const classes = useStyles()
   const router = useRouter()
+  const user = fetchStorage('user')
 
-  const profileData = {
-    first_name: 'Bobby',
-    last_name: 'Tan',
-    username: 'bobbiebob',
-    email: 'bob@u.nus.edu',
+  const convertTimestamp = (timestamp) => {
+    return new Date(timestamp?.replace(' ', 'T')).toLocaleString()
   }
 
   const handleRedirectReset = (e) => {
@@ -107,18 +106,17 @@ const Profile = () => {
             <Grid item xs={4} className={classes.profileWrapper}>
               <Avatar
                 className={classes.avatar}
-                alt={`${profileData.username}`}
-                src={`https://avatars.dicebear.com/api/initials/${profileData.first_name} ${profileData.last_name}.svg`}
+                alt={`${user?.firstname}`}
+                src={`https://avatars.dicebear.com/api/initials/${user?.firstname} ${user?.lastname}.svg`}
               />
-              <Typography variant="h6">{`${profileData.first_name} ${profileData.last_name}`}</Typography>
-              <Typography variant="subtitle1">{`@${profileData.username}`}</Typography>
-              <Typography variant="subtitle1">{profileData.email}</Typography>
+              <Typography variant="h6">{`${user?.firstname} ${user?.lastname}`}</Typography>
+              <Typography variant="subtitle1">{user?.email}</Typography>
               <Rating name="disabled" value={4} disabled />
               <Typography
                 variant="caption"
                 className={classes.registrationText}
               >
-                Joined On: 26/12/20
+                {`Joined On: ${convertTimestamp(user?.createdat)}`}
               </Typography>
               <Button
                 color="primary"

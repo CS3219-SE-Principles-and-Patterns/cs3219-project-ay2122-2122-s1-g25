@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import firebase from '../../config/firebase'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR, SUCCESS } from '../../utils/message'
+import { createUser } from '../../api/users'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -58,15 +59,27 @@ const Register = () => {
     },
   })
   const onSubmit = (data) => {
-    console.log(data)
-    const { email, password } = data
-    if (email && password) {
+    const { email, password, username, firstName, lastName } = data
+    if (email && password && username && firstName && lastName) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          router.push('/')
-          toast.success(SUCCESS.register)
+        .then((res) => {
+          const newUser = {
+            userId: res.user.uid,
+            email: email,
+            username: username,
+            firstName: firstName,
+            lastName: lastName,
+          }
+          createUser(newUser)
+            .then(() => {
+              router.push('/')
+              toast.success(SUCCESS.register)
+            })
+            .catch((err) => {
+              throw err
+            })
         })
         .catch((error) => {
           toast.error(error.message)

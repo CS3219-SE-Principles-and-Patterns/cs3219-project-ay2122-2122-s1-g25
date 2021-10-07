@@ -1,13 +1,10 @@
 name: Deploy to Cloud Run
 on:
-  pull_request:
+  push:
+    branches:
+      - master
     paths:
-    - "server/**"
-  # push:
-  #   branches:
-  #     - master
-  #   paths:
-  #     - "server/**"
+      - "server/**"
       
 env:
   PROJECT_ID: upskill-prod

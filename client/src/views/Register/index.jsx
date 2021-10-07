@@ -52,15 +52,14 @@ const Register = () => {
   const { handleSubmit, control } = useForm({
     defaultValues: {
       email: '',
-      username: '',
       firstName: '',
       lastName: '',
       password: '',
     },
   })
   const onSubmit = (data) => {
-    const { email, password, username, firstName, lastName } = data
-    if (email && password && username && firstName && lastName) {
+    const { email, password, firstName, lastName } = data
+    if (email && password && firstName && lastName) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -68,7 +67,6 @@ const Register = () => {
           const newUser = {
             userId: res.user.uid,
             email: email,
-            username: username,
             firstName: firstName,
             lastName: lastName,
           }
@@ -77,8 +75,11 @@ const Register = () => {
               router.push('/')
               toast.success(SUCCESS.register)
             })
-            .catch((err) => {
-              throw err
+            .catch(() => {
+              // TODO: implement a more effective error handler, possibly let outer promise catch it
+              toast.error(ERROR.userCreationFailure, {
+                duration: 15000,
+              })
             })
         })
         .catch((error) => {
@@ -110,19 +111,6 @@ const Register = () => {
                 onChange={onChange}
                 value={value}
                 label={'Email'}
-              />
-            )}
-          />
-          <Controller
-            name={'username'}
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                onChange={onChange}
-                value={value}
-                label={'Username'}
               />
             )}
           />

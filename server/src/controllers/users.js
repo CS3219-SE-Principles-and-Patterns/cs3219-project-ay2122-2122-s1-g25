@@ -21,10 +21,10 @@ exports.getUser = async (req, res) => {
 }
 
 exports.createUser = async (req, res) => {
-    const { userId, email, username, firstName, lastName } = req.body
+    const { userId, email, firstName, lastName } = req.body
     try {
         const User = new Users()
-        const createUser = await User.createUser(userId, email, username, firstName, lastName)
+        const createUser = await User.createUser(userId, email, firstName, lastName)
         res.status(200).json(createUser.rows)
     } catch (err) {
         res.status(400).json({ errMsg: err })

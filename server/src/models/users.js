@@ -4,8 +4,8 @@ class Users {
         return pool.query("SELECT * FROM Users WHERE userId = $1", [userId])
     }
 
-    createUser(userId, email, username, firstName, lastName) {
-        return pool.query("INSERT INTO Users(userId, email, username, firstName, lastName) VALUES($1, $2, $3, $4, $5) RETURNING *", [userId, email, username, firstName, lastName])
+    createUser(userId, email, firstName, lastName) {
+        return pool.query("INSERT INTO Users(userId, email, firstName, lastName) VALUES($1, $2, $3, $4) RETURNING *", [userId, email, firstName, lastName])
     }
 
     deleteUser(userId) {

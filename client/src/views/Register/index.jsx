@@ -8,6 +8,7 @@ import firebase from '../../config/firebase'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR, SUCCESS } from '../../utils/message'
 import { createUser } from '../../api/users'
+import { saveStorage } from '../../storage'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -71,7 +72,9 @@ const Register = () => {
             lastName: lastName,
           }
           createUser(newUser)
-            .then(() => {
+            .then((apiRes) => {
+              const user = apiRes.data[0]
+              saveStorage('user', user)
               router.push('/')
               toast.success(SUCCESS.register)
             })

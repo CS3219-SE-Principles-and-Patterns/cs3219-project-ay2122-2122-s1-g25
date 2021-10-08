@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import firebase from '../../config/firebase'
+import { clearStorage } from '../../storage'
+import toast, { Toaster } from 'react-hot-toast'
+import { SUCCESS } from '../../utils/message'
 
 let upskillHomepageRoutes = ['Home Page', 'Profile'] // hardcoded route
 
@@ -91,7 +94,9 @@ const navbar = (props) => {
 
   const handleSignOut = () => {
     firebase.auth().signOut()
+    clearStorage('user')
     router.push('/')
+    toast.success(SUCCESS.logout)
   }
 
   function RoutePointer(props) {
@@ -103,6 +108,7 @@ const navbar = (props) => {
 
   return (
     <Container className={classes.root} maxWidth="xl">
+      <Toaster position="top-right" />
       <Grid container className={classes.gridWrapper}>
         <Grid item className={classes.leftWrapper}>
           <Box className={classes.logoWrapper}>
@@ -133,7 +139,7 @@ const navbar = (props) => {
             type="submit"
             onClick={() => handleSignOut()}
           >
-            Sign Out
+            Logout
           </Button>
         </Box>
       </Grid>

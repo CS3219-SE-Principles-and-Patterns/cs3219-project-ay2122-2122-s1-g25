@@ -8,6 +8,7 @@ const userRoutes = require('./routes/users')
 const userMatchingRoutes = require('./routes/userMatching')
 const interviewSessionRoutes = require('./routes/interviewSession')
 const rotationRoutes = require('./routes/rotation')
+const feedbackRoutes = require('./routes/feedback')
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/matching', userMatchingRoutes);
 app.use('/api/interview', interviewSessionRoutes);
 app.use('/api/rotation', rotationRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

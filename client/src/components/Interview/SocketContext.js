@@ -1,5 +1,5 @@
 import React, { createContext, useState, useRef, useEffect } from 'react'
-import { io } from 'socket.io-client'
+// import { io } from 'socket.io-client'
 import Peer from 'simple-peer'
 import PropTypes from 'prop-types'
 
@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 // const useStyles = makeStyles(() => ({}))
 
 const SocketContext = createContext()
-const socket = io('https://localhost:5000') // pass url of deployed server
+// const socket = io('https://localhost:5000') // pass url of deployed server - dummy now
 
 // const ContextProvider = ({ children }) => {
 const ContextProvider = ({ children }) => {
@@ -40,10 +40,14 @@ const ContextProvider = ({ children }) => {
         myVideo.current.srcObject = currentStream
       })
 
-    socket.on('me', (id) => setMe(id)) // get id
-    socket.on('calluser', ({ from, name: callerName, signal }) => {
-      setCall({ isReceivedCall: true, from, name: callerName, signal })
-    })
+    // socket.on('me', (id) => setMe(id)) // get id
+    // socket.on('calluser', ({ from, name: callerName, signal }) => {
+    //   setCall({ isReceivedCall: true, from, name: callerName, signal })
+    // })
+
+    // dummy until connected w be
+    setMe('')
+    setCall({})
   }, [])
 
   const answerCall = () => {
@@ -51,9 +55,9 @@ const ContextProvider = ({ children }) => {
 
     const peer = new Peer({ initiator: false, trickle: false, stream })
 
-    peer.on('signal', (data) => {
-      socket.emit('answercall', { signal: data, to: call.from })
-    })
+    // peer.on('signal', (data) => {
+    //   socket.emit('answercall', { signal: data, to: call.from })
+    // })
 
     peer.on('stream', (currentStream) => {
       userVideo.current.srcObject = currentStream
@@ -63,34 +67,40 @@ const ContextProvider = ({ children }) => {
     connectionRef.current = peer
   }
 
-  const callUser = (id) => {
+  //   const callUser = (id) => {
+  const callUser = () => {
     const peer = new Peer({ initiator: true, trickle: false, stream })
 
-    peer.on('signal', (data) => {
-      socket.emit('calluser', {
-        userToCall: id,
-        signalData: data,
-        from: me,
-        name,
-      })
-    })
+    // peer.on('signal', (data) => {
+    //   socket.emit('calluser', {
+    //     userToCall: id,
+    //     signalData: data,
+    //     from: me,
+    //     name,
+    //   })
+    // })
 
     peer.on('stream', (currentStream) => {
       userVideo.current.srcObject = currentStream
     })
 
-    socket.on('callaccepted', (signal) => {
-      setCallAccepted(true)
-      peer.signal(signal)
-    })
+    // socket.on('callaccepted', (signal) => {
+    //   setCallAccepted(true)
+    //   peer.signal(signal)
+    // })
 
     connectionRef.current = peer
   }
 
   const leaveCall = () => {
+    console.log('Leaving call')
     setCallEnded(true)
-    connectionRef.current.destroy() // stop receiving input from camera & audio
-    window.location.reload() // to refresh user id -> might not need this for upskill
+    // connectionRef.current.destroy() // stop receiving input from camera & audio
+
+    // close camera
+    stream.getTracks().forEach((track) => {
+      track.stop()
+    })
   }
 
   return (

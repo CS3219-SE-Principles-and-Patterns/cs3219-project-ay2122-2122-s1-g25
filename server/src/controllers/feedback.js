@@ -14,7 +14,6 @@ exports.getFeedback = async (req, res) => {
 exports.getFeedbacks = async (req, res) => {
     try {
         const userId = req.query.userId
-        console.log(typeof userId)
         const feedback = new Feedback()
         const feedbacks = await feedback.getFeedbacks(userId)
         res.status(200).json(feedbacks.rows)

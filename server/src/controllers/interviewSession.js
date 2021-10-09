@@ -18,6 +18,17 @@ exports.getInterviewSession = async (req, res) => {
     }
 }
 
+exports.getInterviewSessions = async (req, res) => {
+    try {
+        const userId = req.query.userId
+        const interviewSession = new InterviewSession()
+        const interviewSessions = await interviewSession.getInterviewSessions(userId)
+        res.status(200).json(interviewSessions.rows)
+    } catch (err) {
+        res.status(400).json({ errMsg: err })
+    }
+}
+
 exports.updateInterviewSession = async (req, res) => {
     const { rotationNum } = req.body;
     try {

@@ -1,4 +1,7 @@
 const { UserMatching } = require('../models/userMatching');
+const { InterviewSession } = require('../models/interviewSession');
+const { Rotation } = require('../models/rotation');
+const pool = require('../db')
 
 exports.getUserMatching = async (req, res) => {
     try {
@@ -45,5 +48,26 @@ exports.deleteUserMatching = async (req, res) => {
         res.status(200).json(deletedUserMatching.rows)
     } catch (err) {
         res.status(400).json({ errMsg: err })
+    }
+}
+
+exports.initialiseInterviewSession = async (user0, user1, difficulty) => {
+    try {
+        await pool.query('BEGIN')
+        const interviewSession = new InterviewSession();
+        const rotation = new Rotation();
+        // const question = new Question();
+        const newInterviewSession = await interviewSession.createInterviewSession(user0, user1, difficulty);
+        const iSessionId = newInterviewSession.rows[0].isessionid
+        // TODO: Incorporate random selection of Questions, once Question model is ready
+        const firstQuestionId = "1"
+        const secondQuestionId = "2"
+        await rotation.createRotation(iSessionId, 0, firstQuestionId)
+        await rotation.createRotation(iSessionId, 1, secondQuestionId)
+        await pool.query('COMMIT')
+        return iSessionId
+    } catch (err) {
+        await pool.query('ROLLBACK')
+        throw err
     }
 }

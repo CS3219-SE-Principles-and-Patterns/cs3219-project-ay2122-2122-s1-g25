@@ -10,7 +10,7 @@ class InterviewSession {
     }
 
     updateInterviewSession(iSessionId, rotationNum) {
-        return pool.query("UPDATE InterviewSessions SET rotationNum = $1 WHERE iSessionId = $2", [rotationNum, iSessionId])
+        return pool.query("UPDATE InterviewSessions SET rotationNum = $1 WHERE iSessionId = $2 RETURNING *", [rotationNum, iSessionId])
     }
 }
 

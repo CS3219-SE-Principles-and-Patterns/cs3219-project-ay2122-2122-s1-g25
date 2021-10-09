@@ -6,6 +6,8 @@ require('dotenv').config();
 const { errorHandler, notFound } = require('./middleware/middleware');
 const userRoutes = require('./routes/users')
 const userMatchingRoutes = require('./routes/userMatching')
+const interviewSessionRoutes = require('./routes/interviewSession')
+const rotationRoutes = require('./routes/rotation')
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.get('/', (req, res) => {
 });
 app.use('/api/users', userRoutes)
 app.use('/api/matching', userMatchingRoutes);
+app.use('/api/interview', interviewSessionRoutes);
+app.use('/api/rotation', rotationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

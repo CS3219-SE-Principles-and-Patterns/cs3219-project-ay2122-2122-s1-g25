@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     textAlign: 'center',
     width: 400,
-    overflow: 'scroll',
+    // overflow: 'scroll',
+    overflow: 'auto',
   },
   form: {
     display: 'flex',

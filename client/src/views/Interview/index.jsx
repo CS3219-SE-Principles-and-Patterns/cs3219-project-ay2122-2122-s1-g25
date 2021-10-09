@@ -4,6 +4,7 @@ import { Container, Grid, Box } from '@material-ui/core'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
+import Conferencing from '../../components/Interview/Conferencing'
 
 // import CodeEditor from '../../components/Interview/CodeEditor'
 import dynamic from 'next/dynamic'
@@ -35,10 +36,10 @@ const useStyles = makeStyles(() => ({
     height: '30%',
   },
   videoWrapper: {
-    height: '30%',
+    height: '25%',
   },
   chatWrapper: {
-    height: '70%',
+    height: '75%',
   },
 }))
 
@@ -63,7 +64,9 @@ const Interview = () => {
               </Box>
             </Grid>
             <Grid item xs={3} className={classes.gridRight}>
-              <Box className={classes.videoWrapper}>Video Here</Box>
+              <Box className={classes.videoWrapper}>
+                <Conferencing />
+              </Box>
               <Box className={classes.chatWrapper}>
                 <ChatBox />
               </Box>

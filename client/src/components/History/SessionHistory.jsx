@@ -25,11 +25,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const sessionHistory = () => {
+const sessionHistory = (props) => {
   const classes = useStyles()
 
   return (
-    <ListItem className={classes.sessionHistoryItem}>
+    <ListItem
+      className={classes.sessionHistoryItem}
+      onClick={() => props.customClickEvent(props.id)}
+    >
       <Grid container className={classes.gridWrapper}>
         <Grid item xs={3} className={classes.dateWrapper}>
           <Typography variant="caption" className={classes.difficultyTypo}>

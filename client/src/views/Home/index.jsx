@@ -6,6 +6,7 @@ import {
   Typography,
   Container,
   Grid,
+  Modal,
   List,
 } from '@material-ui/core'
 import SessionHistory from '../../components/History/SessionHistory'
@@ -15,6 +16,7 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR } from '../../utils/message'
 import { fetchStorage } from '../../storage'
+import HistoryModal from '../HistoryModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
   activeButton: {
     backgroundColor: 'grey',
   },
+  historyModalContainer: {
+    backgroundColor: 'pink',
+  },
 }))
 
 const Home = () => {
@@ -135,6 +140,18 @@ const Home = () => {
     }
   }
 
+  const [open, setOpen] = useState(false)
+  const [modalID, setModalID] = useState(-1)
+  const handleOpen = (id) => {
+    setModalID(id)
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setModalID(-1)
+    setOpen(false)
+  }
+
   return (
     <AuthWrapper>
       <HomeLayout currPage="Home Page">
@@ -153,7 +170,11 @@ const Home = () => {
                 <Divider className={classes.homeDivider} />
                 <List>
                   {loops.map((i) => (
-                    <SessionHistory key={i} />
+                    <SessionHistory
+                      key={i}
+                      customClickEvent={handleOpen}
+                      id={i}
+                    />
                   ))}
                 </List>
               </Grid>
@@ -216,6 +237,14 @@ const Home = () => {
             </Grid>
           </Grid>
         </Container>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <HistoryModal closeModal={handleClose} id={modalID} />
+        </Modal>
       </HomeLayout>
     </AuthWrapper>
   )

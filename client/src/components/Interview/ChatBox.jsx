@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   speechWrapper: {
     maxHeight: '90%',
     padding: 8,
-    overflow: 'scroll',
+    overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column-reverse',
   },

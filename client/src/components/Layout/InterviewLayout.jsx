@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import InterviewNavbar from '../Navbar/InterviewNavbar'
+import { Container, Box } from '@material-ui/core'
+// import InterviewNavbar from '../Navbar/InterviewNavbar'
+import { FeedbackNavbar, InterviewNavbar } from '../Navbar/InterviewNavbar'
 
 const useStyles = makeStyles(() => ({
   interviewPageWrapper: {
     height: '100vh',
     width: '100%',
-    minHeight: '100vh',
-    maxHeight: '100vh',
   },
   navbarWrapper: {
     height: '5%',
@@ -24,14 +24,26 @@ const HomeLayout = (props) => {
   const classes = useStyles()
   const { children } = props
 
+  const Role = (props) => {
+    if (props.currPage == 'interview') {
+      return <InterviewNavbar />
+    } else {
+      return <FeedbackNavbar />
+    }
+  }
+
   return (
-    <div className={classes.interviewPageWrapper}>
-      <div className={classes.navbarWrapper}>
+    <Container
+      className={classes.interviewPageWrapper}
+      disableGutters
+      maxWidth="xl"
+    >
+      <Box className={classes.navbarWrapper}>
         {/* currPage is either 'interview' or 'feedback'*/}
-        <InterviewNavbar currPage={props.currPage} />
-      </div>
-      <div className={classes.contentWrapper}>{children}</div>
-    </div>
+        <Role currPage={props.currPage} />
+      </Box>
+      <Box className={classes.contentWrapper}>{children}</Box>
+    </Container>
   )
 }
 

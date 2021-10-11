@@ -77,7 +77,7 @@ const Example = (props) => {
     data: PropTypes.shape({
       example: PropTypes.string.isRequired,
     }),
-    index: PropTypes.string,
+    index: PropTypes.number,
   }
 
   return (

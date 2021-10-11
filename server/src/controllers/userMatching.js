@@ -50,10 +50,9 @@ exports.createUserMatching = async (req, res) => {
                 // user searches for an available user
                 const userMatch = new UserMatching();
                 // gets all UserMatchings with matchId = null (excluding currentUserMatching)
-                let availableUserMatchings = await userMatch.getAllAvailableUserMatching(userId);
+                let availableUserMatchings = await userMatch.getAllAvailableUserMatching(userId, difficulty);
                 if (availableUserMatchings.rows.length > 0) {
                     // get match with the first (oldest) entry
-                    let difficulty = JSON.parse(JSON.stringify(availableUserMatchings.rows[0])).difficulty;
                     let matchedId = JSON.parse(JSON.stringify(availableUserMatchings.rows[0])).userid;
                     currentUserMatching = await userMatch.updateUserMatching(userId, matchedId);
                     availableUserMatchings = await userMatch.updateUserMatching(matchedId, userId);

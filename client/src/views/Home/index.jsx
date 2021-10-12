@@ -173,7 +173,7 @@ const Home = () => {
                     <SessionHistory
                       key={i}
                       customClickEvent={handleOpen}
-                      id={i}
+                      id={'history' + i}
                     />
                   ))}
                 </List>
@@ -187,7 +187,7 @@ const Home = () => {
                 >
                   Mock Interview Session
                 </Typography>
-                <Divider className={classes.homeDivider} />{' '}
+                <Divider className={classes.homeDivider} />
                 <Typography
                   variant="body2"
                   className={classes.interviewGreetings}

@@ -23,15 +23,33 @@ const useStyles = makeStyles((theme) => ({
   difficultyTypo: {
     fontWeight: 600,
   },
+  hoverBackground: {
+    opacity: '70%',
+  },
 }))
 
 const sessionHistory = (props) => {
   const classes = useStyles()
 
+  const onHover = (event) => {
+    document
+      .getElementById(event.currentTarget.id)
+      .classList.add(classes.hoverBackground)
+  }
+
+  const onLeave = (event) => {
+    document
+      .getElementById(event.currentTarget.id)
+      .classList.remove(classes.hoverBackground)
+  }
+
   return (
     <ListItem
+      id={props.id + ''}
       className={classes.sessionHistoryItem}
       onClick={() => props.customClickEvent(props.id)}
+      onMouseEnter={(e) => onHover(e)}
+      onMouseLeave={(e) => onLeave(e)}
     >
       <Grid container className={classes.gridWrapper}>
         <Grid item xs={3} className={classes.dateWrapper}>

@@ -7,8 +7,8 @@ import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
 import Conferencing from '../../components/Interview/Conferencing'
 
 // import CodeEditor from '../../components/Interview/CodeEditor'
-import dynamic from 'next/dynamic'
 import ChatBox from '../../components/Interview/ChatBox'
+import dynamic from 'next/dynamic'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
@@ -55,14 +55,14 @@ const Interview = () => {
             <Grid container className={classes.gridWrapper}>
               <Grid item xs={9} className={classes.gridLeft}>
                 <Box className={classes.codeWrapper}>
-                  <CodeEditor />
+                  <CodeEditor initialCode={''} editable={true} />
                 </Box>
                 <Box
                   className={classes.questionWrapper}
                   border={1}
                   borderColor="black"
                 >
-                  <AlgorithmQuestion />
+                  <AlgorithmQuestion qnIndex={1} />
                 </Box>
               </Grid>
               <Grid item xs={3} className={classes.gridRight}>

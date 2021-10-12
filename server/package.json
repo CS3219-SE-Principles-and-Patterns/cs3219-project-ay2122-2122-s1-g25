@@ -13,7 +13,8 @@
     "helmet": "^4.6.0",
     "morgan": "^1.10.0",
     "node-postgres": "^0.6.2",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "socket.io": "^4.2.0"
   },
   "devDependencies": {
     "eslint": "^7.25.0",

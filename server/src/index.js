@@ -5,10 +5,6 @@ const morgan = require('morgan');
 require('dotenv').config();
 const { errorHandler, notFound } = require('./middleware/middleware');
 const userRoutes = require('./routes/users')
-const userMatchingRoutes = require('./routes/userMatching')
-const interviewSessionRoutes = require('./routes/interviewSession')
-const rotationRoutes = require('./routes/rotation')
-const feedbackRoutes = require('./routes/feedback')
 
 const app = express();
 
@@ -20,14 +16,10 @@ app.use(helmet());
 
 app.get('/', (req, res) => {
   res.json({
-    data: 'Welcome! Let\'s Upskill now!',
+    route: 'Welcome to application server!',
   });
 });
-app.use('/api/users', userRoutes)
-app.use('/api/matching', userMatchingRoutes);
-app.use('/api/interview', interviewSessionRoutes);
-app.use('/api/rotation', rotationRoutes);
-app.use('/api/feedback', feedbackRoutes);
+app.use('/api', userRoutes)
 
 app.use(notFound);
 app.use(errorHandler);

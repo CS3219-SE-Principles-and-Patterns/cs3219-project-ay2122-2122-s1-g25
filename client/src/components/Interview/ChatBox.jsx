@@ -145,7 +145,7 @@ const ChatBox = (props) => {
   ))
 
   useEffect(() => {
-    props.chatSocket.on('chat-message', (newMessage) => {
+    props.chatSocket.on('receive-chat-message', (newMessage) => {
       setChat([newMessage, ...chat])
     })
   }, [props.chatSocket])

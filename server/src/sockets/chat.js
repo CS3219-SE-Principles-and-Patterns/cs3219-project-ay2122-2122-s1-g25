@@ -10,9 +10,9 @@ const chatSocketWrapper = (io) => {
             socket.join(roomId);
             return socket.emit("successfully joined room", `You have successfully joined ${roomId}`);
         })
-        //broadcast to all the ppl in the room the chat message
+        //broadcast the chat message to all the ppl in the room
         socket.on('send-chat-message', msg => {
-            chatSocket.to(roomId).emit('chat-message', msg)
+            chatSocket.to(roomId).emit('receive-chat-message', msg)
         })
         //exiting the room
         socket.on("disconnect", () => {

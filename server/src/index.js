@@ -40,24 +40,6 @@ app.use('/api/interview', interviewSessionRoutes);
 app.use('/api/rotation', rotationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 
-//socket
-// const chatNamespace = io.of("/sockets/chat");
-
-// chatNamespace.on("connection", socket => {
-//   socket.emit("welcome", "Welcome to the chat!")
-//   console.log("New client connected");
-//   //join room
-//   socket.on("joinRoom", room => {
-//     socket.join(room);
-//     chatNamespace.to(room).emit("newUser", `New Player has joined room ${room}`);
-//     return socket.emit("success", `You have successfully joined ${room}`);
-//   })
-//   //broadcast to all the ppl in the room the chat message
-//   socket.on('send-chat-message', msg => {
-//     chatNamespace.in(msg.roomId).emit('chat-message', msg)
-//   })
-// })
-
 app.use(notFound);
 app.use(errorHandler);
 

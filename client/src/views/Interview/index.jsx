@@ -49,10 +49,10 @@ const Interview = () => {
   const classes = useStyles()
   //join room
   const chatSocket = io.connect('http://localhost:4000/sockets/chat')
-  chatSocket.emit('joinRoom', 'dsad8u891')
-  chatSocket.on('success', (res) => {
-    console.log(res)
-  })
+  // chatSocket.emit('joinRoom', 'dsad8u891')
+  // chatSocket.on('success', (res) => {
+  //   console.log(res)
+  // })
   return (
     <AuthWrapper>
       <ContextProvider>

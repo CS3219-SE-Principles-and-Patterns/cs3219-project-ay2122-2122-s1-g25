@@ -71,7 +71,17 @@ const useStyles = makeStyles((theme) => ({
 const ChatBox = (props) => {
   const classes = useStyles()
   const user = fetchStorage('user')
-
+  //join room
+  props.chatSocket.emit('joinRoom', { room: 'dsad8u891', user: user })
+  props.chatSocket.on('successfully joined room', (res) => {
+    console.log(res)
+  })
+  props.chatSocket.on('user-disconnected', (msg) => {
+    alert(msg)
+  })
+  props.chatSocket.on('new-user', (msg) => {
+    console.log(msg)
+  })
   // const MOCK_CHAT = [
   //   {
   //     uid: 'user2',
@@ -117,7 +127,6 @@ const ChatBox = (props) => {
       uid: user,
       message: input,
       timestamp: new Date().getTime().toString(),
-      roomId: 'dsad8u891',
     }
     setChat([newMessage, ...chat])
     props.chatSocket.emit('send-chat-message', newMessage)

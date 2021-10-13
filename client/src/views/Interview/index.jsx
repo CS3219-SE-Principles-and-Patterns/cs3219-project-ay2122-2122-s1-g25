@@ -5,7 +5,6 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
 import Conferencing from '../../components/Interview/Conferencing'
-import { io } from 'socket.io-client'
 // import CodeEditor from '../../components/Interview/CodeEditor'
 import dynamic from 'next/dynamic'
 import ChatBox from '../../components/Interview/ChatBox'
@@ -47,12 +46,6 @@ const useStyles = makeStyles(() => ({
 
 const Interview = () => {
   const classes = useStyles()
-  //join room
-  const chatSocket = io.connect('http://localhost:4000/sockets/chat')
-  // chatSocket.emit('joinRoom', 'dsad8u891')
-  // chatSocket.on('success', (res) => {
-  //   console.log(res)
-  // })
   return (
     <AuthWrapper>
       <ContextProvider>
@@ -76,7 +69,7 @@ const Interview = () => {
                   <Conferencing />
                 </Box>
                 <Box className={classes.chatWrapper}>
-                  <ChatBox chatSocket={chatSocket} />
+                  <ChatBox />
                 </Box>
               </Grid>
             </Grid>

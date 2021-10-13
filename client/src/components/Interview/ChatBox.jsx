@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+
 import {
   Box,
   Button,
@@ -8,6 +10,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { fetchStorage } from '../../storage'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,43 +68,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ChatBox = () => {
+const ChatBox = (props) => {
   const classes = useStyles()
-  const user = 'user1'
+  const user = fetchStorage('user')
 
-  const MOCK_CHAT = [
-    {
-      uid: 'user2',
-      message: 'Sure!',
-      timestamp: '2020-10-05 14:06:10-08',
-    },
-    {
-      uid: 'user1',
-      message: 'Same here! Shall we get started with the question?',
-      timestamp: '2020-10-05 14:05:10-08',
-    },
-    {
-      uid: 'user2',
-      message: 'I am doing good, just not really a morning person HAHA',
-      timestamp: '2020-10-05 14:04:10-08',
-    },
-    {
-      uid: 'user2',
-      message: 'Nice to meet you!',
-      timestamp: '2020-10-05 14:03:10-08',
-    },
-    {
-      uid: 'user1',
-      message: 'How are you doing?',
-      timestamp: '2020-10-05 14:02:10-08',
-    },
-    {
-      uid: 'user1',
-      message: 'Hello there!',
-      timestamp: '2020-10-05 14:01:10-08',
-    },
-  ]
-  const [chat, setChat] = useState(MOCK_CHAT)
+  // const MOCK_CHAT = [
+  //   {
+  //     uid: 'user2',
+  //     message: 'Sure!',
+  //     timestamp: '2020-10-05 14:06:10-08',
+  //   },
+  //   {
+  //     uid: 'user1',
+  //     message: 'Same here! Shall we get started with the question?',
+  //     timestamp: '2020-10-05 14:05:10-08',
+  //   },
+  //   {
+  //     uid: 'user2',
+  //     message: 'I am doing good, just not really a morning person HAHA',
+  //     timestamp: '2020-10-05 14:04:10-08',
+  //   },
+  //   {
+  //     uid: 'user2',
+  //     message: 'Nice to meet you!',
+  //     timestamp: '2020-10-05 14:03:10-08',
+  //   },
+  //   {
+  //     uid: 'user1',
+  //     message: 'How are you doing?',
+  //     timestamp: '2020-10-05 14:02:10-08',
+  //   },
+  //   {
+  //     uid: 'user1',
+  //     message: 'Hello there!',
+  //     timestamp: '2020-10-05 14:01:10-08',
+  //   },
+  // ]
+  const [chat, setChat] = useState([])
   const [input, setInput] = useState('')
 
   const handleChangeInput = (e) => {
@@ -114,8 +117,10 @@ const ChatBox = () => {
       uid: user,
       message: input,
       timestamp: new Date().getTime().toString(),
+      roomId: 'dsad8u891',
     }
     setChat([newMessage, ...chat])
+    props.chatSocket.emit('send-chat-message', newMessage)
     setInput('')
   }
 
@@ -129,6 +134,12 @@ const ChatBox = () => {
       {message.message}
     </Typography>
   ))
+
+  useEffect(() => {
+    props.chatSocket.on('chat-message', (newMessage) => {
+      setChat([newMessage, ...chat])
+    })
+  }, [props.chatSocket])
 
   return (
     <Box className={classes.root}>
@@ -164,6 +175,10 @@ const ChatBox = () => {
       </Grid>
     </Box>
   )
+}
+
+ChatBox.propTypes = {
+  chatSocket: PropTypes.object,
 }
 
 export default ChatBox

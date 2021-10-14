@@ -25,8 +25,6 @@ exports.getAllAvailableUserMatching = async (req, res) => {
 }
 
 exports.createUserMatching = async (req, res) => {
-    // try to return interview session id instead
-    // call another function if can find a match and maybe smaller userId create the interview session?
     const { userId, difficulty } = req.body;
     try {
         const startedMatchingAt = new Date();
@@ -68,7 +66,7 @@ exports.createUserMatching = async (req, res) => {
             }
         }
         await userMatching.deleteUserMatching(userId);
-        res.status(200).json({iSessionId: iSessionId});
+        res.status(200).json({iSessionId});
     } catch (err) {
         res.status(400).json({ errMsg: err });
     }

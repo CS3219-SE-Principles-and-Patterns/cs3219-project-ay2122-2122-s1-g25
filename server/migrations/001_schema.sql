@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS InterviewSessions (
 
 CREATE TABLE IF NOT EXISTS Questions (
     questionId SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     category TEXT NOT NULL,
     difficulty SMALLINT NOT NULL, -- 0 = easy, 1 = moderate, 2 = hard

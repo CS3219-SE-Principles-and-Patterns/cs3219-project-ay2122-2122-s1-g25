@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
   });
 });
 app.use('/api/users', userRoutes)
-app.use('/api/question', questionRoutes);
+app.use('/api/questions', questionRoutes);
 app.use('/api/matching', userMatchingRoutes);
 app.use('/api/interview', interviewSessionRoutes);
 app.use('/api/rotation', rotationRoutes);

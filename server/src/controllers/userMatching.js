@@ -30,17 +30,17 @@ exports.createUserMatching = async (req, res) => {
     const { userId, difficulty } = req.body;
     try {
         const startedMatchingAt = new Date();
-        const matchId = null;
+        const interviewSessionId = null;
 
         const userMatching = new UserMatching();
-        await userMatching.createUserMatching(userId, startedMatchingAt, difficulty, matchId);
+        await userMatching.createUserMatching(userId, startedMatchingAt, difficulty, interviewSessionId);
 
         // loop through for 30 seconds to find a match
         let tries = 0;
         let iSessionId = null;
         while (tries < 7) {
             const currentUserMatching = await userMatching.getUserMatching(userId);
-            if (JSON.parse(JSON.stringify(currentUserMatching.rows[0])).matchid) {
+            if (currentUserMatching.rows[0].interviewsessionid) {
                 // user has been chosen by another user
                 iSessionId = currentUserMatching.rows[0].interviewsessionid;
                 break;
@@ -51,15 +51,15 @@ exports.createUserMatching = async (req, res) => {
             } else {
                 // user searches for an available user
                 const userMatch = new UserMatching();
-                // gets all UserMatchings with matchId = null (excluding currentUserMatching)
+                // gets all UserMatchings with interviewSessionId = null (excluding currentUserMatching)
                 const availableUserMatchings = await userMatch.getAllAvailableUserMatching(userId, difficulty);
                 if (availableUserMatchings.rows.length > 0) {
                     // get match with the first (oldest) entry
-                    let matchedId = JSON.parse(JSON.stringify(availableUserMatchings.rows[0])).userid;
+                    let matchedId = availableUserMatchings.rows[0].userid;
                     iSessionId = await exports.initialiseInterviewSession(userId, matchedId, difficulty);
                     iSessionId = iSessionId.toString();
-                    await userMatch.updateUserMatching(userId, matchedId, iSessionId);
-                    await userMatch.updateUserMatching(matchedId, userId, iSessionId);
+                    await userMatch.updateUserMatching(userId, iSessionId);
+                    await userMatch.updateUserMatching(matchedId, iSessionId);
                     break;
                 }
                 // no available users
@@ -69,18 +69,6 @@ exports.createUserMatching = async (req, res) => {
         }
         await userMatching.deleteUserMatching(userId);
         res.status(200).json({iSessionId: iSessionId});
-    } catch (err) {
-        res.status(400).json({ errMsg: err });
-    }
-}
-
-exports.updateUserMatching = async (req, res) => {
-    const { matchId } = req.body;
-    try {
-        const userId = req.params.id;
-        const userMatching = new UserMatching();
-        const updatedUserMatching = await userMatching.updateUserMatching(userId, matchId);
-        res.status(200).json(updatedUserMatching.rows)
     } catch (err) {
         res.status(400).json({ errMsg: err });
     }

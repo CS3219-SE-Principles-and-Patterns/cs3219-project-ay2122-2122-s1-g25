@@ -4,13 +4,24 @@ const cors = require('cors');
 const morgan = require('morgan');
 require('dotenv').config();
 const { errorHandler, notFound } = require('./middleware/middleware');
+
+//Server imports
+const PORT = process.env.PORT || 4000;
+const app = express();
+const server = app.listen(PORT, () => {
+  console.log(`Listening on port: ${PORT}`);
+});
+
+// Route imports
 const userRoutes = require('./routes/users')
 const userMatchingRoutes = require('./routes/userMatching')
 const interviewSessionRoutes = require('./routes/interviewSession')
 const rotationRoutes = require('./routes/rotation')
 const feedbackRoutes = require('./routes/feedback')
 
-const app = express();
+//Websocket imports
+const socketDriver = require('./sockets')
+socketDriver(server)
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -32,8 +43,3 @@ app.use('/api/feedback', feedbackRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
-});

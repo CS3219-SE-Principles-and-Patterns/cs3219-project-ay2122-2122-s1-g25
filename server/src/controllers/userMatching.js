@@ -92,9 +92,9 @@ exports.initialiseInterviewSession = async (user0, user1, difficulty) => {
         const question = new Questions();
         const newInterviewSession = await interviewSession.createInterviewSession(user0, user1, difficulty);
         const iSessionId = newInterviewSession.rows[0].isessionid
-        const interviewQuestions = question.getRandTwoQuestions(difficulty)
-        await rotation.createRotation(iSessionId, 0, interviewQuestions[0].questionId)
-        await rotation.createRotation(iSessionId, 1, interviewQuestions[0].questionId)
+        const interviewQuestions = await question.getRandTwoQuestions(difficulty)
+        await rotation.createRotation(iSessionId, 0, interviewQuestions.rows[0].questionid)
+        await rotation.createRotation(iSessionId, 1, interviewQuestions.rows[1].questionid)
         await pool.query('COMMIT')
         return iSessionId
     } catch (err) {

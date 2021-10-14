@@ -37,19 +37,17 @@ exports.createUserMatching = async (req, res) => {
 
         // loop through for 30 seconds to find a match
         let tries = 0;
-        let iSessionId = -1;
+        let iSessionId = null;
         while (tries < 7) {
-            let currentUserMatching = await userMatching.getUserMatching(userId);
+            const currentUserMatching = await userMatching.getUserMatching(userId);
             if (JSON.parse(JSON.stringify(currentUserMatching.rows[0])).matchid) {
                 // user has been chosen by another user
-                const interviewSession = new InterviewSession();
-                iSessionId = await interviewSession.getInterviewSessions(userId);
+                iSessionId = currentUserMatching.rows[0].interviewsessionid;
                 break;
             } else if (tries == 6) {
                 // 30s timeout reached
                 const deletedUserMatching = await userMatching.deleteUserMatching(userId);
                 res.status(503).json(deletedUserMatching.rows)
-                return iSessionId;
             } else {
                 // user searches for an available user
                 const userMatch = new UserMatching();
@@ -58,19 +56,19 @@ exports.createUserMatching = async (req, res) => {
                 if (availableUserMatchings.rows.length > 0) {
                     // get match with the first (oldest) entry
                     let matchedId = JSON.parse(JSON.stringify(availableUserMatchings.rows[0])).userid;
-                    currentUserMatching = await userMatch.updateUserMatching(userId, matchedId);
-                    await userMatch.updateUserMatching(matchedId, userId);
-
-                    iSessionId = await initialiseInterviewSession(userId, matchedId, difficulty);
+                    iSessionId = await exports.initialiseInterviewSession(userId, matchedId, difficulty);
+                    iSessionId = iSessionId.toString();
+                    await userMatch.updateUserMatching(userId, matchedId, iSessionId);
+                    await userMatch.updateUserMatching(matchedId, userId, iSessionId);
                     break;
                 }
+                // no available users
                 await sleep(5000);
                 tries++;
             }
         }
-        const deletedUserMatching = await userMatching.deleteUserMatching(userId);
-        res.status(200).json(deletedUserMatching.rows)
-        return iSessionId;
+        await userMatching.deleteUserMatching(userId);
+        res.status(200).json({iSessionId: iSessionId});
     } catch (err) {
         res.status(400).json({ errMsg: err });
     }

@@ -13,8 +13,8 @@ class UserMatching {
         return pool.query("INSERT INTO UserMatching(userId, startedMatchingAt, difficulty, matchId) VALUES($1, $2, $3, $4) RETURNING *", [userId, startedMatchingAt, difficulty, matchId])
     }
 
-    updateUserMatching(userId, matchId) {
-        return pool.query("UPDATE UserMatching SET matchId = $1 WHERE userId = $2", [matchId, userId])
+    updateUserMatching(userId, matchId, iSessionId) {
+        return pool.query("UPDATE UserMatching SET matchId = $1, interviewSessionId = $3 WHERE userId = $2", [matchId, userId, iSessionId])
     }
 
     deleteUserMatching(userId) {

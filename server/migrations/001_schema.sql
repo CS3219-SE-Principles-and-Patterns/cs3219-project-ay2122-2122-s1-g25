@@ -53,5 +53,6 @@ CREATE TABLE IF NOT EXISTS UserMatching (
   	userId TEXT PRIMARY KEY,
     startedMatchingAt TIMESTAMP, 
     difficulty SMALLINT, 
-    matchId TEXT UNIQUE
+    matchId TEXT UNIQUE,
+    interviewSessionId TEXT
 );

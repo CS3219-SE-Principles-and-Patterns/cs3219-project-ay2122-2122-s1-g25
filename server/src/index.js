@@ -14,6 +14,7 @@ const server = app.listen(PORT, () => {
 
 // Route imports
 const userRoutes = require('./routes/users')
+const questionRoutes = require('./routes/questions')
 const userMatchingRoutes = require('./routes/userMatching')
 const interviewSessionRoutes = require('./routes/interviewSession')
 const rotationRoutes = require('./routes/rotation')
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
   });
 });
 app.use('/api/users', userRoutes)
+app.use('/api/questions', questionRoutes);
 app.use('/api/matching', userMatchingRoutes);
 app.use('/api/interview', interviewSessionRoutes);
 app.use('/api/rotation', rotationRoutes);
@@ -42,4 +44,3 @@ app.use('/api/feedback', feedbackRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-

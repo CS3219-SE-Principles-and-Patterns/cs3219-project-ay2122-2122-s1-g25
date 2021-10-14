@@ -1,7 +1,8 @@
 const { UserMatching } = require('../models/userMatching');
 const { InterviewSession } = require('../models/interviewSession');
 const { Rotation } = require('../models/rotation');
-const pool = require('../db')
+const pool = require('../db');
+const { Questions } = require('../models/questions');
 
 exports.getUserMatching = async (req, res) => {
     try {
@@ -88,14 +89,12 @@ exports.initialiseInterviewSession = async (user0, user1, difficulty) => {
         await pool.query('BEGIN')
         const interviewSession = new InterviewSession();
         const rotation = new Rotation();
-        // const question = new Question();
+        const question = new Questions();
         const newInterviewSession = await interviewSession.createInterviewSession(user0, user1, difficulty);
         const iSessionId = newInterviewSession.rows[0].isessionid
-        // TODO: Incorporate random selection of Questions, once Question model is ready
-        const firstQuestionId = "1"
-        const secondQuestionId = "2"
-        await rotation.createRotation(iSessionId, 0, firstQuestionId)
-        await rotation.createRotation(iSessionId, 1, secondQuestionId)
+        const interviewQuestions = await question.getRandTwoQuestions(difficulty)
+        await rotation.createRotation(iSessionId, 0, interviewQuestions.rows[0].questionid)
+        await rotation.createRotation(iSessionId, 1, interviewQuestions.rows[1].questionid)
         await pool.query('COMMIT')
         return iSessionId
     } catch (err) {

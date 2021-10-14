@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/:id', getUserMatching)
 router.post('/', createUserMatching)
-router.put('/:id', updateUserMatching)
 router.delete('/:id', deleteUserMatching)
 
 module.exports = router

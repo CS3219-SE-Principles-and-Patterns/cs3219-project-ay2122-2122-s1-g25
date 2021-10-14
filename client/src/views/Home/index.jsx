@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR } from '../../utils/message'
+import { fetchStorage } from '../../storage'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +93,7 @@ const Home = () => {
   const [buttonClicked, setButtonClicked] = useState(0)
   const loops = Array.from(Array(50).keys())
   const router = useRouter()
+  const user = fetchStorage('user')
 
   const onDifficultySelection = (buttonNo, event) => {
     console.log(event.currentTarget.id)
@@ -140,7 +142,7 @@ const Home = () => {
         <Container className={classes.root} maxWidth="xl">
           <Grid container className={classes.gridWrapper}>
             <Grid item xs={6} className={classes.leftGridWrapper}>
-              <Typography variant="h6">Welcome, Bobby!</Typography>
+              <Typography variant="h6">{`Welcome, ${user?.firstname}!`}</Typography>
               <Grid item className={classes.sessionHistoryWrapper}>
                 <Typography
                   variant="subtitle2"

@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
+
+import { SocketContext } from '../Interview/SocketContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,11 +42,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const navbar = (props) => {
+const FeedbackNavbar = () => {
   const classes = useStyles()
   const router = useRouter()
 
-  Role.propTypes = {
+  const exitFeedback = () => {
+    router.push('/home')
+  }
+
+  return (
+    <Container className={classes.root} maxWidth="xl">
+      <Grid container className={classes.gridWrapper}>
+        <img src={'/Upskill-Logo-White.png'} className={classes.upskillLogo} />
+        <Box className={classes.buttonWrapper}>
+          <Button
+            variant="contained"
+            size="small"
+            color="secondary"
+            type="submit"
+            onClick={() => exitFeedback()}
+          >
+            Exit
+          </Button>
+        </Box>
+      </Grid>
+    </Container>
+  )
+}
+
+const InterviewNavbar = (props) => {
+  const classes = useStyles()
+  const router = useRouter()
+
+  InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
   }
 
@@ -56,35 +86,31 @@ const navbar = (props) => {
     role == 0 ? setRole(1) : setRole(0)
   }
 
-  const exitInterview = (currPage) => {
-    if (currPage == 'interview') {
-      router.push('/feedback')
-    } else {
-      router.push('/home')
-    }
+  const { leaveCall } = useContext(SocketContext)
+
+  const exitInterview = () => {
+    leaveCall() // close camera & stuff
+    router.push('/feedback')
   }
 
-  function Role(props) {
-    if (props.currPage == 'interview') {
-      return (
-        <Box className={classes.switchRoleContainer}>
-          <Typography variant="caption" className={classes.roleDisplay}>
-            Role: {roles[role]}
-          </Typography>
-          <Button
-            variant="contained"
-            size="small"
-            color="secondary"
-            type="submit"
-            className={classes.rotateButton}
-            onClick={() => onRotate()}
-          >
-            Rotate
-          </Button>
-        </Box>
-      )
-    }
-    return <Box></Box>
+  function Role() {
+    return (
+      <Box className={classes.switchRoleContainer}>
+        <Typography variant="caption" className={classes.roleDisplay}>
+          Role: {roles[role]}
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          color="secondary"
+          type="submit"
+          className={classes.rotateButton}
+          onClick={() => onRotate()}
+        >
+          Rotate
+        </Button>
+      </Box>
+    )
   }
 
   return (
@@ -98,7 +124,7 @@ const navbar = (props) => {
             size="small"
             color="secondary"
             type="submit"
-            onClick={() => exitInterview(props.currPage)}
+            onClick={() => exitInterview()}
           >
             Exit
           </Button>
@@ -108,4 +134,5 @@ const navbar = (props) => {
   )
 }
 
-export default navbar
+// export default navbar
+export { InterviewNavbar, FeedbackNavbar }

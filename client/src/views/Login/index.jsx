@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import firebase from '../../config/firebase'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR, SUCCESS } from '../../utils/message'
+import { getUser } from '../../api/users'
+import { saveStorage } from '../../storage'
 
 const useStyles = makeStyles((theme) => ({
   cardWrapper: {
@@ -53,15 +55,25 @@ const Login = () => {
     },
   })
   const onSubmit = (data) => {
-    console.log(data)
     const { email, password } = data
     if (email && password) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          router.push('/home')
-          toast.success(SUCCESS.login)
+        .then((res) => {
+          getUser(res.user.uid)
+            .then((apiRes) => {
+              const user = apiRes.data[0]
+              saveStorage('user', user)
+              router.push('/home')
+              toast.success(SUCCESS.login)
+            })
+            .catch(() => {
+              // TODO: implement a more effective error handler, possibly let outer promise catch it
+              toast.error(ERROR.userLoginFailure, {
+                duration: 15000,
+              })
+            })
         })
         .catch((error) => {
           toast.error(error.message)
@@ -121,7 +133,7 @@ const Login = () => {
             className={classes.submitBtn}
             onClick={handleSubmit(onSubmit)}
           >
-            Sign In
+            Login
           </Button>
           <Box className={classes.linkWrapper}>
             <Typography

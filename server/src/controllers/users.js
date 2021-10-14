@@ -1,4 +1,3 @@
-const pool = require('../db')
 const { Users } = require('../models/users')
 exports.getUser = async (req, res) => {
     try {

@@ -4,6 +4,7 @@ import { Container, Grid, Box } from '@material-ui/core'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
+import Conferencing from '../../components/Interview/Conferencing'
 
 // import CodeEditor from '../../components/Interview/CodeEditor'
 import dynamic from 'next/dynamic'
@@ -11,6 +12,7 @@ import ChatBox from '../../components/Interview/ChatBox'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
+import { ContextProvider } from '../../components/Interview/SocketContext'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -35,10 +37,10 @@ const useStyles = makeStyles(() => ({
     height: '30%',
   },
   videoWrapper: {
-    height: '30%',
+    height: '25%',
   },
   chatWrapper: {
-    height: '70%',
+    height: '75%',
   },
 }))
 
@@ -47,30 +49,34 @@ const Interview = () => {
 
   return (
     <AuthWrapper>
-      <InterviewLayout currPage="interview">
-        <Container className={classes.root} disableGutters maxWidth="xl">
-          <Grid container className={classes.gridWrapper}>
-            <Grid item xs={9} className={classes.gridLeft}>
-              <Box className={classes.codeWrapper}>
-                <CodeEditor />
-              </Box>
-              <Box
-                className={classes.questionWrapper}
-                border={1}
-                borderColor="black"
-              >
-                <AlgorithmQuestion />
-              </Box>
+      <ContextProvider>
+        <InterviewLayout currPage="interview">
+          <Container className={classes.root} disableGutters maxWidth="xl">
+            <Grid container className={classes.gridWrapper}>
+              <Grid item xs={9} className={classes.gridLeft}>
+                <Box className={classes.codeWrapper}>
+                  <CodeEditor />
+                </Box>
+                <Box
+                  className={classes.questionWrapper}
+                  border={1}
+                  borderColor="black"
+                >
+                  <AlgorithmQuestion />
+                </Box>
+              </Grid>
+              <Grid item xs={3} className={classes.gridRight}>
+                <Box className={classes.videoWrapper}>
+                  <Conferencing />
+                </Box>
+                <Box className={classes.chatWrapper}>
+                  <ChatBox />
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={3} className={classes.gridRight}>
-              <Box className={classes.videoWrapper}>Video Here</Box>
-              <Box className={classes.chatWrapper}>
-                <ChatBox />
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </InterviewLayout>
+          </Container>
+        </InterviewLayout>
+      </ContextProvider>
     </AuthWrapper>
   )
 }

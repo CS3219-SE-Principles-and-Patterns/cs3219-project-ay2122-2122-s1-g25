@@ -47,7 +47,9 @@ exports.createUserMatching = async (req, res) => {
                 break;
             } else if (tries == 6) {
                 // 30s timeout reached
-                break;
+                const deletedUserMatching = await userMatching.deleteUserMatching(userId);
+                res.status(503).json(deletedUserMatching.rows)
+                return iSessionId;
             } else {
                 // user searches for an available user
                 const userMatch = new UserMatching();

@@ -5,10 +5,10 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
 import Conferencing from '../../components/Interview/Conferencing'
+
 // import CodeEditor from '../../components/Interview/CodeEditor'
 import dynamic from 'next/dynamic'
 import ChatBox from '../../components/Interview/ChatBox'
-
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
@@ -46,6 +46,7 @@ const useStyles = makeStyles(() => ({
 
 const Interview = () => {
   const classes = useStyles()
+
   return (
     <AuthWrapper>
       <ContextProvider>

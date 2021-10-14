@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     // backgroundColor: 'pink',
-    overflowY: 'scroll',
+    overflowY: 'auto',
   },
   gridWrapper: {
     paddingTop: '10px',
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   questionTitle: {
     paddingTop: '10px',
     paddingBottom: '10px',
+    fontWeight: '700',
   },
   questionContent: {
     padding: '10px 0px 10px 0px',
@@ -101,7 +102,7 @@ const AlgorithmQuestion = () => {
   return (
     <Container className={classes.root} maxWidth="xl">
       <Grid container className={classes.gridWrapper}>
-        <Typography variant="h6" className={classes.questionTitle}>
+        <Typography variant="subtitle1" className={classes.questionTitle}>
           {tempQuestionData.title}
         </Typography>
         <Divider className={classes.dividerStyle} />

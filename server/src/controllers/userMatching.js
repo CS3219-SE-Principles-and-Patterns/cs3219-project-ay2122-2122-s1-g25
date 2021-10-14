@@ -42,7 +42,6 @@ exports.createUserMatching = async (req, res) => {
             let currentUserMatching = await userMatching.getUserMatching(userId);
             if (JSON.parse(JSON.stringify(currentUserMatching.rows[0])).matchid) {
                 // user has been chosen by another user
-                res.status(200).json(currentUserMatching.rows);
                 const interviewSession = new InterviewSession();
                 iSessionId = await interviewSession.getInterviewSessions(userId);
                 break;
@@ -61,8 +60,6 @@ exports.createUserMatching = async (req, res) => {
                     await userMatch.updateUserMatching(matchedId, userId);
 
                     iSessionId = await initialiseInterviewSession(userId, matchedId, difficulty);
-
-                    res.status(200).json(currentUserMatching.rows);
                     break;
                 }
                 await sleep(5000);

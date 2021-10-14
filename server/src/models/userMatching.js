@@ -5,12 +5,16 @@ class UserMatching {
         return pool.query("SELECT * FROM UserMatching WHERE userId = $1", [userId])
     }
 
-    createUserMatching(userId, startedMatchingAt, difficulty, matchId) {
-        return pool.query("INSERT INTO UserMatching(userId, startedMatchingAt, difficulty, matchId) VALUES($1, $2, $3, $4) RETURNING *", [userId, startedMatchingAt, difficulty, matchId])
+    getAllAvailableUserMatching(userId, difficulty) {
+        return pool.query("SELECT * FROM UserMatching WHERE interviewSessionId is null AND userId != $1 AND difficulty = $2 ORDER BY startedMatchingAt ASC", [userId, difficulty])
     }
 
-    updateUserMatching(userId, matchId) {
-        return pool.query("UPDATE UserMatching SET matchId = $1 WHERE userId = $2", [matchId, userId])
+    createUserMatching(userId, startedMatchingAt, difficulty, interviewSessionId) {
+        return pool.query("INSERT INTO UserMatching(userId, startedMatchingAt, difficulty, interviewSessionId) VALUES($1, $2, $3, $4) RETURNING *", [userId, startedMatchingAt, difficulty, interviewSessionId])
+    }
+
+    updateUserMatching(userId, iSessionId) {
+        return pool.query("UPDATE UserMatching SET interviewSessionId = $2 WHERE userId = $1", [userId, iSessionId])
     }
 
     deleteUserMatching(userId) {

@@ -6,7 +6,7 @@ class UserMatching {
     }
 
     getAllAvailableUserMatching(userId, difficulty) {
-        return pool.query("SELECT * FROM UserMatching WHERE matchId is null AND userId != $1 AND difficulty = $2", [userId, difficulty])
+        return pool.query("SELECT * FROM UserMatching WHERE matchId is null AND userId != $1 AND difficulty = $2 ORDER BY startedMatchingAt ASC", [userId, difficulty])
     }
 
     createUserMatching(userId, startedMatchingAt, difficulty, matchId) {

@@ -42,11 +42,14 @@ exports.createUserMatching = async (req, res) => {
             if (currentUserMatching.rows[0].interviewsessionid) {
                 // user has been chosen by another user
                 iSessionId = currentUserMatching.rows[0].interviewsessionid;
+                await userMatching.deleteUserMatching(userId);
+                res.status(200).json({iSessionId});
                 break;
             } else if (tries == 6) {
                 // 30s timeout reached
                 const deletedUserMatching = await userMatching.deleteUserMatching(userId);
                 res.status(503).json(deletedUserMatching.rows)
+                break;
             } else {
                 // user searches for an available user
                 const userMatch = new UserMatching();
@@ -59,6 +62,8 @@ exports.createUserMatching = async (req, res) => {
                     iSessionId = iSessionId.toString();
                     await userMatch.updateUserMatching(userId, iSessionId);
                     await userMatch.updateUserMatching(matchedId, iSessionId);
+                    await userMatching.deleteUserMatching(userId);
+                    res.status(200).json({iSessionId});
                     break;
                 }
                 // no available users
@@ -66,8 +71,6 @@ exports.createUserMatching = async (req, res) => {
                 tries++;
             }
         }
-        await userMatching.deleteUserMatching(userId);
-        res.status(200).json({iSessionId});
     } catch (err) {
         res.status(400).json({ errMsg: err });
     }

@@ -39,14 +39,17 @@ exports.createUserMatching = async (req, res) => {
         let iSessionId = null;
         while (tries < 7) {
             const currentUserMatching = await userMatching.getUserMatching(userId);
-            if (currentUserMatching.rows[0].interviewsessionid) {
+            if (currentUserMatching.rows.length == 0) {
+                // user has cancelled matching before 30s timeout
+                break;
+            } else if (currentUserMatching.rows[0].interviewsessionid) {
                 // user has been chosen by another user
                 iSessionId = currentUserMatching.rows[0].interviewsessionid;
                 break;
             } else if (tries == 6) {
                 // 30s timeout reached
                 const deletedUserMatching = await userMatching.deleteUserMatching(userId);
-                res.status(503).json(deletedUserMatching.rows)
+                return res.status(503).json(deletedUserMatching.rows);
             } else {
                 // user searches for an available user
                 const userMatch = new UserMatching();

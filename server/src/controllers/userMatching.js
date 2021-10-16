@@ -39,7 +39,10 @@ exports.createUserMatching = async (req, res) => {
         let iSessionId = null;
         while (tries < 7) {
             const currentUserMatching = await userMatching.getUserMatching(userId);
-            if (currentUserMatching.rows[0].interviewsessionid) {
+            if (currentUserMatching.rows.length == 0) {
+                res.status(200).json({iSessionId});
+                break;
+            } else if (currentUserMatching.rows[0].interviewsessionid) {
                 // user has been chosen by another user
                 iSessionId = currentUserMatching.rows[0].interviewsessionid;
                 await userMatching.deleteUserMatching(userId);

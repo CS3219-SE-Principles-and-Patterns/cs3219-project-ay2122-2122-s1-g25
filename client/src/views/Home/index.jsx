@@ -11,14 +11,14 @@ import {
   Box,
   CircularProgress,
 } from '@material-ui/core'
-import axios from 'axios'
 import SessionHistory from '../../components/History/SessionHistory'
 import HomeLayout from '../../components/Layout/HomeLayout'
-// import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import toast, { Toaster } from 'react-hot-toast'
 import { ERROR } from '../../utils/message'
 import { fetchStorage } from '../../storage'
+import { createUserMatching, deleteUserMatching } from '../../api/userMatching'
 import HistoryModal from '../HistoryModal'
 
 const useStyles = makeStyles((theme) => ({
@@ -131,7 +131,7 @@ const Home = () => {
   const classes = useStyles()
   const [buttonClicked, setButtonClicked] = useState(0)
   const loops = Array.from(Array(50).keys())
-  // const router = useRouter()
+  const router = useRouter()
   const user = fetchStorage('user')
 
   // History
@@ -173,10 +173,9 @@ const Home = () => {
   }
 
   // Loading
-  const [openLoading, setOpenLoading] = useState(false)
+  const [openLoading, setOpenLoading] = useState(false) // modal
   const [matchSuccess, setMatchSuccess] = useState(false) // whether we found a match or not
   const [showRetry, setShowRetry] = useState(false) // whether to show retry screen or not
-  const [matchingCancelled, setMatchingCancelled] = useState(false) // check if it's timeout or cancelled
 
   const handleLoadingOpen = () => {
     setOpenLoading(true)
@@ -188,38 +187,44 @@ const Home = () => {
     // Reset all our states
     setMatchSuccess(false)
     setShowRetry(false)
+    resetButton()
+  }
+
+  const resetButton = () => {
+    // only reset if 1) user cancelled, 2) user does not retry
+    document
+      .getElementById(buttonClicked)
+      .classList.remove(classes.activeButton)
+    setButtonClicked(0)
   }
 
   const findAPartner = () => {
     if (buttonClicked != 0) {
       const currDifficulty = buttonClicked
-      document
-        .getElementById(buttonClicked)
-        .classList.remove(classes.activeButton)
-      setButtonClicked(0)
 
       // Calling API
       handleLoadingOpen()
-      axios
-        .post('http://localhost:4000/api/matching/', {
-          userId: user.userid,
-          difficulty: currDifficulty,
-        })
+      createUserMatching({
+        userId: user.userid,
+        difficulty: currDifficulty,
+      })
         .then((response) => {
           console.log(response)
-          // match success, generate interview
-          setMatchSuccess(true)
+          const sessionId = response.data.iSessionId
+          if (sessionId) {
+            // match success
+            setMatchSuccess(true)
+            console.log(sessionId)
+
+            // generate interview
+            router.push('/interview/' + sessionId)
+          }
         })
         .catch((error) => {
           console.log(error)
-          // unable to match, try again?
-          if (!matchingCancelled) {
-            setShowRetry(true)
-          }
-          // reset
-          setMatchingCancelled(false)
+          // unable to match, try again
+          setShowRetry(true)
         })
-      // router.push('/interview')
     } else {
       toast.error(ERROR.missingDifficulty)
     }
@@ -227,18 +232,15 @@ const Home = () => {
 
   const cancelMatching = () => {
     // call API to remove
-    axios
-      .delete(`http://localhost:4000/api/matching/${user.userid}`)
+    deleteUserMatching(user.userid)
       .then((response) => {
         // Close Modal
         console.log(response)
-        setMatchingCancelled(true)
         handleLoadingClose()
-        // success toast?
       })
       .catch((error) => {
         console.log(error)
-        // handle error with toast?
+        toast.error(ERROR.userMatchingCancelFailure)
       })
   }
 

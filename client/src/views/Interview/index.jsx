@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Container, Grid, Box } from '@material-ui/core'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
@@ -13,6 +13,8 @@ const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
 import { ContextProvider } from '../../components/Interview/SocketContext'
+import { getInterview } from '../../api/interview'
+import { fetchStorage } from '../../storage'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -46,11 +48,48 @@ const useStyles = makeStyles(() => ({
 
 const Interview = () => {
   const classes = useStyles()
+  const user = fetchStorage('user')
+  const [interviewData, setInterviewData] = useState()
+  const [userNum, setUserNum] = useState(-1)
+
+  const rotationNum = interviewData?.interviewSession?.rotationnum
+
+  useEffect(() => {
+    const pathname = window.location.pathname
+    const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    getInterview(iSessionId)
+      .then((res) => {
+        setInterviewData(res.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    if (user && interviewData) {
+      setUserNum(getUserNum(interviewData, user.userid))
+    }
+  }, [interviewData, user])
+
+  const getUserNum = (interviewData, userId) => {
+    const user0 = interviewData?.interviewSession?.user0
+    const user1 = interviewData?.interviewSession?.user1
+    if (userId === user0) {
+      return 0
+    } else if (userId === user1) {
+      return 1
+    } else {
+      console.log('Error cannot assign user num')
+    }
+  }
 
   return (
     <AuthWrapper>
       <ContextProvider>
-        <InterviewLayout currPage="interview">
+        <InterviewLayout
+          currPage="interview"
+          rotationNum={rotationNum}
+          userNum={userNum}
+        >
           <Container className={classes.root} disableGutters maxWidth="xl">
             <Grid container className={classes.gridWrapper}>
               <Grid item xs={9} className={classes.gridLeft}>

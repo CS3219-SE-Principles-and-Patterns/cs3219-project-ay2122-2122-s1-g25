@@ -14,9 +14,10 @@ const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
 import { ContextProvider } from '../../components/Interview/SocketContext'
-import { getInterview } from '../../api/interview'
+import { getInterview, updateInterview } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR } from '../../utils/message'
+import { rotationSocket } from '../../config/socket'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -55,12 +56,15 @@ const Interview = () => {
   const [interviewData, setInterviewData] = useState()
   const user = fetchStorage('user')
 
+  const [iSessionId, setISessionId] = useState()
   const [userNum, setUserNum] = useState()
   const [rotationNum, setRotationNum] = useState()
 
+  console.log(rotationNum)
   useEffect(() => {
     const pathname = window.location.pathname
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    setISessionId(iSessionId)
     getInterview(iSessionId)
       .then((res) => {
         setInterviewData(res.data)
@@ -69,12 +73,44 @@ const Interview = () => {
   }, [])
 
   useEffect(() => {
-    if (user && interviewData) {
+    rotationSocket.on('receive-rotation-message', (data) => {
+      console.log('New rotation: ', data)
+      setRotationNum(data)
+    })
+  }, [rotationSocket])
+
+  useEffect(() => {
+    if (user && interviewData && iSessionId) {
       setUserNum(getUserNum(interviewData, user.userid))
       setRotationNum(interviewData.interviewSession.rotationnum)
+      console.log('ONCE', user, interviewData, iSessionId)
+      rotationSocket.emit('joinRoom', {
+        room: iSessionId,
+        user: user.firstname,
+      })
       setLoading(false)
     }
-  }, [interviewData, user])
+  }, [interviewData, user, iSessionId])
+
+  const handleRotation = () => {
+    let newRotation = -1
+    if (rotationNum == 0) {
+      newRotation = 1
+    } else {
+      newRotation = 0
+    }
+
+    updateInterview(iSessionId, { rotationNum: newRotation })
+      .then(() => {
+        toast.success('Rotated!')
+        getInterview(iSessionId)
+          .then((res) => {
+            setInterviewData(res.data)
+          })
+          .catch(() => toast.error(ERROR.interviewInitialisationFailure))
+      })
+      .catch(() => toast.error('Rotation failed'))
+  }
 
   const getUserNum = (interviewData, userId) => {
     const user0 = interviewData?.interviewSession?.user0
@@ -97,6 +133,7 @@ const Interview = () => {
             currPage="interview"
             rotationNum={rotationNum}
             userNum={userNum}
+            handleRotation={handleRotation}
           >
             <Container className={classes.root} disableGutters maxWidth="xl">
               <Grid container className={classes.gridWrapper}>

@@ -13,6 +13,10 @@ export const POSTRequest = (url, data = {}) => {
   return instance.post(url, data)
 }
 
+export const PUTRequest = (url, data = {}) => {
+  return instance.put(url, data)
+}
+
 export const DELETERequest = (url, params = {}) => {
   return instance.delete(url, { params })
 }

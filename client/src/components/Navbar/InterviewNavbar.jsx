@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   roleDisplay: {
     color: 'white',
+    fontWeight: 700,
   },
 }))
 
@@ -73,12 +74,13 @@ const FeedbackNavbar = () => {
 const InterviewNavbar = (props) => {
   const classes = useStyles()
   const router = useRouter()
-  const { rotationNum, userNum } = props
+  const { rotationNum, userNum, handleRotation } = props
 
   InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
     rotationNum: PropTypes.number,
     userNum: PropTypes.number,
+    handleRotation: PropTypes.func,
   }
 
   const getRole = (rotationNum, userNum) => {
@@ -98,9 +100,7 @@ const InterviewNavbar = (props) => {
   }
 
   const onRotate = () => {
-    // allow only 1 call / interview in the future
-    // role == 0 ? setRole(1) : setRole(0)
-    console.log('Clicked rotate')
+    handleRotation()
   }
 
   const { leaveCall } = useContext(SocketContext)
@@ -113,7 +113,7 @@ const InterviewNavbar = (props) => {
   function Role() {
     return (
       <Box className={classes.switchRoleContainer}>
-        <Typography variant="caption" className={classes.roleDisplay}>
+        <Typography variant="body2" className={classes.roleDisplay}>
           Role: {getRole(rotationNum, userNum)}
         </Typography>
         <Button

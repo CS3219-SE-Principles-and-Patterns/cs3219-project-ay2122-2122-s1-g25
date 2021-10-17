@@ -22,11 +22,17 @@ const useStyles = makeStyles(() => ({
 
 const HomeLayout = (props) => {
   const classes = useStyles()
-  const { children, currPage, rotationNum, userNum } = props
+  const { children, currPage, rotationNum, userNum, handleRotation } = props
 
   const Role = () => {
     if (currPage == 'interview') {
-      return <InterviewNavbar rotationNum={rotationNum} userNum={userNum} />
+      return (
+        <InterviewNavbar
+          rotationNum={rotationNum}
+          userNum={userNum}
+          handleRotation={handleRotation}
+        />
+      )
     } else {
       return <FeedbackNavbar />
     }
@@ -52,6 +58,7 @@ HomeLayout.propTypes = {
   currPage: PropTypes.string.isRequired,
   rotationNum: PropTypes.number,
   userNum: PropTypes.number,
+  handleRotation: PropTypes.func,
 }
 
 export default HomeLayout

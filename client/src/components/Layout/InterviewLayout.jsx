@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { Container, Box } from '@material-ui/core'
-// import InterviewNavbar from '../Navbar/InterviewNavbar'
 import { FeedbackNavbar, InterviewNavbar } from '../Navbar/InterviewNavbar'
 
 const useStyles = makeStyles(() => ({

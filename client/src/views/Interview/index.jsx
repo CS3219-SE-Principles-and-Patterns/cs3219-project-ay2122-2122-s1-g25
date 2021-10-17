@@ -6,8 +6,6 @@ import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
 import Conferencing from '../../components/Interview/Conferencing'
 import toast, { Toaster } from 'react-hot-toast'
-
-// import CodeEditor from '../../components/Interview/CodeEditor'
 import ChatBox from '../../components/Interview/ChatBox'
 import dynamic from 'next/dynamic'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
@@ -16,7 +14,7 @@ const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
 import { ContextProvider } from '../../components/Interview/SocketContext'
 import { getInterview, updateInterview } from '../../api/interview'
 import { fetchStorage } from '../../storage'
-import { ERROR } from '../../utils/message'
+import { ERROR, SUCCESS } from '../../utils/message'
 import { rotationSocket } from '../../config/socket'
 
 const useStyles = makeStyles(() => ({
@@ -67,7 +65,6 @@ const Interview = () => {
     if (user && interviewData) {
       setUserNum(getUserNum(interviewData, user.userid))
       setRotationNum(interviewData.interviewSession.rotationnum)
-      // console.log('ONCE', user, interviewData, iSessionId)
       rotationSocket.emit('joinRoom', {
         room: getInterviewSessionId(),
         user: user.firstname,
@@ -78,13 +75,14 @@ const Interview = () => {
 
   useEffect(() => {
     rotationSocket.on('receive-rotation-message', () => {
+      toast.success(SUCCESS.rotation)
       fetchInterviewData(getInterviewSessionId())
     })
   }, [rotationSocket])
 
   const handleRotation = () => {
     let newRotation = -1
-    if (rotationNum == 0) {
+    if (rotationNum === 0) {
       newRotation = 1
     } else {
       newRotation = 0
@@ -92,10 +90,9 @@ const Interview = () => {
 
     updateInterview(getInterviewSessionId(), { rotationNum: newRotation })
       .then(() => {
-        toast.success('Roles rotated.')
         rotationSocket.emit('send-rotation-message', newRotation)
       })
-      .catch(() => toast.error('Rotation failed.'))
+      .catch(() => toast.error(ERROR.rotationFailure))
   }
 
   const fetchInterviewData = (iSessionId) => {

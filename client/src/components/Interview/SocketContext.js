@@ -14,7 +14,7 @@ const SocketContext = createContext()
 // const ContextProvider = ({ children }) => {
 const ContextProvider = ({ children }) => {
   ContextProvider.propTypes = {
-    children: PropTypes.string,
+    children: PropTypes.any,
   }
 
   const [stream, setStream] = useState(null)

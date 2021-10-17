@@ -62,7 +62,7 @@ const Example = (props) => {
   return (
     <Box>
       <Typography variant="body2" className={classes.exampleHeader}>
-        {'Example ' + index}
+        {'Example ' + (index + 1)}
       </Typography>
       <Box className={classes.exampleItem}>
         <Typography variant="body2" className={classes.exampleWrapper}>

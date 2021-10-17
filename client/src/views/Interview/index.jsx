@@ -5,6 +5,7 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import InterviewLayout from '../../components/Layout/InterviewLayout'
 import AlgorithmQuestion from '../../components/Interview/AlgorithmQuestion'
 import Conferencing from '../../components/Interview/Conferencing'
+import toast, { Toaster } from 'react-hot-toast'
 
 // import CodeEditor from '../../components/Interview/CodeEditor'
 import ChatBox from '../../components/Interview/ChatBox'
@@ -15,6 +16,7 @@ const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
 import { ContextProvider } from '../../components/Interview/SocketContext'
 import { getInterview } from '../../api/interview'
 import { fetchStorage } from '../../storage'
+import { ERROR } from '../../utils/message'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -48,10 +50,13 @@ const useStyles = makeStyles(() => ({
 
 const Interview = () => {
   const classes = useStyles()
-  const user = fetchStorage('user')
+  const [loading, setLoading] = useState(true)
+
   const [interviewData, setInterviewData] = useState()
+  const user = fetchStorage('user')
+
   const [userNum, setUserNum] = useState()
-  const rotationNum = interviewData?.interviewSession?.rotationnum
+  const [rotationNum, setRotationNum] = useState()
 
   useEffect(() => {
     const pathname = window.location.pathname
@@ -60,12 +65,14 @@ const Interview = () => {
       .then((res) => {
         setInterviewData(res.data)
       })
-      .catch((err) => console.log(err))
+      .catch(() => toast.error(ERROR.interviewInitialisationFailure))
   }, [])
 
   useEffect(() => {
     if (user && interviewData) {
       setUserNum(getUserNum(interviewData, user.userid))
+      setRotationNum(interviewData.interviewSession.rotationnum)
+      setLoading(false)
     }
   }, [interviewData, user])
 
@@ -77,45 +84,48 @@ const Interview = () => {
     } else if (userId === user1) {
       return 1
     } else {
-      console.log('Error cannot assign user num')
+      toast.error(ERROR.interviewInitialisationFailure)
     }
   }
 
   return (
     <AuthWrapper>
+      <Toaster position="top-right" />
       <ContextProvider>
-        <InterviewLayout
-          currPage="interview"
-          rotationNum={rotationNum}
-          userNum={userNum}
-        >
-          <Container className={classes.root} disableGutters maxWidth="xl">
-            <Grid container className={classes.gridWrapper}>
-              <Grid item xs={9} className={classes.gridLeft}>
-                <Box className={classes.codeWrapper}>
-                  <CodeEditor initialCode={''} editable={true} />
-                </Box>
-                <Box
-                  className={classes.questionWrapper}
-                  border={1}
-                  borderColor="black"
-                >
-                  <AlgorithmQuestion
-                    question={interviewData?.rotations[rotationNum]}
-                  />
-                </Box>
+        {!loading && (
+          <InterviewLayout
+            currPage="interview"
+            rotationNum={rotationNum}
+            userNum={userNum}
+          >
+            <Container className={classes.root} disableGutters maxWidth="xl">
+              <Grid container className={classes.gridWrapper}>
+                <Grid item xs={9} className={classes.gridLeft}>
+                  <Box className={classes.codeWrapper}>
+                    <CodeEditor initialCode={''} editable={true} />
+                  </Box>
+                  <Box
+                    className={classes.questionWrapper}
+                    border={1}
+                    borderColor="black"
+                  >
+                    <AlgorithmQuestion
+                      question={interviewData?.rotations[rotationNum]}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={3} className={classes.gridRight}>
+                  <Box className={classes.videoWrapper}>
+                    <Conferencing />
+                  </Box>
+                  <Box className={classes.chatWrapper}>
+                    <ChatBox />
+                  </Box>
+                </Grid>
               </Grid>
-              <Grid item xs={3} className={classes.gridRight}>
-                <Box className={classes.videoWrapper}>
-                  <Conferencing />
-                </Box>
-                <Box className={classes.chatWrapper}>
-                  <ChatBox />
-                </Box>
-              </Grid>
-            </Grid>
-          </Container>
-        </InterviewLayout>
+            </Container>
+          </InterviewLayout>
+        )}
       </ContextProvider>
     </AuthWrapper>
   )

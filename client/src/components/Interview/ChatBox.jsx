@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Box,
   Button,
@@ -65,44 +66,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ChatBox = () => {
-  const classes = useStyles()
-  const user = 'user1'
+const ChatBox = (props) => {
+  ChatBox.propTypes = {
+    chatSocket: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+  }
 
-  const MOCK_CHAT = [
-    {
-      uid: 'user2',
-      message: 'Sure!',
-      timestamp: '2020-10-05 14:06:10-08',
-    },
-    {
-      uid: 'user1',
-      message: 'Same here! Shall we get started with the question?',
-      timestamp: '2020-10-05 14:05:10-08',
-    },
-    {
-      uid: 'user2',
-      message: 'I am doing good, just not really a morning person HAHA',
-      timestamp: '2020-10-05 14:04:10-08',
-    },
-    {
-      uid: 'user2',
-      message: 'Nice to meet you!',
-      timestamp: '2020-10-05 14:03:10-08',
-    },
-    {
-      uid: 'user1',
-      message: 'How are you doing?',
-      timestamp: '2020-10-05 14:02:10-08',
-    },
-    {
-      uid: 'user1',
-      message: 'Hello there!',
-      timestamp: '2020-10-05 14:01:10-08',
-    },
-  ]
-  const [chat, setChat] = useState(MOCK_CHAT)
+  const classes = useStyles()
+  const { chatSocket, user } = props
+  const uid = user.userid
+
+  const [chat, setChat] = useState([])
   const [input, setInput] = useState('')
+
+  useEffect(() => {
+    chatSocket.on('receive-chat-message', (newMessage) => {
+      setChat((chat) => [newMessage, ...chat])
+    })
+  }, [chatSocket])
 
   const handleChangeInput = (e) => {
     setInput(e.target.value)
@@ -110,20 +91,22 @@ const ChatBox = () => {
 
   const handleSendMessage = (e) => {
     e.preventDefault()
-    const newMessage = {
-      uid: user,
-      message: input,
-      timestamp: new Date().getTime().toString(),
+    if (input.trim()) {
+      const newMessage = {
+        uid: uid,
+        message: input,
+        timestamp: new Date().getTime().toString(),
+      }
+      chatSocket.emit('send-chat-message', newMessage)
+      setInput('')
     }
-    setChat([newMessage, ...chat])
-    setInput('')
   }
 
   const renderChat = chat.map((message) => (
     <Typography
       key={message.timestamp}
       className={
-        message.uid === user ? classes.userMessage : classes.otherMessage
+        message.uid === uid ? classes.userMessage : classes.otherMessage
       }
     >
       {message.message}

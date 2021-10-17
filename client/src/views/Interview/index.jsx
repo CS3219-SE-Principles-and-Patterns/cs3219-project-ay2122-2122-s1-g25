@@ -15,7 +15,7 @@ import { ContextProvider } from '../../components/Interview/SocketContext'
 import { getInterview, updateInterview } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
-import { rotationSocket } from '../../config/socket'
+import { chatSocket, rotationSocket } from '../../config/socket'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -66,6 +66,10 @@ const Interview = () => {
       setUserNum(getUserNum(interviewData, user.userid))
       setRotationNum(interviewData.interviewSession.rotationnum)
       rotationSocket.emit('joinRoom', {
+        room: getInterviewSessionId(),
+        user: user.firstname,
+      })
+      chatSocket.emit('joinRoom', {
         room: getInterviewSessionId(),
         user: user.firstname,
       })
@@ -153,7 +157,7 @@ const Interview = () => {
                     <Conferencing />
                   </Box>
                   <Box className={classes.chatWrapper}>
-                    <ChatBox />
+                    <ChatBox chatSocket={chatSocket} user={user} />
                   </Box>
                 </Grid>
               </Grid>

@@ -15,8 +15,8 @@ services:
       - server
   server:
     build:
-        context: ./server
-        dockerfile: Dockerfile.dev
+      context: ./server
+      dockerfile: Dockerfile.dev
     container_name: server
     restart: always
     environment:

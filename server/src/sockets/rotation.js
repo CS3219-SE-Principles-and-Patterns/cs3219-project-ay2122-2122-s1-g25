@@ -7,7 +7,6 @@ const rotationSocketWrapper = (io) => {
         );
         socket.on("joinRoom", msg => {
             roomId = msg.room;
-            console.log(roomId)
             rotationSocket.to(roomId).emit("new-user", `${msg.user} has joined room ${roomId}`);
             socket.join(roomId);
             return socket.emit("successfully joined room", `You have successfully joined ${roomId}`);

@@ -56,41 +56,31 @@ const Interview = () => {
   const [interviewData, setInterviewData] = useState()
   const user = fetchStorage('user')
 
-  const [iSessionId, setISessionId] = useState()
   const [userNum, setUserNum] = useState()
   const [rotationNum, setRotationNum] = useState()
 
-  console.log(rotationNum)
   useEffect(() => {
-    const pathname = window.location.pathname
-    const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
-    setISessionId(iSessionId)
-    getInterview(iSessionId)
-      .then((res) => {
-        setInterviewData(res.data)
-      })
-      .catch(() => toast.error(ERROR.interviewInitialisationFailure))
+    fetchInterviewData(getInterviewSessionId())
   }, [])
 
   useEffect(() => {
-    rotationSocket.on('receive-rotation-message', (data) => {
-      console.log('New rotation: ', data)
-      setRotationNum(data)
-    })
-  }, [rotationSocket])
-
-  useEffect(() => {
-    if (user && interviewData && iSessionId) {
+    if (user && interviewData) {
       setUserNum(getUserNum(interviewData, user.userid))
       setRotationNum(interviewData.interviewSession.rotationnum)
-      console.log('ONCE', user, interviewData, iSessionId)
+      // console.log('ONCE', user, interviewData, iSessionId)
       rotationSocket.emit('joinRoom', {
-        room: iSessionId,
+        room: getInterviewSessionId(),
         user: user.firstname,
       })
       setLoading(false)
     }
-  }, [interviewData, user, iSessionId])
+  }, [interviewData, user])
+
+  useEffect(() => {
+    rotationSocket.on('receive-rotation-message', () => {
+      fetchInterviewData(getInterviewSessionId())
+    })
+  }, [rotationSocket])
 
   const handleRotation = () => {
     let newRotation = -1
@@ -100,16 +90,26 @@ const Interview = () => {
       newRotation = 0
     }
 
-    updateInterview(iSessionId, { rotationNum: newRotation })
+    updateInterview(getInterviewSessionId(), { rotationNum: newRotation })
       .then(() => {
-        toast.success('Rotated!')
-        getInterview(iSessionId)
-          .then((res) => {
-            setInterviewData(res.data)
-          })
-          .catch(() => toast.error(ERROR.interviewInitialisationFailure))
+        toast.success('Roles rotated.')
+        rotationSocket.emit('send-rotation-message', newRotation)
       })
-      .catch(() => toast.error('Rotation failed'))
+      .catch(() => toast.error('Rotation failed.'))
+  }
+
+  const fetchInterviewData = (iSessionId) => {
+    getInterview(iSessionId)
+      .then((res) => {
+        setInterviewData(res.data)
+      })
+      .catch(() => toast.error(ERROR.interviewInitialisationFailure))
+  }
+
+  const getInterviewSessionId = () => {
+    const pathname = window.location.pathname
+    const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    return iSessionId
   }
 
   const getUserNum = (interviewData, userId) => {

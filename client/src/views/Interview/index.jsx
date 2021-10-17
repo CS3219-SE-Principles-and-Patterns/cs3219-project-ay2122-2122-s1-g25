@@ -50,8 +50,7 @@ const Interview = () => {
   const classes = useStyles()
   const user = fetchStorage('user')
   const [interviewData, setInterviewData] = useState()
-  const [userNum, setUserNum] = useState(-1)
-
+  const [userNum, setUserNum] = useState()
   const rotationNum = interviewData?.interviewSession?.rotationnum
 
   useEffect(() => {
@@ -101,7 +100,9 @@ const Interview = () => {
                   border={1}
                   borderColor="black"
                 >
-                  <AlgorithmQuestion qnIndex={1} />
+                  <AlgorithmQuestion
+                    question={interviewData?.rotations[rotationNum]}
+                  />
                 </Box>
               </Grid>
               <Grid item xs={3} className={classes.gridRight}>

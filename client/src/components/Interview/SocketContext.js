@@ -98,9 +98,11 @@ const ContextProvider = ({ children }) => {
     // connectionRef.current.destroy() // stop receiving input from camera & audio
 
     // close camera
-    stream.getTracks().forEach((track) => {
-      track.stop()
-    })
+    if (stream) {
+      stream.getTracks().forEach((track) => {
+        track.stop()
+      })
+    }
   }
 
   return (

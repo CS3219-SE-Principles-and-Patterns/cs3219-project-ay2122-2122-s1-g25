@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
   const classes = useStyles()
-  const [buttonClicked, setButtonClicked] = useState(0)
+  const [buttonClicked, setButtonClicked] = useState(-1)
   const loops = Array.from(Array(50).keys())
   const router = useRouter()
   const user = fetchStorage('user')
@@ -149,14 +149,14 @@ const Home = () => {
 
   const onDifficultySelection = (buttonNo, event) => {
     // console.log(event.currentTarget.id)
-    if (buttonClicked == 0) {
+    if (buttonClicked == -1) {
       setButtonClicked(buttonNo)
       document
         .getElementById(event.currentTarget.id)
         .classList.add(classes.activeButton)
     } else {
       if (buttonNo == buttonClicked) {
-        setButtonClicked(0)
+        setButtonClicked(-1)
         document
           .getElementById(event.currentTarget.id)
           .classList.remove(classes.activeButton)
@@ -195,11 +195,11 @@ const Home = () => {
     document
       .getElementById(buttonClicked)
       .classList.remove(classes.activeButton)
-    setButtonClicked(0)
+    setButtonClicked(-1)
   }
 
   const findAPartner = () => {
-    if (buttonClicked != 0) {
+    if (buttonClicked != -1) {
       const currDifficulty = buttonClicked
 
       // Calling API
@@ -362,30 +362,30 @@ const Home = () => {
                 </Typography>
                 <Grid item className={classes.buttonWrapper}>
                   <Button
-                    id="1"
+                    id="0"
                     variant="contained"
                     color="secondary"
                     type="submit"
                     className={classes.easyButton}
-                    onClick={(e) => onDifficultySelection(1, e)}
+                    onClick={(e) => onDifficultySelection(0, e)}
                   >
                     Easy
+                  </Button>
+                  <Button
+                    id="1"
+                    variant="contained"
+                    type="submit"
+                    className={classes.moderateButton}
+                    onClick={(e) => onDifficultySelection(1, e)}
+                  >
+                    Moderate
                   </Button>
                   <Button
                     id="2"
                     variant="contained"
                     type="submit"
-                    className={classes.moderateButton}
-                    onClick={(e) => onDifficultySelection(2, e)}
-                  >
-                    Moderate
-                  </Button>
-                  <Button
-                    id="3"
-                    variant="contained"
-                    type="submit"
                     className={classes.hardButton}
-                    onClick={(e) => onDifficultySelection(3, e)}
+                    onClick={(e) => onDifficultySelection(2, e)}
                   >
                     Hard
                   </Button>

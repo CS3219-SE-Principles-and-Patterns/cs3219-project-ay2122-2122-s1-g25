@@ -9,7 +9,11 @@ export const ERROR = {
     'Something went wrong when cancelling match, please contact administrator immediately.',
   interviewInitialisationFailure:
     'Failed to initialise interview session, please contact administrator immediately.',
+  interviewFetchFailure:
+    'Failed to fetch interview session. Please check if session is valid.',
   rotationFailure: 'Rotation failed.',
+  feedbackFailure: 'Failed to submit feedback.',
+  partnerFetchFailure: 'Failed to retrieve interview partner data.',
 }
 
 export const SUCCESS = {
@@ -18,4 +22,5 @@ export const SUCCESS = {
   logout: 'Successfully logged out.',
   reset: 'Email successfully sent.',
   rotation: 'Roles rotated.',
+  feedback: 'Feedback successfully submitted.',
 }

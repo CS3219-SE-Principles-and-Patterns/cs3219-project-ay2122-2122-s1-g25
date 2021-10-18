@@ -14,7 +14,8 @@ import { useRouter } from 'next/router'
 import { getInterview } from '../../api/interview'
 import toast, { Toaster } from 'react-hot-toast'
 import { fetchStorage } from '../../storage'
-import { ERROR } from '../../utils/message'
+import { ERROR, SUCCESS } from '../../utils/message'
+import { createFeedback } from '../../api/feedback'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,9 +56,11 @@ const Feedback = () => {
   const router = useRouter()
   const { iSession } = router.query
 
+  const user = fetchStorage('user')
   const [loading, setLoading] = useState(true)
   const [interviewData, setInterviewData] = useState()
-  const user = fetchStorage('user')
+  const [comment, setComment] = useState('')
+  const [rating, setRating] = useState(0)
 
   useEffect(() => {
     if (iSession) {
@@ -76,7 +79,7 @@ const Feedback = () => {
       .then((res) => {
         setInterviewData(res.data)
       })
-      .catch(() => toast.error(ERROR.interviewInitialisationFailure))
+      .catch(() => toast.error(ERROR.interviewFetchFailure))
   }
 
   const getReceiverId = () => {
@@ -88,14 +91,42 @@ const Feedback = () => {
     } else if (userId === user1) {
       return user0
     } else {
-      toast.error(ERROR.interviewInitialisationFailure)
+      toast.error(ERROR.partnerFetchFailure)
+    }
+  }
+
+  const handleChangeComment = (e) => {
+    setComment(e.target.value)
+  }
+
+  const handleChangeRating = (e) => {
+    setRating(parseInt(e.target.value))
+  }
+
+  const handleSubmitFeedback = (e) => {
+    e.preventDefault()
+    if (comment) {
+      const feedback = {
+        giverId: user.userid,
+        receiverId: getReceiverId(),
+        iSessionId: iSession,
+        rating: rating,
+        comment: comment,
+      }
+      createFeedback(feedback)
+        .then(() => {
+          toast.success(SUCCESS.feedback)
+          router.push('/home')
+        })
+        .catch(() => toast.error(ERROR.feedbackFailure))
+    } else {
+      toast.error(ERROR.incompleteFields)
     }
   }
 
   const handleRedirectHome = (e) => {
     e.preventDefault()
-    // router.push('/home')
-    console.log(getReceiverId())
+    router.push('/home')
   }
 
   return (
@@ -118,16 +149,24 @@ const Feedback = () => {
                 placeholder="Comments on strengths, areas of improvement, etc."
                 variant="outlined"
                 className={classes.textBox}
+                value={comment}
+                onChange={handleChangeComment}
               />
               <Typography variant="body2" gutterBottom>
                 Overall Rating
               </Typography>
-              <Rating className={classes.rating} size="large" />
+              <Rating
+                className={classes.rating}
+                name="rating"
+                size="large"
+                value={rating}
+                onChange={handleChangeRating}
+              />
               <Button
                 color="primary"
                 variant="contained"
                 className={classes.submitBtn}
-                onClick={handleRedirectHome}
+                onClick={handleSubmitFeedback}
               >
                 Submit
               </Button>

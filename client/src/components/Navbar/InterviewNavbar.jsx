@@ -107,7 +107,9 @@ const InterviewNavbar = (props) => {
 
   const exitInterview = () => {
     leaveCall() // close camera & stuff
-    router.push('/feedback')
+    const pathname = window.location.pathname
+    const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    router.push(`/feedback?iSession=${iSessionId}`)
   }
 
   function Role() {

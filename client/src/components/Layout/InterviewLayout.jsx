@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { Container, Box } from '@material-ui/core'
-// import InterviewNavbar from '../Navbar/InterviewNavbar'
 import { FeedbackNavbar, InterviewNavbar } from '../Navbar/InterviewNavbar'
 
 const useStyles = makeStyles(() => ({
@@ -22,11 +21,17 @@ const useStyles = makeStyles(() => ({
 
 const HomeLayout = (props) => {
   const classes = useStyles()
-  const { children } = props
+  const { children, currPage, rotationNum, userNum, handleRotation } = props
 
-  const Role = (props) => {
-    if (props.currPage == 'interview') {
-      return <InterviewNavbar />
+  const Role = () => {
+    if (currPage == 'interview') {
+      return (
+        <InterviewNavbar
+          rotationNum={rotationNum}
+          userNum={userNum}
+          handleRotation={handleRotation}
+        />
+      )
     } else {
       return <FeedbackNavbar />
     }
@@ -40,7 +45,7 @@ const HomeLayout = (props) => {
     >
       <Box className={classes.navbarWrapper}>
         {/* currPage is either 'interview' or 'feedback'*/}
-        <Role currPage={props.currPage} />
+        <Role />
       </Box>
       <Box className={classes.contentWrapper}>{children}</Box>
     </Container>
@@ -50,6 +55,9 @@ const HomeLayout = (props) => {
 HomeLayout.propTypes = {
   children: PropTypes.node.isRequired,
   currPage: PropTypes.string.isRequired,
+  rotationNum: PropTypes.number,
+  userNum: PropTypes.number,
+  handleRotation: PropTypes.func,
 }
 
 export default HomeLayout

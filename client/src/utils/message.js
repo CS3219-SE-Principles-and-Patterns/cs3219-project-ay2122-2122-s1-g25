@@ -7,6 +7,9 @@ export const ERROR = {
     'Error retrieving user data, please contact administrator immediately.',
   userMatchingCancelFailure:
     'Something went wrong when cancelling match, please contact administrator immediately.',
+  interviewInitialisationFailure:
+    'Failed to initialise interview session, please contact administrator immediately.',
+  rotationFailure: 'Rotation failed.',
 }
 
 export const SUCCESS = {
@@ -14,4 +17,5 @@ export const SUCCESS = {
   register: 'User successfully created.',
   logout: 'Successfully logged out.',
   reset: 'Email successfully sent.',
+  rotation: 'Roles rotated.',
 }

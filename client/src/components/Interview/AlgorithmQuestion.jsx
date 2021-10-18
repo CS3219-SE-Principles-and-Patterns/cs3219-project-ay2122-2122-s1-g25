@@ -49,46 +49,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-// check with team what sld the input for question be
-const tempQuestionData = {
-  title: 'Pancake Sorting',
-  question:
-    'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
-    'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
-    'You can return the answer in any order.',
-  examples: [
-    {
-      example:
-        'Input: nums = [2,7,11,15], target = 9 \n' +
-        'Output: [0,1]\n' +
-        'Output: Because nums[0] + nums[1] == 9, we return [0, 1].\n',
-    },
-    {
-      example: 'Input: nums = [3,2,4], target = 6 \n' + 'Output: [1,2]\n',
-    },
-    {
-      example: 'Input: nums = [3,3], target = 6 \n' + 'Output: [0,1]\n',
-    },
-  ],
-}
-
 const Example = (props) => {
   const classes = useStyles()
   Example.propTypes = {
-    data: PropTypes.shape({
-      example: PropTypes.string.isRequired,
-    }),
-    index: PropTypes.number,
+    index: PropTypes.number.isRequired,
+    input: PropTypes.string.isRequired,
+    output: PropTypes.string.isRequired,
   }
+
+  const { index, input, output } = props
 
   return (
     <Box>
       <Typography variant="body2" className={classes.exampleHeader}>
-        {'Example ' + props.index}
+        {'Example ' + (index + 1)}
       </Typography>
       <Box className={classes.exampleItem}>
         <Typography variant="body2" className={classes.exampleWrapper}>
-          {props.data.example}
+          {`Input: ${input}\nOutput: ${output}`}
         </Typography>
       </Box>
     </Box>
@@ -96,22 +74,31 @@ const Example = (props) => {
 }
 
 // make it dragabble in the future
-const AlgorithmQuestion = () => {
+const AlgorithmQuestion = (props) => {
+  AlgorithmQuestion.propTypes = {
+    question: PropTypes.object.isRequired,
+  }
   const classes = useStyles()
+  const { question } = props
 
   return (
     <Container className={classes.root} maxWidth="xl">
       <Grid container className={classes.gridWrapper}>
         <Typography variant="subtitle1" className={classes.questionTitle}>
-          {tempQuestionData.title}
+          {question.title}
         </Typography>
         <Divider className={classes.dividerStyle} />
         <Typography variant="body1" className={classes.questionContent}>
-          {tempQuestionData.question}
+          {question.description}
         </Typography>
         <Box className={classes.exampleList}>
-          {tempQuestionData.examples.map((data, index) => (
-            <Example data={data} index={index} key={index} />
+          {question.input.map((data, index) => (
+            <Example
+              input={data}
+              output={question.output[index]}
+              index={index}
+              key={index}
+            />
           ))}
         </Box>
       </Grid>

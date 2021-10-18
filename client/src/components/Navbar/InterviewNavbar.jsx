@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   roleDisplay: {
     color: 'white',
+    fontWeight: 700,
   },
 }))
 
@@ -73,17 +74,33 @@ const FeedbackNavbar = () => {
 const InterviewNavbar = (props) => {
   const classes = useStyles()
   const router = useRouter()
+  const { rotationNum, userNum, handleRotation } = props
 
   InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
+    rotationNum: PropTypes.number,
+    userNum: PropTypes.number,
+    handleRotation: PropTypes.func,
   }
 
-  const roles = ['Interviewer', 'Interviewee'] // might need to passed via prop
-  const [role, setRole] = useState(0) // 0 or 1 for interviewer & interviewee
+  const getRole = (rotationNum, userNum) => {
+    if (rotationNum === 0) {
+      if (userNum === 0) {
+        return 'Interviewee'
+      } else if (userNum === 1) {
+        return 'Interviewer'
+      }
+    } else if (rotationNum === 1) {
+      if (userNum === 0) {
+        return 'Interviewer'
+      } else if (userNum === 1) {
+        return 'Interviewee'
+      }
+    }
+  }
 
   const onRotate = () => {
-    // allow only 1 call / interview in the future
-    role == 0 ? setRole(1) : setRole(0)
+    handleRotation()
   }
 
   const { leaveCall } = useContext(SocketContext)
@@ -96,8 +113,8 @@ const InterviewNavbar = (props) => {
   function Role() {
     return (
       <Box className={classes.switchRoleContainer}>
-        <Typography variant="caption" className={classes.roleDisplay}>
-          Role: {roles[role]}
+        <Typography variant="body2" className={classes.roleDisplay}>
+          Role: {getRole(rotationNum, userNum)}
         </Typography>
         <Button
           variant="contained"

@@ -11,7 +11,6 @@ import dynamic from 'next/dynamic'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
-import { ContextProvider } from '../../components/Interview/SocketContext'
 import { getInterview, updateInterview } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
@@ -128,43 +127,41 @@ const Interview = () => {
   return (
     <AuthWrapper>
       <Toaster position="top-right" />
-      <ContextProvider>
-        {!loading && (
-          <InterviewLayout
-            currPage="interview"
-            isInterviewee={userNum === rotationNum}
-            handleRotation={handleRotation}
-          >
-            <Container className={classes.root} disableGutters maxWidth="xl">
-              <Grid container className={classes.gridWrapper}>
-                <Grid item xs={9} className={classes.gridLeft}>
-                  <Box className={classes.codeWrapper}>
-                    <CodeEditor initialCode={''} editable={true} />
-                  </Box>
-                  <Box
-                    className={classes.questionWrapper}
-                    border={1}
-                    borderColor="black"
-                  >
-                    <AlgorithmQuestion
-                      question={interviewData?.rotations[rotationNum]}
-                      isInterviewee={userNum === rotationNum}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={3} className={classes.gridRight}>
-                  <Box className={classes.videoWrapper}>
-                    <Conferencing />
-                  </Box>
-                  <Box className={classes.chatWrapper}>
-                    <ChatBox chatSocket={chatSocket} user={user} />
-                  </Box>
-                </Grid>
+      {!loading && (
+        <InterviewLayout
+          currPage="interview"
+          isInterviewee={userNum === rotationNum}
+          handleRotation={handleRotation}
+        >
+          <Container className={classes.root} disableGutters maxWidth="xl">
+            <Grid container className={classes.gridWrapper}>
+              <Grid item xs={9} className={classes.gridLeft}>
+                <Box className={classes.codeWrapper}>
+                  <CodeEditor initialCode={''} editable={true} />
+                </Box>
+                <Box
+                  className={classes.questionWrapper}
+                  border={1}
+                  borderColor="black"
+                >
+                  <AlgorithmQuestion
+                    question={interviewData?.rotations[rotationNum]}
+                    isInterviewee={userNum === rotationNum}
+                  />
+                </Box>
               </Grid>
-            </Container>
-          </InterviewLayout>
-        )}
-      </ContextProvider>
+              <Grid item xs={3} className={classes.gridRight}>
+                <Box className={classes.videoWrapper}>
+                  <Conferencing interviewSessionId={getInterviewSessionId()} />
+                </Box>
+                <Box className={classes.chatWrapper}>
+                  <ChatBox chatSocket={chatSocket} user={user} />
+                </Box>
+              </Grid>
+            </Grid>
+          </Container>
+        </InterviewLayout>
+      )}
     </AuthWrapper>
   )
 }

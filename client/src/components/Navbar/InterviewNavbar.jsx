@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+// import React, { useContext } from 'react'
+import React from 'react'
 import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 
-import { SocketContext } from '../Interview/SocketContext'
+// import { SocketContext } from '../Interview/SocketContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,10 +91,10 @@ const InterviewNavbar = (props) => {
     handleRotation()
   }
 
-  const { leaveCall } = useContext(SocketContext)
+  // const { leaveCall } = useContext(SocketContext)
 
   const exitInterview = () => {
-    leaveCall() // close camera & stuff
+    // leaveCall() // close camera & stuff
     const pathname = window.location.pathname
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
     router.push(`/feedback?iSession=${iSessionId}`)

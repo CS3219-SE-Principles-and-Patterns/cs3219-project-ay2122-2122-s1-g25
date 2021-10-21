@@ -25,12 +25,12 @@ const socketDriver = require('./sockets');
 socketDriver(server);
 
 // Socket.io imports
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
-});
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: '*',
+//     methods: ['GET', 'POST'],
+//   },
+// });
 
 app.use(cors());
 
@@ -67,18 +67,18 @@ app.use('/api/feedback', feedbackRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-io.on('connection', (socket) => {
-  socket.emit('me', socket.id);
+// io.on('connection', (socket) => {
+//   socket.emit('me', socket.id);
 
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('callended');
-  });
+//   socket.on('disconnect', () => {
+//     socket.broadcast.emit('callended');
+//   });
 
-  socket.on('calluser', ({ userToCall, signalData, from, name }) => {
-    io.to(userToCall).emit('calluser', { signal: signalData, from, name });
-  });
+//   socket.on('calluser', ({ userToCall, signalData, from, name }) => {
+//     io.to(userToCall).emit('calluser', { signal: signalData, from, name });
+//   });
 
-  socket.on('answercall', (data) => {
-    io.to(data.to).emit('callaccepted', data.signal);
-  });
-});
+//   socket.on('answercall', (data) => {
+//     io.to(data.to).emit('callaccepted', data.signal);
+//   });
+// });

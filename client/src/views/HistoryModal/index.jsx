@@ -84,20 +84,8 @@ const historyData = {
         'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
         'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
         'You can return the answer in any order.',
-      examples: [
-        {
-          example:
-            'Input: nums = [2,7,11,15], target = 9 \n' +
-            'Output: [0,1]\n' +
-            'Output: Because nums[0] + nums[1] == 9, we return [0, 1].\n',
-        },
-        {
-          example: 'Input: nums = [3,2,4], target = 6 \n' + 'Output: [1,2]\n',
-        },
-        {
-          example: 'Input: nums = [3,3], target = 6 \n' + 'Output: [0,1]\n',
-        },
-      ],
+      input: ['nums = [2,7,11,15], target = 9 \n'],
+      output: ['Output: [0,1]\n'],
       code: 'a = 1\na = a + a',
     },
     {
@@ -108,20 +96,8 @@ const historyData = {
         'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
         'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
         'You can return the answer in any order.',
-      examples: [
-        {
-          example:
-            'Input: nums = [2,7,11,15], target = 9 \n' +
-            'Output: [0,1]\n' +
-            'Output: Because nums[0] + nums[1] == 9, we return [0, 1].\n',
-        },
-        {
-          example: 'Input: nums = [3,2,4], target = 6 \n' + 'Output: [1,2]\n',
-        },
-        {
-          example: 'Input: nums = [3,3], target = 6 \n' + 'Output: [0,1]\n',
-        },
-      ],
+      input: ['nums = [2,7,11,15], target = 9 \n'],
+      output: ['Output: [0,1]\n'],
       code: 'a = [1, 2, 3]\nreturn a',
     },
   ],

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { ListItem, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import AlgorithmQuestion from '../Interview/AlgorithmQuestion'
+import HistoryQuestion from './HistoryQuestion'
 // import CodeEditor from '../Interview/CodeEditor'
 import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded'
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded'
@@ -70,7 +70,8 @@ const FullHistory = (props) => {
     data: PropTypes.shape({
       title: PropTypes.string.isRequired,
       question: PropTypes.string.isRequired,
-      examples: PropTypes.array,
+      input: PropTypes.array,
+      output: PropTypes.array,
       code: PropTypes.string.isRequired,
     }),
   }
@@ -112,7 +113,7 @@ const FullHistory = (props) => {
                   Question:
                 </Typography>
                 <Box className={classes.algorithmQnWrapper}>
-                  <AlgorithmQuestion />
+                  <HistoryQuestion questionData={props.data} />
                 </Box>
               </Box>
               <Box className={classes.codeAttemptWrapper}>

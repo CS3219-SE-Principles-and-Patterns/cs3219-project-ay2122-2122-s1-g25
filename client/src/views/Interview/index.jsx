@@ -103,6 +103,7 @@ const Interview = () => {
     getInterview(iSessionId)
       .then((res) => {
         setInterviewData(res.data)
+        console.log(res.data)
       })
       .catch(() => toast.error(ERROR.interviewInitialisationFailure))
   }

@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
   exampleWrapper: {
     whiteSpace: 'pre-line',
   },
+  answerWrapper: {
+    width: '100%',
+  },
 }))
 
 const Example = (props) => {
@@ -77,9 +80,10 @@ const Example = (props) => {
 const AlgorithmQuestion = (props) => {
   AlgorithmQuestion.propTypes = {
     question: PropTypes.object.isRequired,
+    isInterviewee: PropTypes.bool.isRequired,
   }
   const classes = useStyles()
-  const { question } = props
+  const { question, isInterviewee } = props
 
   return (
     <Container className={classes.root} maxWidth="xl">
@@ -101,6 +105,18 @@ const AlgorithmQuestion = (props) => {
             />
           ))}
         </Box>
+        {!isInterviewee && (
+          <Box className={classes.answerWrapper}>
+            <Typography variant="body2" className={classes.exampleHeader}>
+              Suggested Answer
+            </Typography>
+            <Box className={classes.exampleItem}>
+              <Typography variant="body2" className={classes.exampleWrapper}>
+                {question.suggestedanswer}
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </Grid>
     </Container>
   )

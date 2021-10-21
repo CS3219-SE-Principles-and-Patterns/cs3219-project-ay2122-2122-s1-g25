@@ -132,8 +132,7 @@ const Interview = () => {
         {!loading && (
           <InterviewLayout
             currPage="interview"
-            rotationNum={rotationNum}
-            userNum={userNum}
+            isInterviewee={userNum === rotationNum}
             handleRotation={handleRotation}
           >
             <Container className={classes.root} disableGutters maxWidth="xl">
@@ -149,6 +148,7 @@ const Interview = () => {
                   >
                     <AlgorithmQuestion
                       question={interviewData?.rotations[rotationNum]}
+                      isInterviewee={userNum === rotationNum}
                     />
                   </Box>
                 </Grid>

@@ -4,8 +4,8 @@ class Questions {
         return pool.query("SELECT questionId FROM Questions WHERE difficulty = $1 ORDER BY random() limit 2", [difficulty])
     }
 
-    createQuestion(questions) {
-        return pool.query("INSERT INTO Questions(title, category, difficulty, description, input, output, suggestedAnswer) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *", questions.title, questions.category, questions.difficulty, questions.description, questions.input, questions.output, questions.suggestedAnswer);
+    createQuestion(question) {
+        return pool.query("INSERT INTO Questions(title, category, difficulty, description, input, output, suggestedAnswer) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *", question.title, question.category, question.difficulty, question.description, question.input, question.output, question.suggestedAnswer);
     }
 
     deleteQuestion(questionId) {

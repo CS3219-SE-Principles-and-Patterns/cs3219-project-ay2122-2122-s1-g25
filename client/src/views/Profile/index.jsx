@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Rating from '@material-ui/lab/Rating'
 import {
@@ -16,6 +17,7 @@ import HomeLayout from '../../components/Layout/HomeLayout'
 import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import { useRouter } from 'next/router'
 import { fetchStorage } from '../../storage'
+import { getFeedbacks } from '../../api/feedback'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,27 +60,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Review = () => {
-  const classes = useStyles()
+const convertTimestamp = (timestamp) => {
+  return new Date(timestamp?.replace(' ', 'T')).toLocaleString()
+}
 
-  const peerData = {
-    first_name: 'Jia Hua',
-    last_name: 'Loh',
-    username: 'jiahua',
-    email: 'jiahua@u.nus.edu',
+const Review = (props) => {
+  Review.propTypes = {
+    feedback: PropTypes.object.isRequired,
   }
+
+  const classes = useStyles()
+  const { feedback } = props
 
   return (
     <ListItem className={classes.reviewItem}>
       <ListItemIcon>
         <Avatar
-          alt={`${peerData.username}`}
-          src={`https://avatars.dicebear.com/api/initials/${peerData.first_name} ${peerData.last_name}.svg`}
+          alt={`${feedback.firstname}`}
+          src={`https://avatars.dicebear.com/api/initials/${feedback.firstname} ${feedback.lastname}.svg`}
         />
       </ListItemIcon>
       <ListItemText
-        primary={`@${peerData.username}`}
-        secondary="An amazing programmer! Thanks for practicing with me!"
+        primary={`${feedback.firstname} ${feedback.lastname}`}
+        secondary={`[Session #${feedback.isessionid}] ${feedback.comment}`}
       />
     </ListItem>
   )
@@ -88,10 +92,22 @@ const Profile = () => {
   const classes = useStyles()
   const router = useRouter()
   const user = fetchStorage('user')
+  const [loading, setLoading] = useState(true)
+  const [feedbacks, setFeedbacks] = useState()
 
-  const convertTimestamp = (timestamp) => {
-    return new Date(timestamp?.replace(' ', 'T')).toLocaleString()
-  }
+  useEffect(() => {
+    getFeedbacks(user.userid)
+      .then((res) => {
+        setFeedbacks(res.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    if (user && feedbacks) {
+      setLoading(false)
+    }
+  }, [user, feedbacks])
 
   const handleRedirectReset = (e) => {
     e.preventDefault()
@@ -100,52 +116,55 @@ const Profile = () => {
 
   return (
     <AuthWrapper>
-      <HomeLayout currPage="Profile">
-        <Container className={classes.root} maxWidth="lg">
-          <Grid container className={classes.gridWrapper}>
-            <Grid item xs={4} className={classes.profileWrapper}>
-              <Avatar
-                className={classes.avatar}
-                alt={`${user?.firstname}`}
-                src={`https://avatars.dicebear.com/api/initials/${user?.firstname} ${user?.lastname}.svg`}
-              />
-              <Typography variant="h6">{`${user?.firstname} ${user?.lastname}`}</Typography>
-              <Typography variant="subtitle1">{user?.email}</Typography>
-              <Rating name="disabled" value={4} disabled />
-              <Typography
-                variant="caption"
-                className={classes.registrationText}
-              >
-                {`Joined On: ${convertTimestamp(user?.createdat)}`}
-              </Typography>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={handleRedirectReset}
-              >
-                Reset Password
-              </Button>
+      {!loading && (
+        <HomeLayout currPage="Profile">
+          <Container className={classes.root} maxWidth="lg">
+            <Grid container className={classes.gridWrapper}>
+              <Grid item xs={4} className={classes.profileWrapper}>
+                <Avatar
+                  className={classes.avatar}
+                  alt={`${user?.firstname}`}
+                  src={`https://avatars.dicebear.com/api/initials/${user?.firstname} ${user?.lastname}.svg`}
+                />
+                <Typography variant="h6">{`${user?.firstname} ${user?.lastname}`}</Typography>
+                <Typography variant="subtitle1">{user?.email}</Typography>
+                <Rating name="disabled" value={4} disabled />
+                <Typography
+                  variant="caption"
+                  className={classes.registrationText}
+                >
+                  {`Joined On: ${convertTimestamp(user?.createdat)}`}
+                </Typography>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={handleRedirectReset}
+                >
+                  Reset Password
+                </Button>
+              </Grid>
+              <Grid item xs={8} className={classes.reviewWrapper}>
+                <Typography
+                  variant="subtitle2"
+                  className={classes.reviewHeader}
+                >
+                  Reviews
+                </Typography>
+                <List>
+                  {feedbacks.length === 0 && (
+                    <Typography align="center">
+                      No Interviews Participated
+                    </Typography>
+                  )}
+                  {feedbacks.map((feedback) => (
+                    <Review key={feedback.feedbackid} feedback={feedback} />
+                  ))}
+                </List>
+              </Grid>
             </Grid>
-            <Grid item xs={8} className={classes.reviewWrapper}>
-              <Typography variant="subtitle2" className={classes.reviewHeader}>
-                Reviews
-              </Typography>
-              <List>
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-              </List>
-            </Grid>
-          </Grid>
-        </Container>
-      </HomeLayout>
+          </Container>
+        </HomeLayout>
+      )}
     </AuthWrapper>
   )
 }

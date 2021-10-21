@@ -1,7 +1,7 @@
 const socketDriver = (server) => {
     const io = require('socket.io')(server, {
         cors: {
-            origin: '*',
+            origin: ['http://localhost:3000', 'https://upskilltoday.org'],
         },
     });
 

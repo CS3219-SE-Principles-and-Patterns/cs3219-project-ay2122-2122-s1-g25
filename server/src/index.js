@@ -24,7 +24,19 @@ const feedbackRoutes = require('./routes/feedback')
 const socketDriver = require('./sockets')
 socketDriver(server)
 
-app.use(cors());
+// CORS settings
+const corsWhitelist = ['http://localhost:3000', 'https://upskilltoday.org']
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (corsWhitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+app.use(cors(corsOptions));
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan('dev'));

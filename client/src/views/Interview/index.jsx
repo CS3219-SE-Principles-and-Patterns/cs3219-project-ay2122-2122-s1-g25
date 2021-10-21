@@ -148,6 +148,7 @@ const Interview = () => {
                   >
                     <AlgorithmQuestion
                       question={interviewData?.rotations[rotationNum]}
+                      isInterviewee={userNum === rotationNum}
                     />
                   </Box>
                 </Grid>

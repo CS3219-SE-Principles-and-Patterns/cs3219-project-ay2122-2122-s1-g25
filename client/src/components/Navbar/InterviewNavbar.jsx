@@ -74,29 +74,16 @@ const FeedbackNavbar = () => {
 const InterviewNavbar = (props) => {
   const classes = useStyles()
   const router = useRouter()
-  const { rotationNum, userNum, handleRotation } = props
+  const { isInterviewee, handleRotation } = props
 
   InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
-    rotationNum: PropTypes.number,
-    userNum: PropTypes.number,
+    isInterviewee: PropTypes.bool,
     handleRotation: PropTypes.func,
   }
 
-  const getRole = (rotationNum, userNum) => {
-    if (rotationNum === 0) {
-      if (userNum === 0) {
-        return 'Interviewee'
-      } else if (userNum === 1) {
-        return 'Interviewer'
-      }
-    } else if (rotationNum === 1) {
-      if (userNum === 0) {
-        return 'Interviewer'
-      } else if (userNum === 1) {
-        return 'Interviewee'
-      }
-    }
+  const getRole = () => {
+    return isInterviewee ? 'Interviewee' : 'Interviewer'
   }
 
   const onRotate = () => {
@@ -116,7 +103,7 @@ const InterviewNavbar = (props) => {
     return (
       <Box className={classes.switchRoleContainer}>
         <Typography variant="body2" className={classes.roleDisplay}>
-          Role: {getRole(rotationNum, userNum)}
+          Role: {getRole()}
         </Typography>
         <Button
           variant="contained"

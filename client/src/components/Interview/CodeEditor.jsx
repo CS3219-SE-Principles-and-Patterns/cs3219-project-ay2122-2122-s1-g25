@@ -48,7 +48,7 @@ const CodeEditor = (props) => {
 
   useEffect(() => {
     setCode(initialCode)
-  }, [])
+  }, [initialCode])
 
   useEffect(() => {
     codeSocket.on('receive-code', (newCode) => {

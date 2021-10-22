@@ -13,8 +13,12 @@ class InterviewSession {
         return pool.query("INSERT INTO InterviewSessions(user0, user1, rotationNum, complete, difficulty) VALUES($1, $2, 0, FALSE, $3) RETURNING *", [user0, user1, difficulty])
     }
 
-    updateInterviewSession(iSessionId, rotationNum) {
+    updateInterviewRotation(iSessionId, rotationNum) {
         return pool.query("UPDATE InterviewSessions SET rotationNum = $1 WHERE iSessionId = $2 RETURNING *", [rotationNum, iSessionId])
+    }
+
+    updateInterviewCompletion(iSessionId, completion) {
+        return pool.query("UPDATE InterviewSessions SET complete = $1 WHERE iSessionId = $2 RETURNING *", [completion, iSessionId])
     }
 }
 

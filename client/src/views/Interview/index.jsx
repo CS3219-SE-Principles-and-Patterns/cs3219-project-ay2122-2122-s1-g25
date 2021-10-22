@@ -12,7 +12,7 @@ const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
 import { ContextProvider } from '../../components/Interview/SocketContext'
-import { getInterview, updateInterview } from '../../api/interview'
+import { getInterview, updateInterviewRotation } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
 import { chatSocket, rotationSocket, codeSocket } from '../../config/socket'
@@ -96,7 +96,9 @@ const Interview = () => {
       newRotation = 0
     }
 
-    updateInterview(getInterviewSessionId(), { rotationNum: newRotation })
+    updateInterviewRotation(getInterviewSessionId(), {
+      rotationNum: newRotation,
+    })
       .then(() => {
         rotationSocket.emit('send-rotation-message', newRotation)
       })

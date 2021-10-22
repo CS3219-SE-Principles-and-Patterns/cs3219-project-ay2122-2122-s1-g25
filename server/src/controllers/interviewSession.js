@@ -29,12 +29,24 @@ exports.getInterviewSessions = async (req, res) => {
     }
 }
 
-exports.updateInterviewSession = async (req, res) => {
+exports.updateInterviewRotation = async (req, res) => {
     const { rotationNum } = req.body;
     try {
         const iSessionId = req.params.id
         const interviewSession = new InterviewSession();
-        const updatedInterviewSession = await interviewSession.updateInterviewSession(iSessionId, rotationNum);
+        const updatedInterviewSession = await interviewSession.updateInterviewRotation(iSessionId, rotationNum);
+        res.status(200).json(updatedInterviewSession.rows)
+    } catch (err) {
+        res.status(400).json({ errMsg: err });
+    }
+}
+
+exports.updateInterviewCompletion = async (req, res) => {
+    const { completion } = req.body;
+    try {
+        const iSessionId = req.params.id
+        const interviewSession = new InterviewSession();
+        const updatedInterviewSession = await interviewSession.updateInterviewCompletion(iSessionId, completion);
         res.status(200).json(updatedInterviewSession.rows)
     } catch (err) {
         res.status(400).json({ errMsg: err });

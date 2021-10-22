@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Container, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-
+import { updateCode } from '../../api/interview'
+import { useDebouncedCallback } from 'use-debounce'
 // code editor imports
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
@@ -19,66 +20,66 @@ const useStyles = makeStyles(() => ({
   editorWrapper: {
     height: '100%',
   },
-  languageWrapper: {
-    display: 'flex',
-  },
   codeMirrorWrapper: {
     height: '100%',
   },
 }))
 
-const Editor = (props) => {
-  const { value, onChange } = props
-  Editor.propTypes = {
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    isEditable: PropTypes.bool,
+// make it dragabble in the future
+const CodeEditor = (props) => {
+  CodeEditor.propTypes = {
+    rotationNum: PropTypes.number,
+    codeSocket: PropTypes.object,
+    initialCode: PropTypes.string,
+    editable: PropTypes.bool,
+    iSessionId: PropTypes.string,
   }
 
   const classes = useStyles()
+  const { rotationNum, codeSocket, initialCode, editable, iSessionId } = props
+  const [code, setCode] = useState(initialCode)
+  const debounced = useDebouncedCallback((value) => {
+    const data = {
+      rotationNum: rotationNum,
+      attempt: value,
+    }
+    updateCode(iSessionId, data)
+  }, 2000)
+
+  useEffect(() => {
+    setCode(initialCode)
+  }, [initialCode])
+
+  useEffect(() => {
+    codeSocket.on('receive-code', (newCode) => {
+      setCode(newCode)
+    })
+  }, [codeSocket])
+
   const handleChange = (editor, data, value) => {
-    if (props.isEditable) {
-      onChange(value)
+    if (editable) {
+      setCode(value)
+      debounced(value)
+      codeSocket.emit('send-code', value)
     }
   }
 
   return (
-    <Box className={classes.editorWrapper}>
-      <CodeMirror
-        onBeforeChange={handleChange}
-        value={value}
-        options={{
-          lineWrapping: true,
-          lint: true,
-          theme: 'material',
-          lineNumbers: true,
-          mode: 'python',
-        }}
-        className={classes.codeMirrorWrapper}
-      />
-    </Box>
-  )
-}
-
-// make it dragabble in the future
-const CodeEditor = (props) => {
-  CodeEditor.propTypes = {
-    initialCode: PropTypes.string,
-    editable: PropTypes.bool,
-  }
-
-  const classes = useStyles()
-  const [code, setCode] = useState(props.initialCode)
-  const [editable, setEditable] = useState(props.editable)
-
-  useEffect(() => {
-    setCode(props.initialCode)
-    setEditable(props.editable)
-  }, [props.initialCode])
-
-  return (
     <Container disableGutters className={classes.root} maxWidth="xl">
-      <Editor value={code} onChange={setCode} isEditable={editable} />
+      <Box className={classes.editorWrapper}>
+        <CodeMirror
+          onBeforeChange={handleChange}
+          value={code}
+          options={{
+            lineWrapping: true,
+            lint: true,
+            theme: 'material',
+            lineNumbers: true,
+            mode: 'python',
+          }}
+          className={classes.codeMirrorWrapper}
+        />
+      </Box>
     </Container>
   )
 }

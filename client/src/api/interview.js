@@ -7,3 +7,7 @@ export const getInterview = (iSessionId) => {
 export const updateInterview = (iSessionId, data) => {
   return PUTRequest(`/interview/${iSessionId}`, data)
 }
+
+export const updateCode = (iSessionId, data) => {
+  return PUTRequest(`/rotation/${iSessionId}`, data)
+}

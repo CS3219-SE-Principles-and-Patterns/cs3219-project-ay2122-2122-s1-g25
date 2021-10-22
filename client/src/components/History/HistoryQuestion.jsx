@@ -77,50 +77,38 @@ const Example = (props) => {
 }
 
 // make it dragabble in the future
-const AlgorithmQuestion = (props) => {
-  AlgorithmQuestion.propTypes = {
-    question: PropTypes.object.isRequired,
+const HistoryQuestion = (props) => {
+  HistoryQuestion.propTypes = {
+    questionData: PropTypes.object.isRequired,
     isInterviewee: PropTypes.bool.isRequired,
   }
 
   const classes = useStyles()
-  const { question, isInterviewee } = props
+  const { questionData } = props
 
   return (
     <Container className={classes.root} maxWidth="xl">
       <Grid container className={classes.gridWrapper}>
         <Typography variant="subtitle1" className={classes.questionTitle}>
-          {question.title}
+          {questionData.title}
         </Typography>
         <Divider className={classes.dividerStyle} />
         <Typography variant="body1" className={classes.questionContent}>
-          {question.description}
+          {questionData.question}
         </Typography>
         <Box className={classes.exampleList}>
-          {question.input.map((data, index) => (
+          {questionData.input.map((data, index) => (
             <Example
               input={data}
-              output={question.output[index]}
+              output={questionData.output[index]}
               index={index}
               key={index}
             />
           ))}
         </Box>
-        {!isInterviewee && (
-          <Box className={classes.answerWrapper}>
-            <Typography variant="body2" className={classes.exampleHeader}>
-              Suggested Answer
-            </Typography>
-            <Box className={classes.exampleItem}>
-              <Typography variant="body2" className={classes.exampleWrapper}>
-                {question.suggestedanswer}
-              </Typography>
-            </Box>
-          </Box>
-        )}
       </Grid>
     </Container>
   )
 }
 
-export default AlgorithmQuestion
+export default HistoryQuestion

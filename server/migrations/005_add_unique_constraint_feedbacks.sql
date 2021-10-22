@@ -1,0 +1,1 @@
+ALTER TABLE Feedbacks ADD CONSTRAINT OneFeedbackPerSession UNIQUE (iSessionId, giverId, receiverId);

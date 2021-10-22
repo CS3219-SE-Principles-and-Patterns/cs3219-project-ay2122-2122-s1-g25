@@ -5,7 +5,7 @@ class Feedback {
     }
 
     getFeedbacks(userId) {
-        return pool.query("SELECT * FROM Feedbacks F INNER JOIN Users U ON F.giverId = U.userId WHERE F.receiverId = $1", [userId])
+        return pool.query("SELECT * FROM Feedbacks F INNER JOIN Users U ON F.giverId = U.userId WHERE F.receiverId = $1 ORDER BY F.createdAt DESC", [userId])
     }
 
     createFeedback(giverId, receiverId, iSessionId, rating, comment) {

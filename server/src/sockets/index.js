@@ -1,7 +1,9 @@
 const socketDriver = (server) => {
     const io = require('socket.io')(server, {
         cors: {
-            origin: ['http://localhost:3000', 'https://upskilltoday.org'],
+            // TODO: add back CORS whitelist
+            // origin: ['http://localhost:3000', 'https://upskilltoday.org'],
+            origin: '*',
         },
     });
 

@@ -25,17 +25,19 @@ const socketDriver = require('./sockets')
 socketDriver(server)
 
 // CORS settings
-const corsWhitelist = ['http://localhost:3000', 'https://upskilltoday.org']
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (corsWhitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-app.use(cors(corsOptions));
+// TODO: add back CORS whitelist
+// const corsWhitelist = ['http://localhost:3000', 'https://upskilltoday.org']
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (corsWhitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
+// app.use(cors(corsOptions));
+app.use(cors())
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

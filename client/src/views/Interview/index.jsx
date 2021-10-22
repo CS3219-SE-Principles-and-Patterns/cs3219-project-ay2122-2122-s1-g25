@@ -48,6 +48,10 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+export const isInvalidInterviewSession = (interviewData) => {
+  return interviewData?.interviewSession === undefined
+}
+
 export const isInterviewCompleted = (interviewData) => {
   return interviewData.interviewSession.complete
 }
@@ -76,29 +80,32 @@ const Interview = () => {
 
   useEffect(() => {
     if (interviewData) {
-      if (isInterviewCompleted(interviewData)) {
+      if (isInvalidInterviewSession(interviewData)) {
+        toast.error(ERROR.interviewInvalidAlert)
+        router.push('/home')
+      } else if (isInterviewCompleted(interviewData)) {
         toast.error(ERROR.interviewClosedAlert)
         router.push('/home')
-      }
-      if (isInvalidInterviewUser(interviewData, user)) {
+      } else if (isInvalidInterviewUser(interviewData, user)) {
         toast.error(ERROR.invalidInterviewUserAlert)
         router.push('/home')
+      } else {
+        setUserNum(getUserNum(interviewData, user.userid))
+        setRotationNum(interviewData.interviewSession.rotationnum)
+        rotationSocket.emit('joinRoom', {
+          room: getInterviewSessionId(),
+          user: user.firstname,
+        })
+        chatSocket.emit('joinRoom', {
+          room: getInterviewSessionId(),
+          user: user.firstname,
+        })
+        codeSocket.emit('joinRoom', {
+          room: getInterviewSessionId(),
+          user: user.firstname,
+        })
+        setLoading(false)
       }
-      setUserNum(getUserNum(interviewData, user.userid))
-      setRotationNum(interviewData.interviewSession.rotationnum)
-      rotationSocket.emit('joinRoom', {
-        room: getInterviewSessionId(),
-        user: user.firstname,
-      })
-      chatSocket.emit('joinRoom', {
-        room: getInterviewSessionId(),
-        user: user.firstname,
-      })
-      codeSocket.emit('joinRoom', {
-        room: getInterviewSessionId(),
-        user: user.firstname,
-      })
-      setLoading(false)
     }
   }, [interviewData])
 

@@ -8,7 +8,7 @@
     ],
     "rewrites": [{
       "source": "/interview/**",
-      "destination": "/interview/[sessionId]"
+      "destination": "/interview/[sessionId].html"
     }],  
     "cleanUrls": true
   }

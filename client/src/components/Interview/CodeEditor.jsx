@@ -3,7 +3,7 @@ import { Container, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { updateCode } from '../../api/interview'
-import { useDebounce } from 'use-debounce'
+import { useDebouncedCallback } from 'use-debounce'
 // code editor imports
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
@@ -20,47 +20,10 @@ const useStyles = makeStyles(() => ({
   editorWrapper: {
     height: '100%',
   },
-  languageWrapper: {
-    display: 'flex',
-  },
   codeMirrorWrapper: {
     height: '100%',
   },
 }))
-
-const Editor = (props) => {
-  Editor.propTypes = {
-    codeSocket: PropTypes.object,
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    isEditable: PropTypes.bool,
-  }
-  const { codeSocket, value, onChange, isEditable } = props
-  const classes = useStyles()
-  const handleChange = (editor, data, value) => {
-    if (isEditable) {
-      onChange(value)
-      codeSocket.emit('send-code', value)
-    }
-  }
-
-  return (
-    <Box className={classes.editorWrapper}>
-      <CodeMirror
-        onBeforeChange={handleChange}
-        value={value}
-        options={{
-          lineWrapping: true,
-          lint: true,
-          theme: 'material',
-          lineNumbers: true,
-          mode: 'python',
-        }}
-        className={classes.codeMirrorWrapper}
-      />
-    </Box>
-  )
-}
 
 // make it dragabble in the future
 const CodeEditor = (props) => {
@@ -69,24 +32,23 @@ const CodeEditor = (props) => {
     codeSocket: PropTypes.object,
     initialCode: PropTypes.string,
     editable: PropTypes.bool,
+    iSessionId: PropTypes.string,
   }
 
   const classes = useStyles()
-  const { rotationNum, codeSocket, initialCode } = props
+  const { rotationNum, codeSocket, initialCode, editable, iSessionId } = props
   const [code, setCode] = useState(initialCode)
-  const [editable, setEditable] = useState(props.editable)
-  const debounceCode = useDebounce(code, 2000)
-
-  const getInterviewSessionId = () => {
-    const pathname = window.location.pathname
-    const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
-    return iSessionId
-  }
+  const debounced = useDebouncedCallback((value) => {
+    const data = {
+      rotationNum: rotationNum,
+      attempt: value,
+    }
+    updateCode(iSessionId, data)
+  }, 2000)
 
   useEffect(() => {
     setCode(initialCode)
-    setEditable(editable)
-  }, [initialCode])
+  }, [])
 
   useEffect(() => {
     codeSocket.on('receive-code', (newCode) => {
@@ -94,22 +56,30 @@ const CodeEditor = (props) => {
     })
   }, [codeSocket])
 
-  useEffect(() => {
-    const data = {
-      rotationNum: rotationNum,
-      attempt: code,
+  const handleChange = (editor, data, value) => {
+    if (editable) {
+      setCode(value)
+      debounced(value)
+      codeSocket.emit('send-code', value)
     }
-    updateCode(getInterviewSessionId(), data)
-  }, [debounceCode])
+  }
 
   return (
     <Container disableGutters className={classes.root} maxWidth="xl">
-      <Editor
-        codeSocket={codeSocket}
-        value={code}
-        onChange={setCode}
-        isEditable={editable}
-      />
+      <Box className={classes.editorWrapper}>
+        <CodeMirror
+          onBeforeChange={handleChange}
+          value={code}
+          options={{
+            lineWrapping: true,
+            lint: true,
+            theme: 'material',
+            lineNumbers: true,
+            mode: 'python',
+          }}
+          className={classes.codeMirrorWrapper}
+        />
+      </Box>
     </Container>
   )
 }

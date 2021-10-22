@@ -146,8 +146,10 @@ const Interview = () => {
                   <Box className={classes.codeWrapper}>
                     <CodeEditor
                       codeSocket={codeSocket}
-                      initialCode={''}
+                      initialCode={interviewData.rotations[rotationNum].attempt}
                       editable={true}
+                      iSessionId={getInterviewSessionId()}
+                      rotationNum={rotationNum}
                     />
                   </Box>
                   <Box

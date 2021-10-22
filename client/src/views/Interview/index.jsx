@@ -16,6 +16,7 @@ import { getInterview, updateInterviewRotation } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
 import { chatSocket, rotationSocket, codeSocket } from '../../config/socket'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -47,8 +48,20 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
+export const isInterviewCompleted = (interviewData) => {
+  return interviewData.interviewSession.complete
+}
+
+export const isInvalidInterviewUser = (interviewData, user) => {
+  const user0 = interviewData.interviewSession.user0
+  const user1 = interviewData.interviewSession.user1
+  const currUser = user.userid
+  return currUser != user0 && currUser != user1
+}
+
 const Interview = () => {
   const classes = useStyles()
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
 
   const [interviewData, setInterviewData] = useState()
@@ -62,7 +75,15 @@ const Interview = () => {
   }, [])
 
   useEffect(() => {
-    if (user && interviewData) {
+    if (interviewData) {
+      if (isInterviewCompleted(interviewData)) {
+        toast.error(ERROR.interviewClosedAlert)
+        router.push('/home')
+      }
+      if (isInvalidInterviewUser(interviewData, user)) {
+        toast.error(ERROR.invalidInterviewUserAlert)
+        router.push('/home')
+      }
       setUserNum(getUserNum(interviewData, user.userid))
       setRotationNum(interviewData.interviewSession.rotationnum)
       rotationSocket.emit('joinRoom', {
@@ -79,7 +100,7 @@ const Interview = () => {
       })
       setLoading(false)
     }
-  }, [interviewData, user])
+  }, [interviewData])
 
   useEffect(() => {
     rotationSocket.on('receive-rotation-message', () => {
@@ -127,8 +148,6 @@ const Interview = () => {
       return 0
     } else if (userId === user1) {
       return 1
-    } else {
-      toast.error(ERROR.interviewInitialisationFailure)
     }
   }
 

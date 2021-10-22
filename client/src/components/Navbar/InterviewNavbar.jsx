@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
 import { SocketContext } from '../Interview/SocketContext'
 import { updateInterviewCompletion } from '../../api/interview'
+import { ERROR } from '../../utils/message'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +100,7 @@ const InterviewNavbar = (props) => {
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
     updateInterviewCompletion(iSessionId, { completion: true })
       .then(() => router.push(`/feedback?iSession=${iSessionId}`))
-      .catch(() => toast.error('Failed to close interview session.'))
+      .catch(() => toast.error(ERROR.interviewCloseFailure))
   }
 
   function Role() {

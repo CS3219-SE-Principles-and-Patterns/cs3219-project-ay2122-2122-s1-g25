@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Container, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-
+import { updateCode } from '../../api/interview'
+import { useDebounce } from 'use-debounce'
 // code editor imports
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
@@ -28,17 +29,18 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Editor = (props) => {
-  const { value, onChange } = props
   Editor.propTypes = {
+    codeSocket: PropTypes.object,
     value: PropTypes.string,
     onChange: PropTypes.func,
     isEditable: PropTypes.bool,
   }
-
+  const { codeSocket, value, onChange, isEditable } = props
   const classes = useStyles()
   const handleChange = (editor, data, value) => {
-    if (props.isEditable) {
+    if (isEditable) {
       onChange(value)
+      codeSocket.emit('send-code', value)
     }
   }
 
@@ -63,22 +65,51 @@ const Editor = (props) => {
 // make it dragabble in the future
 const CodeEditor = (props) => {
   CodeEditor.propTypes = {
+    rotationNum: PropTypes.number,
+    codeSocket: PropTypes.object,
     initialCode: PropTypes.string,
     editable: PropTypes.bool,
   }
 
   const classes = useStyles()
-  const [code, setCode] = useState(props.initialCode)
+  const { rotationNum, codeSocket, initialCode } = props
+  const [code, setCode] = useState(initialCode)
   const [editable, setEditable] = useState(props.editable)
+  const debounceCode = useDebounce(code, 2000)
+
+  const getInterviewSessionId = () => {
+    const pathname = window.location.pathname
+    const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    return iSessionId
+  }
 
   useEffect(() => {
-    setCode(props.initialCode)
-    setEditable(props.editable)
-  }, [props.initialCode])
+    setCode(initialCode)
+    setEditable(editable)
+  }, [initialCode])
+
+  useEffect(() => {
+    codeSocket.on('receive-code', (newCode) => {
+      setCode(newCode)
+    })
+  }, [codeSocket])
+
+  useEffect(() => {
+    const data = {
+      rotationNum: rotationNum,
+      attempt: code,
+    }
+    updateCode(getInterviewSessionId(), data)
+  }, [debounceCode])
 
   return (
     <Container disableGutters className={classes.root} maxWidth="xl">
-      <Editor value={code} onChange={setCode} isEditable={editable} />
+      <Editor
+        codeSocket={codeSocket}
+        value={code}
+        onChange={setCode}
+        isEditable={editable}
+      />
     </Container>
   )
 }

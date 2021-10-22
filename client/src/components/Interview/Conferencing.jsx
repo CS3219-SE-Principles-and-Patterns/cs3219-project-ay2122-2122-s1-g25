@@ -91,6 +91,7 @@ const Conferencing = (props) => {
   const roomID = props.interviewSessionId
 
   useEffect(() => {
+    console.log('AA ' + roomID)
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
@@ -113,8 +114,16 @@ const Conferencing = (props) => {
           setPeers(peers)
         })
 
+        // check
+        videoSocket.on(roomID, (users) => {
+          console.log('Received All Users: ')
+          console.log(users)
+        })
+
         videoSocket.on('user joined', (payload) => {
           console.log('User just joined or smth')
+
+          // who is the one calling me
           const peer = addPeer(payload.signal, payload.callerID, stream)
           peersRef.current.push({
             peerID: payload.callerID,
@@ -129,7 +138,7 @@ const Conferencing = (props) => {
           item.peer.signal(payload.signal)
         })
       })
-  }, [])
+  }, [videoSocket])
 
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({

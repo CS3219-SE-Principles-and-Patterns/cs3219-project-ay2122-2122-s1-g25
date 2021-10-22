@@ -21,9 +21,15 @@ const videoSocketWrapper = (io) => {
         users[roomID] = [socket.id];
       }
       socketToRoom[socket.id] = roomID;
-      const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
+      //   const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
 
-      socket.emit('all users', usersInThisRoom);
+      const usersInThisRoom = users[roomID];
+
+      //   socket.emit('all users', usersInThisRoom);
+
+      if (usersInThisRoom.length == 2) {
+        socket.emit(roomID, usersInThisRoom);
+      }
     });
 
     socket.on('sending signal', (payload) => {

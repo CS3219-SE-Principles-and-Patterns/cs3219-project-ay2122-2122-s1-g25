@@ -3,8 +3,10 @@ import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
-
+import toast, { Toaster } from 'react-hot-toast'
 import { SocketContext } from '../Interview/SocketContext'
+import { updateInterviewCompletion } from '../../api/interview'
+import { ERROR } from '../../utils/message'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,7 +98,9 @@ const InterviewNavbar = (props) => {
     leaveCall() // close camera & stuff
     const pathname = window.location.pathname
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
-    router.push(`/feedback?iSession=${iSessionId}`)
+    updateInterviewCompletion(iSessionId, { completion: true })
+      .then(() => router.push(`/feedback?iSession=${iSessionId}`))
+      .catch(() => toast.error(ERROR.interviewCloseFailure))
   }
 
   function Role() {
@@ -121,6 +125,7 @@ const InterviewNavbar = (props) => {
 
   return (
     <Container className={classes.root} maxWidth="xl">
+      <Toaster position="top-right" />
       <Grid container className={classes.gridWrapper}>
         <img src={'/Upskill-Logo-White.png'} className={classes.upskillLogo} />
         <Role currPage={props.currPage} />

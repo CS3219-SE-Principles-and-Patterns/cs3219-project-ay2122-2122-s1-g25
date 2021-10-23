@@ -14,6 +14,11 @@ export const ERROR = {
   rotationFailure: 'Rotation failed.',
   feedbackFailure: 'Failed to submit feedback.',
   partnerFetchFailure: 'Failed to retrieve interview partner data.',
+  interviewInvalidAlert: 'Interview session does not exist.',
+  interviewCloseFailure: 'Failed to close interview session.',
+  interviewClosedAlert: 'Not permitted to enter a completed interview session.',
+  invalidInterviewUserAlert:
+    "Not permitted to enter others' interview session.",
 }
 
 export const SUCCESS = {

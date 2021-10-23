@@ -16,6 +16,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
 import { createFeedback } from '../../api/feedback'
+import { isInvalidInterviewUser, isInvalidInterviewSession } from '../Interview'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,10 +70,18 @@ const Feedback = () => {
   }, [iSession])
 
   useEffect(() => {
-    if (user && interviewData) {
-      setLoading(false)
+    if (interviewData) {
+      if (isInvalidInterviewSession(interviewData)) {
+        toast.error(ERROR.interviewInvalidAlert)
+        router.push('/home')
+      } else if (isInvalidInterviewUser(interviewData, user)) {
+        toast.error(ERROR.invalidInterviewUserAlert)
+        router.push('/home')
+      } else {
+        setLoading(false)
+      }
     }
-  }, [interviewData, user])
+  }, [interviewData])
 
   const fetchInterviewData = (iSessionId) => {
     getInterview(iSessionId)

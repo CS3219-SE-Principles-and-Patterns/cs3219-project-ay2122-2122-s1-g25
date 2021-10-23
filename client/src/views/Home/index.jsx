@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Divider,
@@ -20,6 +20,7 @@ import { ERROR } from '../../utils/message'
 import { fetchStorage } from '../../storage'
 import { createUserMatching, deleteUserMatching } from '../../api/userMatching'
 import HistoryModal from '../HistoryModal'
+import { getAllSessions } from '../../api/history'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -130,14 +131,31 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles()
   const [buttonClicked, setButtonClicked] = useState(-1)
-  const loops = Array.from(Array(50).keys())
+  // const loops = Array.from(Array(50).keys())
   const router = useRouter()
   const user = fetchStorage('user')
+  const [historyList, setHistoryList] = useState([])
+  const [modalRotation, setModalRotation] = useState()
+  const [modalPartner, setModalPartner] = useState()
 
   // History
+  useEffect(() => {
+    if (user.userid) {
+      getAllSessions(user.userid)
+        .then((res) => {
+          setHistoryList(res.data)
+          // console.log(res.data)
+        })
+        .catch((err) => console.log(err))
+    }
+  }, [user])
+
+  // History Modal
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
   const [modalID, setModalID] = useState(-1)
-  const handleHistoryModalOpen = (id) => {
+  const handleHistoryModalOpen = (id, rotation, partner) => {
+    setModalRotation(rotation)
+    setModalPartner(partner)
     setModalID(id)
     setHistoryModalOpen(true)
   }
@@ -324,6 +342,7 @@ const Home = () => {
         <Toaster position="top-right" />
         <Container className={classes.root} maxWidth="xl">
           <Grid container className={classes.gridWrapper}>
+            {/* History */}
             <Grid item xs={6} className={classes.leftGridWrapper}>
               <Typography variant="h6">{`Welcome, ${user?.firstname}!`}</Typography>
               <Grid item className={classes.sessionHistoryWrapper}>
@@ -335,16 +354,24 @@ const Home = () => {
                 </Typography>
                 <Divider className={classes.homeDivider} />
                 <List>
-                  {loops.map((i) => (
+                  {historyList.length === 0 && (
+                    <Typography align="center">
+                      No Interviews Participated
+                    </Typography>
+                  )}
+                  {historyList.map((data) => (
                     <SessionHistory
-                      key={i}
+                      key={data.isessionid}
                       customClickEvent={handleHistoryModalOpen}
-                      id={'history' + i}
+                      id={'history' + data.isessionid}
+                      data={data}
                     />
                   ))}
                 </List>
               </Grid>
             </Grid>
+
+            {/* Interview */}
             <Grid item xs={6} className={classes.rightGridWrapper}>
               <Grid item className={classes.mockInterviewWrapper}>
                 <Typography
@@ -403,6 +430,7 @@ const Home = () => {
             </Grid>
           </Grid>
         </Container>
+
         {/* History Modal */}
         <Modal
           open={historyModalOpen}
@@ -410,7 +438,12 @@ const Home = () => {
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <HistoryModal closeModal={handleHistoryModalClose} id={modalID} />
+          <HistoryModal
+            closeModal={handleHistoryModalClose}
+            id={modalID}
+            rotations={modalRotation}
+            partner={modalPartner}
+          />
         </Modal>
         {/* Loading Modal */}
 

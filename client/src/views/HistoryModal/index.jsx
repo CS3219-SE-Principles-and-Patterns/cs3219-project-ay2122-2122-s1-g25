@@ -13,6 +13,7 @@ import {
 
 import CloseIcon from '@material-ui/icons/Close'
 import FullHistory from '../../components/History/FullHistory'
+import { fetchStorage } from '../../storage'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -70,47 +71,18 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-// will pass session id to db to get this data
-const historyData = {
-  difficulty: 'Hard',
-  date: '25 Sep 2021',
-  time: '9.05 pm - 11.12 pm',
-  codeAttempts: [
-    {
-      interviewer: 'Bobby',
-      interviewee: 'Jia Hua',
-      title: 'Pancake Sorting',
-      question:
-        'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
-        'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
-        'You can return the answer in any order.',
-      input: ['nums = [2,7,11,15], target = 9 \n'],
-      output: ['Output: [0,1]\n'],
-      code: 'a = 1\na = a + a',
-    },
-    {
-      interviewer: 'Jia Hua',
-      interviewee: 'Bobby',
-      title: '2 Sum',
-      question:
-        'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
-        'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
-        'You can return the answer in any order.',
-      input: ['nums = [2,7,11,15], target = 9 \n'],
-      output: ['Output: [0,1]\n'],
-      code: 'a = [1, 2, 3]\nreturn a',
-    },
-  ],
-}
-
 const QuestionWrapper = (props) => {
   const classes = useStyles()
   QuestionWrapper.propTypes = {
     index: PropTypes.number,
-    data: PropTypes.shape(),
+    data: PropTypes.object,
+    partner: PropTypes.object,
+    rotationnum: PropTypes.number,
   }
 
-  const { index, data } = props
+  const user = fetchStorage('user')
+
+  const { index, data, partner, rotationnum } = props
 
   return (
     <Box>
@@ -119,7 +91,15 @@ const QuestionWrapper = (props) => {
           {`Question ${index + 1}. ${data.title}`}
         </Typography>
         <Typography variant="body1" className={classes.interviewerDetails}>
-          {`Interviewer: ${data.interviewer}, Interviewee: ${data.interviewee}`}
+          {`Interviewer: ${
+            rotationnum == 0
+              ? user?.firstname + ' ' + user?.lastname
+              : partner.firstname + ' ' + partner.lastname
+          }, Interviewee: ${
+            rotationnum == 0
+              ? partner.firstname + ' ' + partner.lastname
+              : user?.firstname + ' ' + user?.lastname
+          }`}
         </Typography>
       </Box>
       <FullHistory data={data} index={index} />
@@ -129,55 +109,87 @@ const QuestionWrapper = (props) => {
 
 const HistoryModal = (props) => {
   const classes = useStyles()
-  const [modalData, setModalData] = useState({})
-  const [qnData, setQnData] = useState([])
+
+  const [loading, setLoading] = useState(true)
+  const [difficulty, setDifficulty] = useState()
+  const [dateTime, setDateTime] = useState()
+
+  const partner = props.partner
 
   useEffect(() => {
-    // Update data from API
-    // console.log(props.id)
-    setModalData(historyData)
-    setQnData(historyData.codeAttempts)
+    const diff = props.rotations[0].difficulty
+    if (diff == 2) {
+      setDifficulty('Hard')
+    } else if (diff == 1) {
+      setDifficulty('Medium')
+    } else {
+      setDifficulty('Easy')
+    }
+
+    const createdAt = props.rotations[0].createdat
+    let dt = new Date(createdAt)
+    const date = dt.toISOString().slice(0, 10)
+    var time = dt.toLocaleTimeString()
+
+    setDateTime([date, time])
   }, [])
+
+  // get info before load
+  useEffect(() => {
+    if (difficulty && dateTime) {
+      setLoading(false)
+    }
+  }, [dateTime, difficulty])
 
   HistoryModal.propTypes = {
     closeModal: PropTypes.func,
     id: PropTypes.string,
+    partner: PropTypes.object,
+    rotations: PropTypes.object,
   }
 
   return (
     <Container className={classes.root} maxWidth="lg" disableGutters>
-      <Box className={classes.modalWrapper}>
-        <Grid item className={classes.gridWrapper}>
-          <Grid item className={classes.historyHeadingWrapper}>
-            <Grid item className={classes.leftHeaderContentWrapper}>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="submit"
-                className={classes.difficultyButton}
-              >
-                {modalData.difficulty}
-              </Button>
-              <Typography variant="button" className={classes.dateTimeTypo}>
-                {modalData.date}
-              </Typography>
-              <Typography variant="overline" className={classes.dateTimeTypo}>
-                {modalData.time}
-              </Typography>
+      {!loading && (
+        <Box className={classes.modalWrapper}>
+          <Grid item className={classes.gridWrapper}>
+            <Grid item className={classes.historyHeadingWrapper}>
+              <Grid item className={classes.leftHeaderContentWrapper}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  className={classes.difficultyButton}
+                >
+                  {difficulty}
+                </Button>
+                <Typography variant="button" className={classes.dateTimeTypo}>
+                  {dateTime[0]}
+                </Typography>
+                <Typography variant="overline" className={classes.dateTimeTypo}>
+                  {dateTime[1]}
+                </Typography>
+              </Grid>
+              <CloseIcon
+                onClick={props.closeModal}
+                className={classes.closeIconStyle}
+              />
             </Grid>
-            <CloseIcon
-              onClick={props.closeModal}
-              className={classes.closeIconStyle}
-            />
+            <Divider className={classes.contentDivider} />
+            <List className={classes.historyList}>
+              {props.rotations.map((data, index) => (
+                <QuestionWrapper
+                  key={index}
+                  data={data}
+                  index={index}
+                  partner={partner}
+                  rotationnum={props.rotations[index].rotationnum}
+                />
+              ))}
+            </List>
           </Grid>
-          <Divider className={classes.contentDivider} />
-          <List className={classes.historyList}>
-            {qnData.map((data, index) => (
-              <QuestionWrapper key={index} data={data} index={index} />
-            ))}
-          </List>
-        </Grid>
-      </Box>
+        </Box>
+      )}
     </Container>
   )
 }

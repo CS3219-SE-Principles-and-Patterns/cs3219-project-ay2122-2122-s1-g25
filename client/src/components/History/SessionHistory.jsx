@@ -125,7 +125,7 @@ const sessionHistory = (props) => {
           </Grid>
           <Grid item xs={9} className={classes.infoWrapper}>
             <ListItemText
-              primary={`Practiced with @${partner.firstname} ${partner.lastname}!`}
+              primary={`Practiced with ${partner.firstname} ${partner.lastname}!`}
             />
             <ListItemText secondary={`1. ${rotation[0].title}`} />
             <ListItemText secondary={`2. ${rotation[1].title}`} />

@@ -140,13 +140,15 @@ const Home = () => {
 
   // History
   useEffect(() => {
-    getAllSessions(user.userid)
-      .then((res) => {
-        setHistoryList(res.data)
-        // console.log(res.data)
-      })
-      .catch((err) => console.log(err))
-  }, [])
+    if (user.userid) {
+      getAllSessions(user.userid)
+        .then((res) => {
+          setHistoryList(res.data)
+          // console.log(res.data)
+        })
+        .catch((err) => console.log(err))
+    }
+  }, [user])
 
   // History Modal
   const [historyModalOpen, setHistoryModalOpen] = useState(false)

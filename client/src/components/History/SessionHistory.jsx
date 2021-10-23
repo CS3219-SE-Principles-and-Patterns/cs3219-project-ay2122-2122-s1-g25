@@ -47,16 +47,17 @@ const sessionHistory = (props) => {
   // History
   useEffect(() => {
     // get partner details
-    const partnerId =
-      user.userid == props.data.user0 ? props.data.user1 : props.data.user0
-
-    getPartner(partnerId)
-      .then((res) => {
-        setPartner(res.data[0])
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    if (user.userid) {
+      const partnerId =
+        user.userid == props.data.user0 ? props.data.user1 : props.data.user0
+      getPartner(partnerId)
+        .then((res) => {
+          setPartner(res.data[0])
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
 
     // get rotation details
     getSession(props.data.isessionid)
@@ -83,7 +84,7 @@ const sessionHistory = (props) => {
       .catch((err) => {
         console.log(err)
       })
-  }, [])
+  }, [user])
 
   // get info before load
   useEffect(() => {

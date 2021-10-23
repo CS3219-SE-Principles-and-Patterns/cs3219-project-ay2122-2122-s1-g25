@@ -71,39 +71,6 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-// will pass session id to db to get this data
-// const historyData = {
-//   difficulty: 'Hard',
-//   date: '25 Sep 2021',
-//   time: '9.05 pm - 11.12 pm',
-//   codeAttempts: [
-//     {
-//       interviewer: 'Bobby',
-//       interviewee: 'Jia Hua',
-//       title: 'Pancake Sorting',
-//       question:
-//         'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
-//         'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
-//         'You can return the answer in any order.',
-//       input: ['nums = [2,7,11,15], target = 9 \n'],
-//       output: ['Output: [0,1]\n'],
-//       code: 'a = 1\na = a + a',
-//     },
-//     {
-//       interviewer: 'Jia Hua',
-//       interviewee: 'Bobby',
-//       title: '2 Sum',
-//       question:
-//         'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n' +
-//         'You may assume that each input would have exactly one solution, and you may not use the same element twice.\n' +
-//         'You can return the answer in any order.',
-//       input: ['nums = [2,7,11,15], target = 9 \n'],
-//       output: ['Output: [0,1]\n'],
-//       code: 'a = [1, 2, 3]\nreturn a',
-//     },
-//   ],
-// }
-
 const QuestionWrapper = (props) => {
   const classes = useStyles()
   QuestionWrapper.propTypes = {

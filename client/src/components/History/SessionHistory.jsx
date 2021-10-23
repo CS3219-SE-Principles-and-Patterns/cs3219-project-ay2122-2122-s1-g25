@@ -62,8 +62,6 @@ const sessionHistory = (props) => {
     getSession(props.data.isessionid)
       .then((res) => {
         setRotation(res.data.rotations)
-        // console.log('Hah')
-        // console.log(res.data)
 
         // Difficulty
         const diff = res.data.rotations[0].difficulty

@@ -60,7 +60,6 @@ const Editor = (props) => {
   )
 }
 
-// make it dragabble in the future
 const CodeDisplay = (props) => {
   CodeDisplay.propTypes = {
     initialCode: PropTypes.string,

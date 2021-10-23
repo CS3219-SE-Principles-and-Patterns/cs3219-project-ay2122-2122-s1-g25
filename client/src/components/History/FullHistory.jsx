@@ -9,7 +9,7 @@ import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded'
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded'
 
 import dynamic from 'next/dynamic'
-const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
+const CodeDisplay = dynamic(import('../../components/History/CodeDisplay'), {
   ssr: false,
 })
 
@@ -69,10 +69,11 @@ const FullHistory = (props) => {
   FullHistory.propTypes = {
     data: PropTypes.shape({
       title: PropTypes.string.isRequired,
-      question: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
       input: PropTypes.array,
       output: PropTypes.array,
       code: PropTypes.string.isRequired,
+      attempt: PropTypes.string.isRequired,
     }),
   }
   const { data } = props
@@ -124,7 +125,7 @@ const FullHistory = (props) => {
                   Code Attempt:
                 </Typography>
                 <Box className={classes.codeAttemptEditor}>
-                  <CodeEditor initialCode={data.code} editable={false} />
+                  <CodeDisplay initialCode={data.attempt} editable={false} />
                 </Box>
               </Box>
             </Box>

@@ -76,7 +76,6 @@ const Example = (props) => {
   )
 }
 
-// make it dragabble in the future
 const HistoryQuestion = (props) => {
   HistoryQuestion.propTypes = {
     questionData: PropTypes.object.isRequired,
@@ -94,7 +93,7 @@ const HistoryQuestion = (props) => {
         </Typography>
         <Divider className={classes.dividerStyle} />
         <Typography variant="body1" className={classes.questionContent}>
-          {questionData.question}
+          {questionData.description}
         </Typography>
         <Box className={classes.exampleList}>
           {questionData.input.map((data, index) => (
@@ -105,6 +104,17 @@ const HistoryQuestion = (props) => {
               key={index}
             />
           ))}
+
+          <Box>
+            <Typography variant="body2" className={classes.exampleHeader}>
+              {'Suggested Answer'}
+            </Typography>
+            <Box className={classes.exampleItem}>
+              <Typography variant="body2" className={classes.exampleWrapper}>
+                {questionData.suggestedanswer}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       </Grid>
     </Container>

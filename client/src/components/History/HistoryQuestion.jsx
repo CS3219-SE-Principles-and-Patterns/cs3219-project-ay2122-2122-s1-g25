@@ -79,7 +79,6 @@ const Example = (props) => {
 const HistoryQuestion = (props) => {
   HistoryQuestion.propTypes = {
     questionData: PropTypes.object.isRequired,
-    isInterviewee: PropTypes.bool.isRequired,
   }
 
   const classes = useStyles()

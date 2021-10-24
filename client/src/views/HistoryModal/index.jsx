@@ -145,7 +145,7 @@ const HistoryModal = (props) => {
     closeModal: PropTypes.func,
     id: PropTypes.string,
     partner: PropTypes.object,
-    rotations: PropTypes.object,
+    rotations: PropTypes.array,
   }
 
   return (

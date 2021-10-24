@@ -72,7 +72,6 @@ const FullHistory = (props) => {
       description: PropTypes.string.isRequired,
       input: PropTypes.array,
       output: PropTypes.array,
-      code: PropTypes.string.isRequired,
       attempt: PropTypes.string.isRequired,
     }),
   }

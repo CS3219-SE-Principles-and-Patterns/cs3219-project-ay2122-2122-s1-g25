@@ -138,26 +138,14 @@ const Home = () => {
   const [modalRotation, setModalRotation] = useState()
   const [modalPartner, setModalPartner] = useState()
 
-  const [loadingUser, setLoadingUser] = useState(true)
-
-  // User
-  useEffect(() => {
-    if (user) {
-      setLoadingUser(false)
-    }
-  }, [user])
-
   // History
   useEffect(() => {
-    if (!loadingUser) {
-      getAllSessions(user.userid)
-        .then((res) => {
-          setHistoryList(res.data)
-          // console.log(res.data)
-        })
-        .catch((err) => console.log(err))
-    }
-  }, [loadingUser])
+    getAllSessions(user.userid)
+      .then((res) => {
+        setHistoryList(res.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
 
   // History Modal
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
@@ -449,7 +437,7 @@ const Home = () => {
         >
           <HistoryModal
             closeModal={handleHistoryModalClose}
-            id={modalID}
+            id={modalID.toString()}
             rotations={modalRotation}
             partner={modalPartner}
           />

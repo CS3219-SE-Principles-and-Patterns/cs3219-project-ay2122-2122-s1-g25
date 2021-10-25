@@ -138,14 +138,25 @@ const Home = () => {
   const [modalRotation, setModalRotation] = useState()
   const [modalPartner, setModalPartner] = useState()
 
+  // Temporary fix for undefined user on fresh load
+  const [loadingUser, setLoadingUser] = useState(true)
+
+  useEffect(() => {
+    if (user && loadingUser) {
+      setLoadingUser(false)
+    }
+  }, [user])
+
   // History
   useEffect(() => {
-    getAllSessions(user.userid)
-      .then((res) => {
-        setHistoryList(res.data)
-      })
-      .catch((err) => console.log(err))
-  }, [])
+    if (!loadingUser) {
+      getAllSessions(user.userid)
+        .then((res) => {
+          setHistoryList(res.data)
+        })
+        .catch((err) => console.log(err))
+    }
+  }, [loadingUser])
 
   // History Modal
   const [historyModalOpen, setHistoryModalOpen] = useState(false)

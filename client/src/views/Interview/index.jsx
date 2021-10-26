@@ -14,7 +14,7 @@ const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
 import { getInterview, updateInterview } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
-import { chatSocket, rotationSocket } from '../../config/socket'
+import { chatSocket, rotationSocket, videoSocket } from '../../config/socket'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -71,6 +71,11 @@ const Interview = () => {
       chatSocket.emit('joinRoom', {
         room: getInterviewSessionId(),
         user: user.firstname,
+      })
+      videoSocket.emit('joinRoom', {
+        room: getInterviewSessionId(),
+        user: user.firstname,
+        userId: user.userid,
       })
       setLoading(false)
     }
@@ -152,7 +157,10 @@ const Interview = () => {
               </Grid>
               <Grid item xs={3} className={classes.gridRight}>
                 <Box className={classes.videoWrapper}>
-                  <Conferencing interviewSessionId={getInterviewSessionId()} />
+                  <Conferencing
+                    interviewSessionId={getInterviewSessionId()}
+                    isInterviewee={userNum === rotationNum}
+                  />
                 </Box>
                 <Box className={classes.chatWrapper}>
                   <ChatBox chatSocket={chatSocket} user={user} />

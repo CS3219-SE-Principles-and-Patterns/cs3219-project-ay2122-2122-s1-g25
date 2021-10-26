@@ -22,6 +22,7 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     width: '50%',
     padding: '5px',
+    // background: 'pink',
   },
   videoBox: {
     height: '100%',
@@ -42,136 +43,272 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const Video = (props) => {
-  const classes = useStyles()
-  const ref = useRef()
-
-  Video.propTypes = {
-    peer: PropTypes.object,
-  }
-
-  useEffect(() => {
-    console.log('AAA')
-    console.log(props)
-
-    // navigator.mediaDevices
-    //   .getUserMedia({ video: true, audio: true })
-    //   .then((stream) => {
-    //     ref.current.srcObject = stream
-    //   })
-
-    props.peer.on('stream', (stream) => {
-      ref.current.srcObject = stream
-    })
-  }, [])
-
-  return (
-    <Box className={classes.videoBox}>
-      <video className={classes.video} playsInline muted ref={ref} autoPlay />
-      <Typography variant="caption" className={classes.names}>
-        {'Dummy Name'}
-      </Typography>
-    </Box>
-  )
-}
-
 const Conferencing = (props) => {
   const classes = useStyles()
 
   Conferencing.propTypes = {
     interviewSessionId: PropTypes.string,
+    isInterviewee: PropTypes.boolean,
   }
 
   const user = fetchStorage('user')
-
-  const [peers, setPeers] = useState([])
+  // const [peers, setPeers] = useState([])
   const userVideo = useRef()
-  const peersRef = useRef([])
-  // const roomID = props.match.params.roomID
-  const roomID = props.interviewSessionId
+  const partnerVideo = useRef()
+  // const [stream, setStream] = useState()
+  // const [partnerName, setPartnerName] = useState('')
+
+  // const peersRef = useRef([])
+  // const [callerSignal, setCallerSignal] = useState()
+  const [callAccepted, setCallAccepted] = useState(false)
+
+  // const [acceptedOffer, setAcceptedOffer] = useState()
+
+  const [runOnce, setRunOnce] = useState(false)
+  // const roomID = props.interviewSessionId
+
+  // useEffect(() => {
+  //   // })
+  // }, [])
 
   useEffect(() => {
-    console.log('AA ' + roomID)
+    // navigator.mediaDevices
+    //   .getUserMedia({ video: true, audio: true })
+    //   .then((stream) => {
+
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        userVideo.current.srcObject = stream
+        // setStream(stream)
+        if (userVideo.current) {
+          userVideo.current.srcObject = stream
+        }
+        console.log(stream)
 
-        videoSocket.emit('join room', roomID)
+        // videoSocket.on('successfully joined room', (message) => {
+        //   console.log(message.successMsg)
 
-        videoSocket.on('all users', (users) => {
-          console.log('Received All Users: ')
-          console.log(users)
-          const peers = []
-          users.forEach((userID) => {
-            const peer = createPeer(userID, videoSocket.id, stream)
-            peersRef.current.push({
-              peerID: userID,
-              peer,
+        //   // send data stream over -- let interviewee initiate call
+        //   console.log(user.userid + ' ' + message.joinedId)
+        //   if (props.isInterviewee && message.joinedId == user.userid) {
+        //     console.log('I am calling, this is me: ' + user.userid)
+        //     console.log(stream)
+        //     callPeer(stream)
+        //   }
+        // })
+
+        // if (!props.isInterviewee) {
+        //   videoSocket.on('hey', (data) => {
+        //     console.log('I am receiving a call from: ' + data.from)
+        //     console.log(stream)
+
+        //     setCallerSignal(data.signal)
+        //     // console.log(data.signal)
+        //     acceptCall(data.from, data.signal)
+        //   })
+        // }
+      })
+
+    // let count = 0
+    // count += 1
+    // console.log(count)
+    // console.log(runOnce)
+    // if (!runOnce) {
+    setRunOnce(true)
+    videoSocket.on('successfully joined room', (message) => {
+      console.log(message.successMsg)
+
+      // send data stream over -- let interviewee initiate call
+      console.log(user.userid + ' ' + message.joinedId)
+      if (props.isInterviewee && message.joinedId == user.userid) {
+        console.log('I am calling, this is me: ' + user.userid)
+        // console.log(stream)
+        callPeer()
+      }
+    })
+
+    if (!props.isInterviewee) {
+      videoSocket.on('hey', (data) => {
+        console.log('I am receiving a call from: ' + data.from)
+        // console.log(stream)
+
+        // setCallerSignal(data.signal)
+        // console.log(data.signal)
+        acceptCall(data.from, data.signal)
+      })
+    }
+    // }
+    // })
+  }, [])
+
+  function callPeer() {
+    console.log('Peer is being called')
+    console.log(runOnce)
+    if (!callAccepted) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          const peer = new Peer({
+            initiator: true,
+            trickle: false,
+            config: {
+              iceServers: [
+                {
+                  urls: 'stun:numb.viagenie.ca',
+                  username: 'sultan1640@gmail.com',
+                  credential: '98376683',
+                },
+                {
+                  urls: 'turn:numb.viagenie.ca',
+                  username: 'sultan1640@gmail.com',
+                  credential: '98376683',
+                },
+              ],
+            },
+            stream: stream,
+          })
+          // console.log('This is the stream')
+          // console.log(stream)
+          peer.on('signal', (data) => {
+            console.log('Peer signal this data sent:')
+            console.log(data)
+            videoSocket.emit('callUser', {
+              signalData: data,
+              from: user.userid,
             })
-            peers.push(peer)
-          })
-          setPeers(peers)
-        })
-
-        // check
-        videoSocket.on(roomID, (users) => {
-          console.log('Received All Users: ')
-          console.log(users)
-        })
-
-        videoSocket.on('user joined', (payload) => {
-          console.log('User just joined or smth')
-
-          // who is the one calling me
-          const peer = addPeer(payload.signal, payload.callerID, stream)
-          peersRef.current.push({
-            peerID: payload.callerID,
-            peer,
           })
 
-          setPeers((users) => [...users, peer])
+          peer.on('stream', (stream) => {
+            console.log('Peer Stream')
+            if (partnerVideo.current) {
+              partnerVideo.current.srcObject = stream
+              console.log('The stream for my partner in Call Peer: ')
+              console.log(stream)
+            }
+          })
+
+          videoSocket.on('callAccepted', (signal) => {
+            setCallAccepted(true)
+            console.log('Call Accepcted:')
+            console.log(signal)
+            peer.signal(signal)
+          })
         })
 
-        videoSocket.on('receiving returned signal', (payload) => {
-          const item = peersRef.current.find((p) => p.peerID === payload.id)
-          item.peer.signal(payload.signal)
-        })
-      })
-  }, [videoSocket])
+      // const peer = new Peer({
+      //   initiator: true,
+      //   trickle: false,
+      //   config: {
+      //     iceServers: [
+      //       {
+      //         urls: 'stun:numb.viagenie.ca',
+      //         username: 'sultan1640@gmail.com',
+      //         credential: '98376683',
+      //       },
+      //       {
+      //         urls: 'turn:numb.viagenie.ca',
+      //         username: 'sultan1640@gmail.com',
+      //         credential: '98376683',
+      //       },
+      //     ],
+      //   },
+      //   stream: stream,
+      // })
+      // // console.log('This is the stream')
+      // // console.log(stream)
+      // peer.on('signal', (data) => {
+      //   console.log('Peer signal this data sent:')
+      //   console.log(data)
+      //   videoSocket.emit('callUser', {
+      //     signalData: data,
+      //     from: user.userid,
+      //   })
+      // })
 
-  function createPeer(userToSignal, callerID, stream) {
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream,
-    })
+      // peer.on('stream', (stream) => {
+      //   console.log('Peer Stream')
+      //   if (partnerVideo.current) {
+      //     partnerVideo.current.srcObject = stream
+      //     console.log('The stream for my partner in Call Peer: ')
+      //     console.log(stream)
+      //   }
+      // })
 
-    peer.on('signal', (signal) => {
-      videoSocket.emit('sending signal', {
-        userToSignal,
-        callerID,
-        signal,
-      })
-    })
-
-    return peer
+      // videoSocket.on('callAccepted', (signal) => {
+      //   setCallAccepted(true)
+      //   console.log('Call Accepcted:')
+      //   console.log(signal)
+      //   peer.signal(signal)
+      // })
+    }
   }
 
-  function addPeer(incomingSignal, callerID, stream) {
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream,
-    })
+  function acceptCall(callerId, theSignalFromCaller) {
+    console.log('Peer is accepting call')
+    console.log(runOnce)
+    console.log('Accepting Call: ' + callAccepted)
+    if (!callAccepted) {
+      let currS = null
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          currS = stream
+          // console.log('Innner')
+          // console.log(currS)
+          // console.log(stream)
+          const peer = new Peer({
+            initiator: false,
+            trickle: false,
+            stream: stream,
+          })
 
-    peer.on('signal', (signal) => {
-      videoSocket.emit('returning signal', { signal, callerID })
-    })
+          peer.on('signal', (data) => {
+            console.log('Accept call signal: ')
+            console.log(data)
+            videoSocket.emit('acceptCall', { signal: data, to: callerId })
+          })
 
-    peer.signal(incomingSignal)
+          peer.on('stream', (stream) => {
+            partnerVideo.current.srcObject = stream
+            console.log('The stream for my partner in Accept Call: ')
+            console.log(stream)
+          })
 
-    return peer
+          console.log('Accepting Call Func')
+          console.log(theSignalFromCaller)
+          // peer.signal(callerSignal)
+          peer.signal(theSignalFromCaller)
+
+          setCallAccepted(true)
+        })
+
+      console.log('currS:')
+      console.log(currS)
+      // const peer = new Peer({
+      //   initiator: false,
+      //   trickle: false,
+      //   stream: stream,
+      // })
+
+      // peer.on('signal', (data) => {
+      //   console.log('Accept call signal: ')
+      //   console.log(data)
+      //   videoSocket.emit('acceptCall', { signal: data, to: callerId })
+      // })
+
+      // peer.on('stream', (stream) => {
+      //   partnerVideo.current.srcObject = stream
+      //   console.log('The stream for my partner in Accept Call: ')
+      //   console.log(stream)
+      // })
+
+      // console.log('Accepting Call Func')
+      // console.log(theSignalFromCaller)
+      // // peer.signal(callerSignal)
+      // peer.signal(theSignalFromCaller)
+
+      // setCallAccepted(true)
+    }
   }
 
   return (
@@ -192,9 +329,24 @@ const Conferencing = (props) => {
         </Box>
       </Box>
       <Box className={classes.videoWrapper}>
-        {peers.map((peer, index) => {
-          return <Video key={index} peer={peer} />
-        })}
+        {/* <Box className={classes.videoWrapper}>
+        {callAccepted && <Video playsInline ref={partnerVideo} autoPlay />}
+      </Box> */}
+        <Box className={classes.videoBox}>
+          {callAccepted && (
+            <video
+              className={classes.video}
+              playsInline
+              muted
+              ref={partnerVideo}
+              autoPlay
+            />
+          )}
+          <Typography variant="caption" className={classes.names}>
+            {/* {`${partnerName}` || 'Dummy Name'} */}
+            {'Dummy Name'}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   )

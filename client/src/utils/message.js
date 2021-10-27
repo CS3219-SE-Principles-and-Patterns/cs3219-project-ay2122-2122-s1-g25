@@ -19,6 +19,9 @@ export const ERROR = {
   interviewClosedAlert: 'Not permitted to enter a completed interview session.',
   invalidInterviewUserAlert:
     "Not permitted to enter others' interview session.",
+  invalidEmail: 'Please register using an NUS email address',
+  weakPassword:
+    'Passwords must be longer than 8 characters and include alphabets, numbers, and special characters',
 }
 
 export const SUCCESS = {

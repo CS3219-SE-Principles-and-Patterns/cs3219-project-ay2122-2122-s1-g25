@@ -8,11 +8,13 @@ const videoSocketWrapper = (io) => {
 
     let roomId;
     let users = [];
+
     socket.on('joinRoom', (msg) => {
       roomId = msg.room;
       videoSocket
         .to(roomId)
         .emit('new-user', `${msg.user} has joined room ${roomId}`);
+      console.log(users);
       if (!users.includes(msg.userId)) {
         users.push(msg.userId);
 
@@ -20,6 +22,12 @@ const videoSocketWrapper = (io) => {
         return socket.emit('successfully joined room', {
           successMsg: `You have successfully joined ${roomId} with id ${msg.userId}`,
           joinedId: msg.userId,
+        });
+      } else {
+        console.log(users);
+        console.log(msg.userId);
+        return socket.emit('the room is full', {
+          msg: 'The Room is Full',
         });
       }
     });
@@ -32,14 +40,21 @@ const videoSocketWrapper = (io) => {
       videoSocket.to(roomId).emit('hey', {
         signal: data.signalData,
         from: data.from,
+        partnerName: data.userName,
       });
+      users = [];
     });
 
     socket.on('acceptCall', (data) => {
-      videoSocket.to(roomId).emit('callAccepted', data.signal);
+      videoSocket.to(roomId).emit('callAccepted', {
+        signal: data.signal,
+        partnerName: data.userName,
+      });
+      users = [];
     });
 
     socket.on('disconnect', () => {
+      users = [];
       videoSocket
         .to(roomId)
         .emit('user-disconnected', `Your partner has disconnected`);

@@ -95,6 +95,12 @@ const InterviewNavbar = (props) => {
 
   const exitInterview = () => {
     // leaveCall() // close camera & stuff
+    // if (stream) {
+    // stream.getTracks().forEach((track) => {
+    //   track.stop()
+    // })
+    // }
+
     const pathname = window.location.pathname
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
     router.push(`/feedback?iSession=${iSessionId}`)

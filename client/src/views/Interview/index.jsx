@@ -54,6 +54,7 @@ const Interview = () => {
   const user = fetchStorage('user')
 
   const [userNum, setUserNum] = useState()
+  const [partnerNum, setPartnerNum] = useState()
   const [rotationNum, setRotationNum] = useState()
 
   useEffect(() => {
@@ -121,8 +122,10 @@ const Interview = () => {
     const user0 = interviewData?.interviewSession?.user0
     const user1 = interviewData?.interviewSession?.user1
     if (userId === user0) {
+      setPartnerNum(user1)
       return 0
     } else if (userId === user1) {
+      setPartnerNum(user0)
       return 1
     } else {
       toast.error(ERROR.interviewInitialisationFailure)
@@ -160,6 +163,7 @@ const Interview = () => {
                   <Conferencing
                     interviewSessionId={getInterviewSessionId()}
                     isInterviewee={userNum === rotationNum}
+                    partnerNum={partnerNum}
                   />
                 </Box>
                 <Box className={classes.chatWrapper}>

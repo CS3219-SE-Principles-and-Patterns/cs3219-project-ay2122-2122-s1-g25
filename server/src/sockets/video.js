@@ -5,39 +5,13 @@ const videoSocketWrapper = (io) => {
         `Video Socket: connection established from client ${socket.id}`
       );
       let roomId;
-      
-      socket.on('joinRoom', (msg) => {
-        roomId = msg.room;
-        videoSocket
-          .to(roomId)
-          .emit('new-user', `${msg.user} has joined room ${roomId}`);
 
-          socket.join(roomId);
-          return socket.emit('successfully joined room', {
-            successMsg: `You have successfully joined ${roomId} with id ${msg.userId}`,
-            joinedId: msg.userId,
-          });
+      socket.on('joinRoom', (msg) => {
+        const { roomId, userId } = msg
+        socket.join(roomId);
+        socket.broadcast.to(roomId).emit('user-connected', userId)
       });
-  
-      socket.on('send-video-message', (msg) => {
-        videoSocket.to(roomId).emit('receive-video-message', msg);
-      });
-  
-      socket.on('callUser', (data) => {
-        videoSocket.to(roomId).emit('hey', {
-          signal: data.signalData,
-          from: data.from,
-          partnerName: data.userName,
-        });
-      });
-  
-      socket.on('acceptCall', (data) => {
-        videoSocket.to(roomId).emit('callAccepted', {
-          signal: data.signal,
-          partnerName: data.userName,
-        });
-      });
-  
+
       socket.on('disconnect', () => {
         videoSocket
           .to(roomId)

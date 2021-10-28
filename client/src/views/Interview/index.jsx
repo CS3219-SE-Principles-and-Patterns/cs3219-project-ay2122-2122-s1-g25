@@ -109,11 +109,6 @@ const Interview = () => {
           room: getInterviewSessionId(),
           user: user.firstname,
         })
-        videoSocket.emit('joinRoom', {
-          room: getInterviewSessionId(),
-          user: user.firstname,
-          userId: user.userid,
-        })
         setLoading(false)
       }
     }

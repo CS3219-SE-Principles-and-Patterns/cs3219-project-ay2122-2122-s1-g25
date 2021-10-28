@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-// import Peer from 'simple-peer'
 import PropTypes from 'prop-types'
+// import Peer from 'peerjs'
 
 const useStyles = makeStyles(() => ({
   videoContainer: {
@@ -41,32 +41,71 @@ const Conferencing = (props) => {
   const classes = useStyles()
   Conferencing.propTypes = {
     interviewSessionId: PropTypes.string,
-    isInterviewee: PropTypes.boolean,
+    isInterviewee: PropTypes.bool,
     partnerId: PropTypes.string,
     videoSocket: PropTypes.any,
     user: PropTypes.object,
   }
 
-  // const { interviewSessionId, isInterviewee, partnerId, videoSocket, user } =
-  // props
-  const { user } = props
+  const { interviewSessionId, videoSocket, user } = props
   const myName = user?.firstname + ' ' + user?.lastname
   const userVideo = useRef()
   const partnerVideo = useRef()
   const [partnerName, setPartnerName] = useState()
-  // const [myPeer, setMyPeer] = useState(null)
+  const [peer, setPeer] = useState()
+  const [importComplete, setImportComplete] = useState()
+  // const peer = new Peer(undefined, {})
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        if (userVideo.current) {
-          userVideo.current.srcObject = stream
-        }
-        console.log(stream)
-        setPartnerName('My Partner')
+    import('peerjs').then(({ default: Peer }) => {
+      // const newPeer = new Peer(undefined, {})
+      const newPeer = new Peer()
+      newPeer.on('open', () => {
+        videoSocket.emit('joinRoom', {
+          roomId: interviewSessionId,
+          userId: user.userid,
+        })
       })
+      setPeer(newPeer)
+      setImportComplete(true)
+    })
   }, [])
+
+  useEffect(() => {
+    if (importComplete) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          if (userVideo.current) {
+            userVideo.current.srcObject = stream
+          }
+          console.log(stream)
+          setPartnerName('My Partner')
+          peer.on('call', (call) => {
+            console.log('Receiving call!')
+            call.answer(stream)
+            call.on('stream', (userVideoStream) => {
+              partnerVideo.current.srcObject = userVideoStream
+            })
+          })
+
+          videoSocket.on('user-connected', (userId) => {
+            console.log('Person coming: ', userId)
+            connectToPartner(userId, stream)
+          })
+        })
+    }
+  }, [importComplete])
+
+  const connectToPartner = (userId, stream) => {
+    const call = peer.call(userId, stream)
+    console.log('Sending call!')
+    call.on('stream', (userVideoStream) => {
+      console.log(userVideoStream)
+      partnerVideo.current.srcObject = userVideoStream
+    })
+  }
+
   return (
     <Box className={classes.videoContainer}>
       <Box className={classes.videoWrapper}>
@@ -76,7 +115,7 @@ const Conferencing = (props) => {
             className={classes.video}
             playsInline
             // muted={audioMuted}
-            muted={false}
+            muted={true}
             ref={userVideo}
             autoPlay
           />
@@ -93,7 +132,7 @@ const Conferencing = (props) => {
           <video
             className={classes.video}
             playsInline
-            muted={false}
+            muted={true}
             ref={partnerVideo}
             autoPlay
           />

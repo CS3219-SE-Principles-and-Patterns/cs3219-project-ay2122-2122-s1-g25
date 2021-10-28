@@ -1,10 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-// import { ContextProvider, SocketContext } from './SocketContext'
-import { SocketContext } from './SocketContext'
-import { fetchStorage } from '../../storage'
+// import Peer from 'simple-peer'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(() => ({
   videoContainer: {
@@ -38,61 +37,70 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const Conferencing = () => {
+const Conferencing = (props) => {
   const classes = useStyles()
-  const { callAccepted, myVideo, userVideo, callEnded, stream, call } =
-    useContext(SocketContext)
+  Conferencing.propTypes = {
+    interviewSessionId: PropTypes.string,
+    isInterviewee: PropTypes.boolean,
+    partnerId: PropTypes.string,
+    videoSocket: PropTypes.any,
+    user: PropTypes.object,
+  }
 
-  const user = fetchStorage('user')
+  // const { interviewSessionId, isInterviewee, partnerId, videoSocket, user } =
+  // props
+  const { user } = props
+  const myName = user?.firstname + ' ' + user?.lastname
+  const userVideo = useRef()
+  const partnerVideo = useRef()
+  const [partnerName, setPartnerName] = useState()
+  // const [myPeer, setMyPeer] = useState(null)
 
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        if (userVideo.current) {
+          userVideo.current.srcObject = stream
+        }
+        console.log(stream)
+        setPartnerName('My Partner')
+      })
+  }, [])
   return (
     <Box className={classes.videoContainer}>
       <Box className={classes.videoWrapper}>
         {/* My Video */}
-        {stream && (
-          <Box className={classes.videoBox}>
-            <video
-              className={classes.video}
-              playsInline
-              muted
-              ref={myVideo}
-              autoPlay
-            />
+        <Box className={classes.videoBox}>
+          <video
+            className={classes.video}
+            playsInline
+            // muted={audioMuted}
+            muted={false}
+            ref={userVideo}
+            autoPlay
+          />
+          <Box className={classes.nameMicContainer}>
             <Typography variant="caption" className={classes.names}>
-              {`${user?.firstname} ${user?.lastname}` || 'Dummy Name'}
+              {myName || 'Nameless'}
             </Typography>
           </Box>
-        )}
-        {!stream && (
-          <Box className={classes.videoBox}>
-            <Typography variant="caption" className={classes.names}>
-              No video detected for Name
-            </Typography>
-          </Box>
-        )}
+        </Box>
       </Box>
+      {/*  Partner Video */}
       <Box className={classes.videoWrapper}>
-        {/*Other User's  Video */}
-        {callAccepted && !callEnded && (
-          <Box className={classes.videoBox}>
-            <video
-              playsInline
-              ref={userVideo}
-              autoPlay
-              className={classes.video}
-            />
-            <Typography variant="caption" className={classes.names}>
-              {call.name || 'Name'}
-            </Typography>
-          </Box>
-        )}
-        {!callAccepted && (
-          <Box className={classes.videoBox}>
-            <Typography variant="caption" className={classes.names}>
-              No video detected for Partner
-            </Typography>
-          </Box>
-        )}
+        <Box className={classes.videoBox}>
+          <video
+            className={classes.video}
+            playsInline
+            muted={false}
+            ref={partnerVideo}
+            autoPlay
+          />
+          <Typography variant="caption" className={classes.names}>
+            {`${partnerName}` || 'Partner video is not connected'}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   )

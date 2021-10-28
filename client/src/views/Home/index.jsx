@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.secondary,
     borderRadius: theme.shape.borderRadius,
     padding: 16,
+
     '& Button': {
       width: '100%',
       minHeight: '100px',
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   easyButton: {
     width: '100%',

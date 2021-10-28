@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Rating from '@material-ui/lab/Rating'
 import {
   Avatar,
-  Box,
   Button,
   Container,
   Grid,
@@ -19,7 +18,7 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import { useRouter } from 'next/router'
 import { fetchStorage } from '../../storage'
 import { getFeedbacks } from '../../api/feedback'
-import SearchBar from '../../components/Search/SearchBar'
+// import SearchBar from '../../components/Search/SearchBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.secondary,
     borderRadius: theme.shape.borderRadius,
     padding: 16,
-    overflow: 'scroll',
+    overflow: 'auto',
   },
   reviewHeader: {
     fontWeight: 700,
@@ -125,9 +124,9 @@ const Profile = () => {
       {!loading && (
         <HomeLayout currPage="Profile">
           <Container className={classes.root} maxWidth="lg">
-            <Box className={classes.searchWrapper}>
+            {/* <Box className={classes.searchWrapper}>
               <SearchBar />
-            </Box>
+            </Box> */}
             <Grid container className={classes.gridWrapper}>
               <Grid item xs={4} className={classes.profileWrapper}>
                 <Avatar

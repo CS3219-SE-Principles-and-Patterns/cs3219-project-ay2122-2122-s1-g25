@@ -99,11 +99,13 @@ const Profile = () => {
   const user = fetchStorage('user')
   const [loading, setLoading] = useState(true)
   const [feedbacks, setFeedbacks] = useState()
+  const [ratingValue, setRatingValue] = useState(0)
 
   useEffect(() => {
     getFeedbacks(user.userid)
       .then((res) => {
         setFeedbacks(res.data)
+        setRatings(res.data)
       })
       .catch((err) => console.log(err))
   }, [])
@@ -117,6 +119,14 @@ const Profile = () => {
   const handleRedirectReset = (e) => {
     e.preventDefault()
     router.push('/resetPassword')
+  }
+
+  const setRatings = (feedbacks) => {
+    let newRatings = 0
+    for (let feedback of feedbacks) {
+      newRatings += feedback.rating
+    }
+    setRatingValue(newRatings / feedbacks.length)
   }
 
   return (
@@ -136,7 +146,7 @@ const Profile = () => {
                 />
                 <Typography variant="h6">{`${user?.firstname} ${user?.lastname}`}</Typography>
                 <Typography variant="subtitle1">{user?.email}</Typography>
-                <Rating name="disabled" value={4} disabled />
+                <Rating name="disabled" value={ratingValue} disabled />
                 <Typography
                   variant="caption"
                   className={classes.registrationText}

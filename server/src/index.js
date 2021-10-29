@@ -37,6 +37,16 @@ socketDriver(server)
 //   }
 // }
 // app.use(cors(corsOptions));
+
+// JWT imports
+const admin = require('firebase-admin')
+const serviceAccount = require("../serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: ""
+});
+
 app.use(cors())
 
 app.use(express.urlencoded({ extended: false }));
@@ -49,12 +59,26 @@ app.get('/', (req, res) => {
     data: 'Welcome! Let\'s Upskill now!',
   });
 });
-app.use('/api/users', userRoutes)
-app.use('/api/questions', questionRoutes);
-app.use('/api/matching', userMatchingRoutes);
-app.use('/api/interview', interviewSessionRoutes);
-app.use('/api/rotation', rotationRoutes);
-app.use('/api/feedback', feedbackRoutes);
+app.use('/api/users', authenticateToken, userRoutes)
+app.use('/api/questions', authenticateToken, questionRoutes);
+app.use('/api/matching', authenticateToken, userMatchingRoutes);
+app.use('/api/interview', authenticateToken, interviewSessionRoutes);
+app.use('/api/rotation', authenticateToken, rotationRoutes);
+app.use('/api/feedback', authenticateToken, feedbackRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  // no token, unauthenticated
+  if (token == null) return res.sendStatus(401);
+  // has token, verify token  
+  admin.auth().verifyIdToken(token)
+    .then(() => {
+      next()
+    }).catch(() => {
+      res.status(403).send('Unauthorized')
+    });
+}

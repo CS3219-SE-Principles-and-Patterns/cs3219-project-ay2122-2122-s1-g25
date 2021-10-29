@@ -6,13 +6,13 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "test": "npx jest ./src",
     "lint-staged": "npx lint-staged",
     "lint": "npx eslint ./src",
-    "cy:open-only": "cypress open",
-    "cy:run-only": "cypress run",
-    "cy:open": "start-server-and-test dev 3001 cy:open-only",
-    "cy:run": "start-server-and-test dev 3001 cy:run-only"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "dev:test": "next dev -p 3001",
+    "test-with-ui": "start-server-and-test dev:test 3001 cy:open",
+    "test": "start-server-and-test dev:test 3001 cy:run"
   },
   "lint-staged": {
     "*.{js,jsx}": "npx eslint --fix"

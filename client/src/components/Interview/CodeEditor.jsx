@@ -11,7 +11,7 @@ import 'codemirror/theme/material.css'
 
 require('codemirror/mode/python/python.js') // can choose language to highlight
 
-import { UnControlled as CodeMirrorEditor } from 'react-codemirror2'
+import { Controlled as CodeMirrorEditor } from 'react-codemirror2'
 
 // import CodeMirror from 'codemirror'
 import * as Y from 'yjs'
@@ -57,13 +57,13 @@ const CodeEditor = (props) => {
 
   const handleChange = (editor, data, value) => {
     if (editable) {
+      console.log('handling change ')
       setCode(value)
       debounced(value)
     }
   }
 
   const handleEditorDidMount = (editor) => {
-    console.log('editor', editor)
     setEditorRef(editor)
   }
 
@@ -100,7 +100,7 @@ const CodeEditor = (props) => {
     <Container disableGutters className={classes.root} maxWidth="xl">
       <Box className={classes.editorWrapper}>
         <CodeMirrorEditor
-          onChange={() => handleChange}
+          onBeforeChange={handleChange}
           value={code}
           autoCursor
           options={{

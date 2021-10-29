@@ -102,6 +102,7 @@ const CodeEditor = (props) => {
         <CodeMirrorEditor
           onChange={() => handleChange}
           value={code}
+          autoCursor
           options={{
             lineWrapping: true,
             lint: true,

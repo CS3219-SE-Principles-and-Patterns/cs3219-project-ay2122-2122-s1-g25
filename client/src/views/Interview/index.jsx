@@ -173,11 +173,12 @@ const Interview = () => {
                 <Grid item xs={9} className={classes.gridLeft}>
                   <Box className={classes.codeWrapper}>
                     <CodeEditor
-                      codeSocket={codeSocket}
+                      // codeSocket={codeSocket}
                       initialCode={interviewData.rotations[rotationNum].attempt}
                       editable={true}
                       iSessionId={getInterviewSessionId()}
                       rotationNum={rotationNum}
+                      user={user.firstname}
                     />
                   </Box>
                   <Box

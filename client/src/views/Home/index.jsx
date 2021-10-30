@@ -137,6 +137,7 @@ const Home = () => {
   const [historyList, setHistoryList] = useState([])
   const [modalRotation, setModalRotation] = useState()
   const [modalPartner, setModalPartner] = useState()
+  const [modalDateTime, setModalDateTime] = useState()
 
   // Temporary fix for undefined user on fresh load
   const [loadingUser, setLoadingUser] = useState(true)
@@ -161,10 +162,11 @@ const Home = () => {
   // History Modal
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
   const [modalID, setModalID] = useState(-1)
-  const handleHistoryModalOpen = (id, rotation, partner) => {
+  const handleHistoryModalOpen = (id, rotation, partner, dateTime) => {
     setModalRotation(rotation)
     setModalPartner(partner)
     setModalID(id)
+    setModalDateTime(dateTime)
     setHistoryModalOpen(true)
   }
 
@@ -451,6 +453,7 @@ const Home = () => {
             id={modalID.toString()}
             rotations={modalRotation}
             partner={modalPartner}
+            dateTime={modalDateTime}
           />
         </Modal>
         {/* Loading Modal */}

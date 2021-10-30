@@ -6,7 +6,16 @@ class InterviewSession {
     }
 
     getInterviewSessions(userId) {
-        return pool.query("SELECT * FROM InterviewSessions WHERE user0 = $1 OR user1 = $1", [userId])
+        const query = "SELECT I.iSessionId, I.createdAt, I.difficulty, I.user0, I.user1, " +
+        "U0.firstname user0Firstname, U0.lastname user0Lastname, " +
+        "U1.firstname user1Firstname, U1.lastname user1Lastname " +
+        "FROM InterviewSessions I " +
+        "INNER JOIN Users U0 ON I.user0 = U0.userId " +
+        "INNER JOIN Users U1 ON I.user1 = U1.userId " +
+        "WHERE user0 = $1 OR user1 = $1 " +
+        "ORDER BY I.createdAt DESC " +
+        "LIMIT 10"
+        return pool.query(query, [userId])
     }
 
     createInterviewSession(user0, user1, difficulty) {

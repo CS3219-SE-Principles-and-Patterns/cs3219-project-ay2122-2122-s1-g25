@@ -1,10 +1,11 @@
 name: Client Preview
 
 on:
-  pull_request:
-    # Optionally configure to run only for specific folders/files
-    paths:
-    - "client/**"
+  workflow_run:
+    workflows: [ "Client Test" ]
+    branches: [ master ]
+    types: 
+      - completed
 
 env:
   NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY: ${{secrets.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY}}
@@ -15,6 +16,7 @@ env:
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
       # Add any build steps here. For example:

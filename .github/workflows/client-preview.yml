@@ -1,11 +1,10 @@
 name: Client Preview
 
 on:
-  workflow_run:
-    workflows: [ "Client Test" ]
-    branches: [ master ]
-    types: 
-      - completed
+  pull_request:
+    # Optionally configure to run only for specific folders/files
+    paths:
+    - "client/**"
 
 env:
   NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY: ${{secrets.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY}}
@@ -14,9 +13,23 @@ env:
   NEXT_PUBLIC_API_ENDPOINT: ${{secrets.NEXT_PUBLIC_API_ENDPOINT}}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn
+        working-directory: client
+      - run: yarn test
+        working-directory: client
   build_and_preview:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v2
       # Add any build steps here. For example:

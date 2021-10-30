@@ -1,18 +1,32 @@
 import axios from 'axios'
+import { ERROR } from '../utils/message'
 import firebase from './firebase'
 
-const injectJWTToken = (config) => {
-  const user = firebase.auth().currentUser
-  if (user) {
-    user
-      .getIdToken()
-      .then((token) => {
-        config.headers.Authorization = `Bearer ${token}`
-        return config
-      })
-      .catch((err) => err)
+const getJWTToken = () => {
+  return new Promise((resolve, reject) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        user
+          .getIdToken()
+          .then((token) => {
+            resolve(token)
+          })
+          .catch((err) => reject(err))
+      } else {
+        reject(ERROR.userNotFound)
+      }
+    })
+  })
+}
+
+const injectJWTToken = async (request) => {
+  try {
+    const token = await getJWTToken()
+    request.headers.Authorization = `Bearer ${token}`
+  } catch (err) {
+    console.error(err)
   }
-  return config
+  return request
 }
 
 const instance = axios.create({
@@ -20,9 +34,7 @@ const instance = axios.create({
   timeout: 5000,
 })
 
-instance.interceptors.request.use((config) => {
-  return injectJWTToken(config)
-})
+instance.interceptors.request.use(injectJWTToken)
 
 export const GETRequest = (url, params = {}) => {
   return instance.get(url, { params })
@@ -46,9 +58,7 @@ const longInstance = axios.create({
   timeout: 40000,
 })
 
-longInstance.interceptors.request.use((config) => {
-  return injectJWTToken(config)
-})
+longInstance.interceptors.request.use(injectJWTToken)
 
 export const POSTLongRequest = (url, data = {}) => {
   return longInstance.post(url, data)

@@ -2,8 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
-require('dotenv').config();
-const { errorHandler, notFound } = require('./middleware/middleware');
 
 //Server imports
 const PORT = process.env.PORT || 4000;
@@ -19,6 +17,10 @@ const userMatchingRoutes = require('./routes/userMatching')
 const interviewSessionRoutes = require('./routes/interviewSession')
 const rotationRoutes = require('./routes/rotation')
 const feedbackRoutes = require('./routes/feedback')
+
+// Middleware imports
+const { verifyLogin } = require('./middleware/auth');
+const { errorHandler, notFound } = require('./middleware/middleware');
 
 //Websocket imports
 const socketDriver = require('./sockets')
@@ -38,18 +40,6 @@ socketDriver(server)
 // }
 // app.use(cors(corsOptions));
 
-// JWT imports
-const admin = require('firebase-admin')
-
-admin.initializeApp({
-  credential: admin.credential.cert({
-    "project_id": process.env.FIREBASE_PROJECT_ID,
-    "private_key": process.env.FIREBASE_PRIVATE_KEY,
-    "client_email": process.env.FIREBASE_CLIENT_EMAIL,
-  }),
-  databaseURL: ""
-});
-
 app.use(cors())
 
 app.use(express.urlencoded({ extended: false }));
@@ -62,26 +52,12 @@ app.get('/', (req, res) => {
     data: 'Welcome! Let\'s Upskill now!',
   });
 });
-app.use('/api/users', authenticateToken, userRoutes)
-app.use('/api/questions', authenticateToken, questionRoutes);
-app.use('/api/matching', authenticateToken, userMatchingRoutes);
-app.use('/api/interview', authenticateToken, interviewSessionRoutes);
-app.use('/api/rotation', authenticateToken, rotationRoutes);
-app.use('/api/feedback', authenticateToken, feedbackRoutes);
+app.use('/api/users', verifyLogin, userRoutes)
+app.use('/api/questions', verifyLogin, questionRoutes);
+app.use('/api/matching', verifyLogin, userMatchingRoutes);
+app.use('/api/interview', verifyLogin, interviewSessionRoutes);
+app.use('/api/rotation', verifyLogin, rotationRoutes);
+app.use('/api/feedback', verifyLogin, feedbackRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  // no token, unauthenticated
-  if (token == null) return res.sendStatus(401);
-  // has token, verify token  
-  admin.auth().verifyIdToken(token)
-    .then(() => {
-      next()
-    }).catch(() => {
-      res.status(403).send('Unauthorized')
-    });
-}

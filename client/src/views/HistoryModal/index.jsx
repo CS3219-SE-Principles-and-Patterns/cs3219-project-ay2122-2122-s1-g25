@@ -112,7 +112,6 @@ const HistoryModal = (props) => {
 
   const [loading, setLoading] = useState(true)
   const [difficulty, setDifficulty] = useState()
-  const [dateTime, setDateTime] = useState()
 
   const partner = props.partner
 
@@ -125,27 +124,21 @@ const HistoryModal = (props) => {
     } else {
       setDifficulty('Easy')
     }
-
-    const createdAt = props.rotations[0].createdat
-    let dt = new Date(createdAt)
-    const date = dt.toISOString().slice(0, 10)
-    var time = dt.toLocaleTimeString()
-
-    setDateTime([date, time])
   }, [])
 
   // get info before load
   useEffect(() => {
-    if (difficulty && dateTime) {
+    if (difficulty) {
       setLoading(false)
     }
-  }, [dateTime, difficulty])
+  }, [difficulty])
 
   HistoryModal.propTypes = {
     closeModal: PropTypes.func,
     id: PropTypes.string,
     partner: PropTypes.object,
     rotations: PropTypes.array,
+    dateTime: PropTypes.array,
   }
 
   return (
@@ -164,10 +157,10 @@ const HistoryModal = (props) => {
                   {difficulty}
                 </Button>
                 <Typography variant="button" className={classes.dateTimeTypo}>
-                  {dateTime[0]}
+                  {props.dateTime[0]}
                 </Typography>
                 <Typography variant="overline" className={classes.dateTimeTypo}>
-                  {dateTime[1]}
+                  {props.dateTime[1]}
                 </Typography>
               </Grid>
               <CloseIcon

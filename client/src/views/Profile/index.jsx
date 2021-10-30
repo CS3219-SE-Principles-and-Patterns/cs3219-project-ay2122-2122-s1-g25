@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const convertTimestamp = (timestamp) => {
+export const convertTimestamp = (timestamp) => {
   return new Date(timestamp?.replace(' ', 'T')).toLocaleString()
 }
 

@@ -10,7 +10,6 @@ const socketDriver = (server) => {
     // Import individual socket wrapper implementations
     require('./rotation')(io);
     require('./chat')(io);
-    require('./code')(io)
     return io;
 };
 

@@ -11,7 +11,7 @@ import 'codemirror/theme/material.css'
 
 require('codemirror/mode/python/python.js') // can choose language to highlight
 
-import { Controlled as CodeMirrorEditor } from 'react-codemirror2'
+import { UnControlled as CodeMirrorEditor } from 'react-codemirror2'
 
 // import CodeMirror from 'codemirror'
 import * as Y from 'yjs'
@@ -69,14 +69,20 @@ const CodeEditor = (props) => {
 
   useEffect(() => {
     setCode(initialCode)
+    console.log('setting initial code', initialCode)
   }, [initialCode])
 
   useEffect(() => {
     if (EditorRef) {
       const ydoc = new Y.Doc()
-      const provider = new WebrtcProvider(iSessionId, ydoc)
+      const provider = new WebrtcProvider(iSessionId, ydoc, {
+        signaling: [
+          'wss://signaling.yjs.dev',
+          'wss://y-webrtc-signaling-eu.herokuapp.com',
+          'wss://y-webrtc-signaling-us.herokuapp.com',
+        ],
+      })
       const awareness = provider.awareness
-
       awareness.setLocalStateField('user', {
         name: user,
         color: randomColor(),
@@ -100,9 +106,10 @@ const CodeEditor = (props) => {
     <Container disableGutters className={classes.root} maxWidth="xl">
       <Box className={classes.editorWrapper}>
         <CodeMirrorEditor
-          onBeforeChange={handleChange}
+          onChange={handleChange}
           value={code}
-          autoCursor
+          readOnly
+          autoCursor={false}
           options={{
             lineWrapping: true,
             lint: true,

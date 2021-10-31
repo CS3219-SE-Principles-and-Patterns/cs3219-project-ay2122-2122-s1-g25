@@ -44,6 +44,7 @@ const Conferencing = (props) => {
     isInterviewee: PropTypes.bool,
     partnerId: PropTypes.string,
     videoSocket: PropTypes.any,
+    partnerName: PropTypes.string,
     user: PropTypes.object,
   }
 
@@ -51,21 +52,26 @@ const Conferencing = (props) => {
   const myName = user?.firstname + ' ' + user?.lastname
   const userVideo = useRef()
   const partnerVideo = useRef()
-  const [partnerName, setPartnerName] = useState()
+  // const [partnerName, setPartnerName] = useState()
   const [peer, setPeer] = useState()
   const [importComplete, setImportComplete] = useState()
+
   // const peer = new Peer(undefined, {})
 
   useEffect(() => {
     import('peerjs').then(({ default: Peer }) => {
       // const newPeer = new Peer(undefined, {})
-      const newPeer = new Peer()
+      const newPeer = new Peer(user.userid)
+
       newPeer.on('open', () => {
         videoSocket.emit('joinRoom', {
           roomId: interviewSessionId,
           userId: user.userid,
+          userName: user.firstname + ' ' + user.lastname,
         })
       })
+
+      // create a new peer
       setPeer(newPeer)
       setImportComplete(true)
     })
@@ -80,7 +86,8 @@ const Conferencing = (props) => {
             userVideo.current.srcObject = stream
           }
           console.log(stream)
-          setPartnerName('My Partner')
+          // setPartnerName('My Partner')
+
           peer.on('call', (call) => {
             console.log('Receiving call!')
             call.answer(stream)
@@ -90,6 +97,7 @@ const Conferencing = (props) => {
           })
 
           videoSocket.on('user-connected', (userId) => {
+            console.log(userId)
             console.log('Person coming: ', userId)
             connectToPartner(userId, stream)
           })
@@ -101,6 +109,7 @@ const Conferencing = (props) => {
     const call = peer.call(userId, stream)
     console.log('Sending call!')
     call.on('stream', (userVideoStream) => {
+      console.log("This my partner's stream")
       console.log(userVideoStream)
       partnerVideo.current.srcObject = userVideoStream
     })
@@ -114,16 +123,13 @@ const Conferencing = (props) => {
           <video
             className={classes.video}
             playsInline
-            // muted={audioMuted}
-            muted={true}
+            muted={false}
             ref={userVideo}
             autoPlay
           />
-          <Box className={classes.nameMicContainer}>
-            <Typography variant="caption" className={classes.names}>
-              {myName || 'Nameless'}
-            </Typography>
-          </Box>
+          <Typography variant="caption" className={classes.names}>
+            {myName || 'Nameless'}
+          </Typography>
         </Box>
       </Box>
       {/*  Partner Video */}
@@ -132,12 +138,12 @@ const Conferencing = (props) => {
           <video
             className={classes.video}
             playsInline
-            muted={true}
+            muted={false}
             ref={partnerVideo}
             autoPlay
           />
           <Typography variant="caption" className={classes.names}>
-            {`${partnerName}` || 'Partner video is not connected'}
+            {`${props.partnerName}` || 'Partner video is not connected'}
           </Typography>
         </Box>
       </Box>

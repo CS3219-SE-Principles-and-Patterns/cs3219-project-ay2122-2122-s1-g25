@@ -22,6 +22,8 @@ export const ERROR = {
   invalidEmail: 'Please register using an NUS email address',
   weakPassword:
     'Passwords must be longer than 8 characters and include alphabets, numbers, and special characters',
+  userDataRetrivalFailure:
+    'Unable to retrieve partner data, please contact administrator immediately.',
 }
 
 export const SUCCESS = {

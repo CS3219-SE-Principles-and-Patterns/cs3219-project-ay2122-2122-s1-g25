@@ -11,7 +11,11 @@ import dynamic from 'next/dynamic'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
-import { getInterview, updateInterviewRotation } from '../../api/interview'
+import {
+  getInterview,
+  updateInterviewRotation,
+  getPartnerDetails,
+} from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
 import {
@@ -77,6 +81,7 @@ const Interview = () => {
 
   const [userNum, setUserNum] = useState()
   const [partnerId, setPartnerId] = useState()
+  const [partnerName, setPartnerName] = useState('')
   const [rotationNum, setRotationNum] = useState()
 
   useEffect(() => {
@@ -109,6 +114,10 @@ const Interview = () => {
           room: getInterviewSessionId(),
           user: user.firstname,
         })
+        // videoSocket.emit('joinRoom', {
+        //   roomId: getInterviewSessionId(),
+        //   userId: user.userid,
+        // })
         setLoading(false)
       }
     }
@@ -156,11 +165,24 @@ const Interview = () => {
   const getUserNum = (interviewData, userId) => {
     const user0 = interviewData?.interviewSession?.user0
     const user1 = interviewData?.interviewSession?.user1
+    console.log('Partner Details')
     if (userId === user0) {
       setPartnerId(user1)
+      getPartnerDetails(user1)
+        .then((res) => {
+          console.log(res.data)
+          setPartnerName(res.data[0].firstname + ' ' + res.data[0].lastname)
+        })
+        .catch(() => toast.error(ERROR.userDataRetrivalFailure))
       return 0
     } else if (userId === user1) {
       setPartnerId(user0)
+      getPartnerDetails(user0)
+        .then((res) => {
+          console.log(res.data)
+          setPartnerName(res.data[0].firstname + ' ' + res.data[0].lastname)
+        })
+        .catch(() => toast.error(ERROR.userDataRetrivalFailure))
       return 1
     }
   }
@@ -203,6 +225,7 @@ const Interview = () => {
                     interviewSessionId={getInterviewSessionId()}
                     isInterviewee={userNum === rotationNum}
                     partnerId={partnerId}
+                    partnerName={partnerName}
                     videoSocket={videoSocket}
                     user={user}
                   />

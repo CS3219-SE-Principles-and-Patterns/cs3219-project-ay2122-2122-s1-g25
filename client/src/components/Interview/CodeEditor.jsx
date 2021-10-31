@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Box } from '@material-ui/core'
+import {
+  Container,
+  Box,
+  Select,
+  MenuItem,
+  Typography,
+  FormControl,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { updateCode } from '../../api/interview'
@@ -8,12 +15,17 @@ import { useDebouncedCallback } from 'use-debounce'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
 
-require('codemirror/mode/python/python.js') // can choose language to highlight
+// languages
+require('codemirror/mode/python/python.js') //python
+require('codemirror/mode/javascript/javascript.js') //javascript
+require('codemirror/mode/css/css.js') // css
+require('codemirror/mode/go/go.js')
+require('codemirror/mode/markdown/markdown.js')
 
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
 // imports
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
   },
@@ -22,6 +34,21 @@ const useStyles = makeStyles(() => ({
   },
   codeMirrorWrapper: {
     height: '100%',
+  },
+  headerWrapper: {
+    background: '#1a1b1c',
+    padding: '10px',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  codingPadTitle: {
+    color: 'white',
+  },
+  dropDown: {
+    borderRadius: theme.shape.borderRadius,
+    background: theme.palette.tertiary.main,
+    paddingLeft: 10,
   },
 }))
 
@@ -38,6 +65,12 @@ const CodeEditor = (props) => {
   const classes = useStyles()
   const { rotationNum, codeSocket, initialCode, editable, iSessionId } = props
   const [code, setCode] = useState(initialCode)
+  const [language, setLanguage] = React.useState('python')
+
+  const handleCodeChange = (event) => {
+    setLanguage(event.target.value)
+  }
+
   const debounced = useDebouncedCallback((value) => {
     const data = {
       rotationNum: rotationNum,
@@ -66,6 +99,26 @@ const CodeEditor = (props) => {
 
   return (
     <Container disableGutters className={classes.root} maxWidth="xl">
+      <Box className={classes.headerWrapper}>
+        <Typography variant="subtitle2" className={classes.codingPadTitle}>
+          Coding Pad
+        </Typography>
+        <FormControl className={classes.formControl}>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={language}
+            onChange={handleCodeChange}
+            className={classes.dropDown}
+          >
+            <MenuItem value={'python'}>Python</MenuItem>
+            <MenuItem value={'javascript'}>Javascript</MenuItem>
+            <MenuItem value={'css'}>CSS</MenuItem>
+            <MenuItem value={'go'}>Go</MenuItem>
+            <MenuItem value={'markdown'}>Markdown</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
       <Box className={classes.editorWrapper}>
         <CodeMirror
           onBeforeChange={handleChange}
@@ -75,7 +128,7 @@ const CodeEditor = (props) => {
             lint: true,
             theme: 'material',
             lineNumbers: true,
-            mode: 'python',
+            mode: language,
           }}
           className={classes.codeMirrorWrapper}
         />

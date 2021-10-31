@@ -45,20 +45,19 @@ const CodeEditor = (props) => {
 
   const classes = useStyles()
   const { rotationNum, user, initialCode, editable, iSessionId } = props
-  const [code, setCode] = useState(initialCode)
   const [EditorRef, setEditorRef] = useState(null)
   const debounced = useDebouncedCallback((value) => {
     const data = {
       rotationNum: rotationNum,
       attempt: value,
     }
+    console.log(data)
     updateCode(iSessionId, data)
   }, 2000)
 
   const handleChange = (editor, data, value) => {
     if (editable) {
       console.log('handling change ')
-      setCode(value)
       debounced(value)
     }
   }
@@ -68,20 +67,10 @@ const CodeEditor = (props) => {
   }
 
   useEffect(() => {
-    setCode(initialCode)
-    console.log('setting initial code', initialCode)
-  }, [initialCode])
-
-  useEffect(() => {
+    console.log('doing smth w editor ref')
     if (EditorRef) {
       const ydoc = new Y.Doc()
-      const provider = new WebrtcProvider(iSessionId, ydoc, {
-        signaling: [
-          'wss://signaling.yjs.dev',
-          'wss://y-webrtc-signaling-eu.herokuapp.com',
-          'wss://y-webrtc-signaling-us.herokuapp.com',
-        ],
-      })
+      const provider = new WebrtcProvider(iSessionId, ydoc)
       const awareness = provider.awareness
       awareness.setLocalStateField('user', {
         name: user,
@@ -107,8 +96,7 @@ const CodeEditor = (props) => {
       <Box className={classes.editorWrapper}>
         <CodeMirrorEditor
           onChange={handleChange}
-          value={code}
-          readOnly
+          value={initialCode}
           autoCursor={false}
           options={{
             lineWrapping: true,

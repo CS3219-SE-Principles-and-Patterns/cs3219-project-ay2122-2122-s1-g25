@@ -13,7 +13,6 @@ import {
 
 import CloseIcon from '@material-ui/icons/Close'
 import FullHistory from '../../components/History/FullHistory'
-import { fetchStorage } from '../../storage'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -78,11 +77,10 @@ const QuestionWrapper = (props) => {
     data: PropTypes.object,
     partner: PropTypes.object,
     rotationnum: PropTypes.number,
+    users: PropTypes.array,
   }
 
-  const user = fetchStorage('user')
-
-  const { index, data, partner, rotationnum } = props
+  const { index, data, rotationnum, users } = props
 
   return (
     <Box>
@@ -93,12 +91,12 @@ const QuestionWrapper = (props) => {
         <Typography variant="body1" className={classes.interviewerDetails}>
           {`Interviewer: ${
             rotationnum == 0
-              ? user?.firstname + ' ' + user?.lastname
-              : partner.firstname + ' ' + partner.lastname
+              ? users[1]?.firstname + ' ' + users[1]?.lastname
+              : users[0].firstname + ' ' + users[0].lastname
           }, Interviewee: ${
             rotationnum == 0
-              ? partner.firstname + ' ' + partner.lastname
-              : user?.firstname + ' ' + user?.lastname
+              ? users[0].firstname + ' ' + users[0].lastname
+              : users[1]?.firstname + ' ' + users[1]?.lastname
           }`}
         </Typography>
       </Box>
@@ -112,7 +110,6 @@ const HistoryModal = (props) => {
 
   const [loading, setLoading] = useState(true)
   const [difficulty, setDifficulty] = useState()
-  const [dateTime, setDateTime] = useState()
 
   const partner = props.partner
 
@@ -125,27 +122,22 @@ const HistoryModal = (props) => {
     } else {
       setDifficulty('Easy')
     }
-
-    const createdAt = props.rotations[0].createdat
-    let dt = new Date(createdAt)
-    const date = dt.toISOString().slice(0, 10)
-    var time = dt.toLocaleTimeString()
-
-    setDateTime([date, time])
   }, [])
 
   // get info before load
   useEffect(() => {
-    if (difficulty && dateTime) {
+    if (difficulty) {
       setLoading(false)
     }
-  }, [dateTime, difficulty])
+  }, [difficulty])
 
   HistoryModal.propTypes = {
     closeModal: PropTypes.func,
     id: PropTypes.string,
     partner: PropTypes.object,
     rotations: PropTypes.array,
+    dateTime: PropTypes.array,
+    users: PropTypes.array,
   }
 
   return (
@@ -164,10 +156,10 @@ const HistoryModal = (props) => {
                   {difficulty}
                 </Button>
                 <Typography variant="button" className={classes.dateTimeTypo}>
-                  {dateTime[0]}
+                  {props.dateTime[0]}
                 </Typography>
                 <Typography variant="overline" className={classes.dateTimeTypo}>
-                  {dateTime[1]}
+                  {props.dateTime[1]}
                 </Typography>
               </Grid>
               <CloseIcon
@@ -183,6 +175,7 @@ const HistoryModal = (props) => {
                   data={data}
                   index={index}
                   partner={partner}
+                  users={props.users}
                   rotationnum={props.rotations[index].rotationnum}
                 />
               ))}

@@ -3,12 +3,16 @@
   "version": "0.0.1",
   "license": "SEE LICENSE IN LICENSE FILE",
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "test": "npx jest ./src",
     "lint-staged": "npx lint-staged",
-    "lint": "npx eslint ./src"
+    "lint": "npx eslint ./src",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "dev:test": "next dev -p 3001",
+    "test-with-ui": "start-server-and-test dev:test 3001 cy:open",
+    "test": "start-server-and-test dev:test 3001 cy:run"
   },
   "lint-staged": {
     "*.{js,jsx}": "npx eslint --fix"
@@ -48,17 +52,20 @@
   "devDependencies": {
     "@types/node": "^16.10.2",
     "babel-plugin-styled-components": "^1.10.7",
+    "cypress": "^8.7.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-babel-module": "^5.1.2",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^23.7.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.11",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "start-server-and-test": "^1.14.0"
   }
 }

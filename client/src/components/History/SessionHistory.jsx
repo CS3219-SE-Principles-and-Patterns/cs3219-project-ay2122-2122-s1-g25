@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react'
 import { ListItem, ListItemText, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { getSession, getPartner } from '../../api/history'
+import { getSession } from '../../api/history'
 import { fetchStorage } from '../../storage'
+import { convertTimestamp } from '../../views/Profile'
 
 const useStyles = makeStyles((theme) => ({
   sessionHistoryItem: {
@@ -35,6 +36,7 @@ const sessionHistory = (props) => {
   const classes = useStyles()
   const [rotation, setRotation] = useState()
   const [partner, setPartner] = useState()
+  const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [difficulty, setDifficulty] = useState()
   const [dateTime, setDateTime] = useState()
@@ -47,15 +49,32 @@ const sessionHistory = (props) => {
   // History
   useEffect(() => {
     // get partner details
-    const partnerId =
-      user.userid == props.data.user0 ? props.data.user1 : props.data.user0
-    getPartner(partnerId)
-      .then((res) => {
-        setPartner(res.data[0])
+    if (user.userid === props.data.user0) {
+      setPartner({
+        userid: props.data.user1,
+        firstname: props.data.user1firstname,
+        lastname: props.data.user1lastname,
       })
-      .catch((err) => {
-        console.log(err)
+    } else {
+      setPartner({
+        userid: props.data.user0,
+        firstname: props.data.user0firstname,
+        lastname: props.data.user0lastname,
       })
+    }
+
+    setUsers([
+      {
+        userid: props.data.user0,
+        firstname: props.data.user0firstname,
+        lastname: props.data.user0lastname,
+      },
+      {
+        userid: props.data.user1,
+        firstname: props.data.user1firstname,
+        lastname: props.data.user1lastname,
+      },
+    ])
 
     // get rotation details
     getSession(props.data.isessionid)
@@ -63,7 +82,7 @@ const sessionHistory = (props) => {
         setRotation(res.data.rotations)
 
         // Difficulty
-        const diff = res.data.rotations[0].difficulty
+        const diff = props.data.difficulty
         if (diff == 2) {
           setDifficulty('Hard')
         } else if (diff == 1) {
@@ -73,11 +92,9 @@ const sessionHistory = (props) => {
         }
 
         // Date Time
-        const createdAt = res.data.rotations[0].createdat
-        let dt = new Date(createdAt)
-        const date = dt.toISOString().slice(0, 10)
-        var time = dt.toLocaleTimeString()
-        setDateTime([date, time])
+        const createdAt = convertTimestamp(props.data.createdat)
+        const parts = createdAt.split(', ')
+        setDateTime([parts[0], parts[1]])
       })
       .catch((err) => {
         console.log(err)
@@ -86,10 +103,10 @@ const sessionHistory = (props) => {
 
   // get info before load
   useEffect(() => {
-    if (rotation && partner && difficulty && dateTime) {
+    if (rotation && partner && difficulty && dateTime && users) {
       setLoading(false)
     }
-  }, [rotation, partner, difficulty, dateTime])
+  }, [rotation, partner, difficulty, dateTime, users])
 
   // other functions
   const onHover = (event) => {
@@ -108,7 +125,9 @@ const sessionHistory = (props) => {
     <ListItem
       id={props.id + ''}
       className={classes.sessionHistoryItem}
-      onClick={() => props.customClickEvent(props.id, rotation, partner)}
+      onClick={() =>
+        props.customClickEvent(props.id, rotation, partner, dateTime, users)
+      }
       onMouseEnter={(e) => onHover(e)}
       onMouseLeave={(e) => onLeave(e)}
     >

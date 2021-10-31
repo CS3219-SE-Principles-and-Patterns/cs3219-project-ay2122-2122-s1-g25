@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.secondary,
     borderRadius: theme.shape.borderRadius,
     padding: 16,
+
     '& Button': {
       width: '100%',
       minHeight: '100px',
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   easyButton: {
     width: '100%',
@@ -137,6 +139,8 @@ const Home = () => {
   const [historyList, setHistoryList] = useState([])
   const [modalRotation, setModalRotation] = useState()
   const [modalPartner, setModalPartner] = useState()
+  const [modalDateTime, setModalDateTime] = useState()
+  const [users, setUsers] = useState([]) // user0 & user1
 
   // Temporary fix for undefined user on fresh load
   const [loadingUser, setLoadingUser] = useState(true)
@@ -161,10 +165,13 @@ const Home = () => {
   // History Modal
   const [historyModalOpen, setHistoryModalOpen] = useState(false)
   const [modalID, setModalID] = useState(-1)
-  const handleHistoryModalOpen = (id, rotation, partner) => {
+
+  const handleHistoryModalOpen = (id, rotation, partner, dateTime, users) => {
     setModalRotation(rotation)
     setModalPartner(partner)
     setModalID(id)
+    setModalDateTime(dateTime)
+    setUsers(users)
     setHistoryModalOpen(true)
   }
 
@@ -451,6 +458,8 @@ const Home = () => {
             id={modalID.toString()}
             rotations={modalRotation}
             partner={modalPartner}
+            dateTime={modalDateTime}
+            users={users}
           />
         </Modal>
         {/* Loading Modal */}

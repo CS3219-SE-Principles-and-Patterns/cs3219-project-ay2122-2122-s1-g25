@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Rating from '@material-ui/lab/Rating'
 import {
   Avatar,
-  Box,
   Button,
   Container,
   Grid,
@@ -19,7 +18,7 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import { useRouter } from 'next/router'
 import { fetchStorage } from '../../storage'
 import { getFeedbacks } from '../../api/feedback'
-import SearchBar from '../../components/Search/SearchBar'
+// import SearchBar from '../../components/Search/SearchBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.secondary,
     borderRadius: theme.shape.borderRadius,
     padding: 16,
-    overflow: 'scroll',
+    overflow: 'auto',
   },
   reviewHeader: {
     fontWeight: 700,
@@ -66,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const convertTimestamp = (timestamp) => {
+export const convertTimestamp = (timestamp) => {
   return new Date(timestamp?.replace(' ', 'T')).toLocaleString()
 }
 
@@ -100,11 +99,13 @@ const Profile = () => {
   const user = fetchStorage('user')
   const [loading, setLoading] = useState(true)
   const [feedbacks, setFeedbacks] = useState()
+  const [ratingValue, setRatingValue] = useState(0)
 
   useEffect(() => {
     getFeedbacks(user.userid)
       .then((res) => {
         setFeedbacks(res.data)
+        setRatings(res.data)
       })
       .catch((err) => console.log(err))
   }, [])
@@ -120,14 +121,22 @@ const Profile = () => {
     router.push('/resetPassword')
   }
 
+  const setRatings = (feedbacks) => {
+    let newRatings = 0
+    for (let feedback of feedbacks) {
+      newRatings += feedback.rating
+    }
+    setRatingValue(newRatings / feedbacks.length)
+  }
+
   return (
     <AuthWrapper>
       {!loading && (
         <HomeLayout currPage="Profile">
           <Container className={classes.root} maxWidth="lg">
-            <Box className={classes.searchWrapper}>
+            {/* <Box className={classes.searchWrapper}>
               <SearchBar />
-            </Box>
+            </Box> */}
             <Grid container className={classes.gridWrapper}>
               <Grid item xs={4} className={classes.profileWrapper}>
                 <Avatar
@@ -137,7 +146,7 @@ const Profile = () => {
                 />
                 <Typography variant="h6">{`${user?.firstname} ${user?.lastname}`}</Typography>
                 <Typography variant="subtitle1">{user?.email}</Typography>
-                <Rating name="disabled" value={4} disabled />
+                <Rating name="disabled" value={ratingValue} disabled />
                 <Typography
                   variant="caption"
                   className={classes.registrationText}

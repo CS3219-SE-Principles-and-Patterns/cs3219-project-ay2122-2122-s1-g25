@@ -14,7 +14,7 @@ done
 if [ $RETRIES -gt 0 ]
 then
     echo "Running all tests..."
-    NODE_ENV=TEST ../../node_modules/mocha/bin/mocha '../test/**/*_test.js' --timeout 10000 --exit
+    NODE_ENV=TEST ../../node_modules/mocha/bin/mocha '../test/**/*.test.js' --timeout 10000 --exit
 else
     echo "Failed to connect to test database."
 fi

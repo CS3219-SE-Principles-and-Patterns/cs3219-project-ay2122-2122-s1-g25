@@ -20,7 +20,7 @@ const config = {
     },
     TEST: {
         host: 'localhost',
-        port: 5433,
+        port: 5434,
         user: 'upskill_user',
         password: 'upskill_pw',
         database: 'upskill_db',

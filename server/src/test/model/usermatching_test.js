@@ -1,6 +1,6 @@
 const { UserMatching } = require("../../models/userMatching");
 const assert = require('assert');
-const chai = require('chai');
+require('chai');
 const userMatching = new UserMatching();
 
 describe('Test UserMatching functions', () => {

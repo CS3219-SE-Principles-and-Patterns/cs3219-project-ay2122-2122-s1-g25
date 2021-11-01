@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "NODE_ENV=DEV nodemon src/index.js",
     "start": "NODE_ENV=PROD nodemon src/index.js",
-    "test": "NODE_ENV=TEST mocha src/test/**/*_test.js --timeout 15000 --exit"
+    "test": "cd src/test && chmod +x run-test.sh && ./run-test.sh"
   },
   "license": "ISC",
   "dependencies": {

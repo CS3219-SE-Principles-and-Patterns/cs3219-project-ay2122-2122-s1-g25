@@ -61,7 +61,16 @@ const Register = () => {
   })
   const onSubmit = (data) => {
     const { email, password, firstName, lastName } = data
-    if (email && password && firstName && lastName) {
+    const isEmailValid = isNusEmail(email)
+    const isPasswordStrong = isStrongPassword(password)
+    if (
+      email &&
+      password &&
+      firstName &&
+      lastName &&
+      isEmailValid &&
+      isPasswordStrong
+    ) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -89,9 +98,41 @@ const Register = () => {
         .catch((error) => {
           toast.error(error.message)
         })
+    } else if (email && !isEmailValid) {
+      // email provided but is not NUS email
+      toast.error(ERROR.invalidEmail)
+    } else if (password && !isPasswordStrong) {
+      // password provided but is not strong enough
+      toast.error(ERROR.weakPassword)
     } else {
       toast.error(ERROR.incompleteFields)
     }
+  }
+
+  function isNusEmail(email) {
+    const emailDomain = email.split('@')[1]
+    return emailDomain === 'u.nus.edu'
+  }
+
+  function isStrongPassword(password) {
+    const isLong = password.length > 8
+    let hasSpecialChar = false
+    let hasAlphabet = false
+    let hasNumber = false
+    for (let i = 0; i < password.length; i++) {
+      if (password[i] >= '0' && password[i] <= '9') {
+        hasNumber = true
+      }
+    }
+    let alphabetRegExp = /[a-zA-Z]/g
+    if (alphabetRegExp.test(password)) {
+      hasAlphabet = true
+    }
+    let specialCharRegExp = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/g
+    if (specialCharRegExp.test(password)) {
+      hasSpecialChar = true
+    }
+    return isLong && hasSpecialChar && hasAlphabet && hasNumber
   }
 
   const handleRedirectLogin = (e) => {

@@ -15,3 +15,7 @@ export const updateInterviewCompletion = (iSessionId, data) => {
 export const updateCode = (iSessionId, data) => {
   return PUTRequest(`/rotation/${iSessionId}`, data)
 }
+
+export const getPartnerDetails = (userId) => {
+  return GETRequest(`/users/${userId}`)
+}

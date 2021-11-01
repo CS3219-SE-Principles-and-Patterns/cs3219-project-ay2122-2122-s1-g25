@@ -46,6 +46,7 @@ const Conferencing = (props) => {
     videoSocket: PropTypes.any,
     partnerName: PropTypes.string,
     user: PropTypes.object,
+    passStreamData: PropTypes.func,
   }
 
   const { interviewSessionId, videoSocket, user } = props
@@ -55,6 +56,7 @@ const Conferencing = (props) => {
   // const [partnerName, setPartnerName] = useState()
   const [peer, setPeer] = useState()
   const [importComplete, setImportComplete] = useState()
+  // const [myStream, setMyStream] = useState()
 
   // const peer = new Peer(undefined, {})
 
@@ -64,6 +66,7 @@ const Conferencing = (props) => {
       const newPeer = new Peer(user.userid)
 
       newPeer.on('open', () => {
+        console.log('Joining Room')
         videoSocket.emit('joinRoom', {
           roomId: interviewSessionId,
           userId: user.userid,
@@ -82,9 +85,13 @@ const Conferencing = (props) => {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
         .then((stream) => {
+          props.passStreamData(stream)
+
           if (userVideo.current) {
             userVideo.current.srcObject = stream
           }
+
+          console.log('Current Stream')
           console.log(stream)
           // setPartnerName('My Partner')
 
@@ -123,7 +130,7 @@ const Conferencing = (props) => {
           <video
             className={classes.video}
             playsInline
-            muted={false}
+            muted
             ref={userVideo}
             autoPlay
           />

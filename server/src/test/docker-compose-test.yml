@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  test-database:
+    image: postgres:12.7
+    container_name: test-database
+    restart: always
+    environment:
+      POSTGRES_USER: upskill_user
+      POSTGRES_PASSWORD: upskill_pw
+      POSTGRES_DB: upskill_db
+    volumes:
+      - ../../migrations:/docker-entrypoint-initdb.d/
+    ports:
+      - 5434:5432

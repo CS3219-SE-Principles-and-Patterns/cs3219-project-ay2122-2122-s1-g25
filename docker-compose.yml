@@ -19,8 +19,6 @@ services:
       dockerfile: Dockerfile.dev
     container_name: server
     restart: always
-    environment:
-      DB_CONNECTION_STRING: postgres://upskill_user:upskill_pw@host.docker.internal:5433/upskill_db
     volumes:
       - ./server:/app
     ports:

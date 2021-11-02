@@ -75,12 +75,13 @@ const FeedbackNavbar = () => {
 const InterviewNavbar = (props) => {
   const classes = useStyles()
   const router = useRouter()
-  const { isInterviewee, handleRotation } = props
+  const { isInterviewee, handleRotation, videoStream } = props
 
   InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
     isInterviewee: PropTypes.bool,
     handleRotation: PropTypes.func,
+    videoStream: PropTypes.object,
   }
 
   const getRole = () => {
@@ -94,9 +95,16 @@ const InterviewNavbar = (props) => {
   const exitInterview = () => {
     const pathname = window.location.pathname
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    closeStream() // from conferencing
     updateInterviewCompletion(iSessionId, { completion: true })
       .then(() => router.push(`/feedback?iSession=${iSessionId}`))
       .catch(() => toast.error(ERROR.interviewCloseFailure))
+  }
+
+  const closeStream = () => {
+    if (videoStream) {
+      videoStream.getTracks().forEach((track) => track.stop())
+    }
   }
 
   function Role() {

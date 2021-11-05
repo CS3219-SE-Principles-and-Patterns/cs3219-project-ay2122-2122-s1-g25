@@ -149,5 +149,4 @@ const InterviewNavbar = (props) => {
   )
 }
 
-// export default navbar
 export { InterviewNavbar, FeedbackNavbar }

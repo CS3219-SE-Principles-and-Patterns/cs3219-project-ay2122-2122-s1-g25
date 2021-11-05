@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
-    // backgroundColor: 'pink',
     overflowY: 'auto',
   },
   gridWrapper: {
@@ -76,7 +75,6 @@ const Example = (props) => {
   )
 }
 
-// make it dragabble in the future
 const AlgorithmQuestion = (props) => {
   AlgorithmQuestion.propTypes = {
     question: PropTypes.object.isRequired,

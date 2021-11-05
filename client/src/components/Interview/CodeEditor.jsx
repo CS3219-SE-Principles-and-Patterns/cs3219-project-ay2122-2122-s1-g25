@@ -4,15 +4,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { updateCode } from '../../api/interview'
 import { useDebouncedCallback } from 'use-debounce'
-// code editor imports
+
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
-
-require('codemirror/mode/python/python.js') // can choose language to highlight
-
+require('codemirror/mode/python/python.js')
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
-// imports
 const useStyles = makeStyles(() => ({
   root: {
     height: '100%',
@@ -25,7 +22,6 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-// make it dragabble in the future
 const CodeEditor = (props) => {
   CodeEditor.propTypes = {
     rotationNum: PropTypes.number,

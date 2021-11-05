@@ -124,7 +124,6 @@ const HistoryModal = (props) => {
     }
   }, [])
 
-  // get info before load
   useEffect(() => {
     if (difficulty) {
       setLoading(false)

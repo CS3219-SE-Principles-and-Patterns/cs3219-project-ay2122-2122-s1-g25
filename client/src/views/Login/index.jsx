@@ -70,7 +70,6 @@ const Login = () => {
               toast.success(SUCCESS.login)
             })
             .catch(() => {
-              // TODO: implement a more effective error handler, possibly let outer promise catch it
               toast.error(ERROR.userLoginFailure, {
                 duration: 15000,
               })

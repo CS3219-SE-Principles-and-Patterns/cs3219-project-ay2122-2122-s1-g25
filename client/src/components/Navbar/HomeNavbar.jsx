@@ -8,7 +8,7 @@ import { clearStorage } from '../../storage'
 import toast, { Toaster } from 'react-hot-toast'
 import { SUCCESS } from '../../utils/message'
 
-let upskillHomepageRoutes = ['Home Page', 'Profile'] // hardcoded route
+let upskillHomepageRoutes = ['Home Page', 'Profile']
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,7 +82,6 @@ const navbar = (props) => {
 
   const handleRedirect = (e, clickedRoute) => {
     e.preventDefault()
-    console.log(clickedRoute + ' ' + props.currPage)
     if (props.currPage !== clickedRoute) {
       if (clickedRoute === 'Profile') {
         router.push('/profile')

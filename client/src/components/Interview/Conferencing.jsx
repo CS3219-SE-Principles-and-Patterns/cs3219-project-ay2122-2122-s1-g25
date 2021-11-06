@@ -53,16 +53,11 @@ const Conferencing = (props) => {
   const myName = user?.firstname + ' ' + user?.lastname
   const userVideo = useRef()
   const partnerVideo = useRef()
-  // const [partnerName, setPartnerName] = useState()
   const [peer, setPeer] = useState()
   const [importComplete, setImportComplete] = useState()
-  // const [myStream, setMyStream] = useState()
-
-  // const peer = new Peer(undefined, {})
 
   useEffect(() => {
     import('peerjs').then(({ default: Peer }) => {
-      // const newPeer = new Peer(undefined, {})
       const newPeer = new Peer(user.userid)
 
       newPeer.on('open', () => {
@@ -91,10 +86,6 @@ const Conferencing = (props) => {
             userVideo.current.srcObject = stream
           }
 
-          console.log('Current Stream')
-          console.log(stream)
-          // setPartnerName('My Partner')
-
           peer.on('call', (call) => {
             console.log('Receiving call!')
             call.answer(stream)
@@ -104,7 +95,6 @@ const Conferencing = (props) => {
           })
 
           videoSocket.on('user-connected', (userId) => {
-            console.log(userId)
             console.log('Person coming: ', userId)
             connectToPartner(userId, stream)
           })

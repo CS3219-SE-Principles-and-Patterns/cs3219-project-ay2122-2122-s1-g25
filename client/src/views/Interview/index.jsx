@@ -114,10 +114,6 @@ const Interview = () => {
           room: getInterviewSessionId(),
           user: user.firstname,
         })
-        // videoSocket.emit('joinRoom', {
-        //   roomId: getInterviewSessionId(),
-        //   userId: user.userid,
-        // })
         setLoading(false)
       }
     }
@@ -151,7 +147,6 @@ const Interview = () => {
     getInterview(iSessionId)
       .then((res) => {
         setInterviewData(res.data)
-        console.log(res.data)
       })
       .catch(() => toast.error(ERROR.interviewInitialisationFailure))
   }
@@ -165,12 +160,10 @@ const Interview = () => {
   const getUserNum = (interviewData, userId) => {
     const user0 = interviewData?.interviewSession?.user0
     const user1 = interviewData?.interviewSession?.user1
-    console.log('Partner Details')
     if (userId === user0) {
       setPartnerId(user1)
       getPartnerDetails(user1)
         .then((res) => {
-          console.log(res.data)
           setPartnerName(res.data[0].firstname + ' ' + res.data[0].lastname)
         })
         .catch(() => toast.error(ERROR.userDataRetrivalFailure))
@@ -179,7 +172,6 @@ const Interview = () => {
       setPartnerId(user0)
       getPartnerDetails(user0)
         .then((res) => {
-          console.log(res.data)
           setPartnerName(res.data[0].firstname + ' ' + res.data[0].lastname)
         })
         .catch(() => toast.error(ERROR.userDataRetrivalFailure))

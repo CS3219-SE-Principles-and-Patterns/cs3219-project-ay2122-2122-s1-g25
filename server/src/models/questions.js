@@ -5,7 +5,7 @@ class Questions {
     }
 
     createQuestion(question) {
-        return pool.query("INSERT INTO Questions(title, category, difficulty, description, input, output, suggestedAnswer) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *", question.title, question.category, question.difficulty, question.description, question.input, question.output, question.suggestedAnswer);
+        return pool.query("INSERT INTO Questions(title, category, difficulty, description, input, output, suggestedAnswer) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *", [question.title, question.category, question.difficulty, question.description, question.input, question.output, question.suggestedAnswer]);
     }
 
     deleteQuestion(questionId) {

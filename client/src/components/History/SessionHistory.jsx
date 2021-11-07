@@ -36,6 +36,7 @@ const sessionHistory = (props) => {
   const classes = useStyles()
   const [rotation, setRotation] = useState()
   const [partner, setPartner] = useState()
+  const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [difficulty, setDifficulty] = useState()
   const [dateTime, setDateTime] = useState()
@@ -61,6 +62,19 @@ const sessionHistory = (props) => {
         lastname: props.data.user0lastname,
       })
     }
+
+    setUsers([
+      {
+        userid: props.data.user0,
+        firstname: props.data.user0firstname,
+        lastname: props.data.user0lastname,
+      },
+      {
+        userid: props.data.user1,
+        firstname: props.data.user1firstname,
+        lastname: props.data.user1lastname,
+      },
+    ])
 
     // get rotation details
     getSession(props.data.isessionid)
@@ -89,10 +103,10 @@ const sessionHistory = (props) => {
 
   // get info before load
   useEffect(() => {
-    if (rotation && partner && difficulty && dateTime) {
+    if (rotation && partner && difficulty && dateTime && users) {
       setLoading(false)
     }
-  }, [rotation, partner, difficulty, dateTime])
+  }, [rotation, partner, difficulty, dateTime, users])
 
   // other functions
   const onHover = (event) => {
@@ -112,7 +126,7 @@ const sessionHistory = (props) => {
       id={props.id + ''}
       className={classes.sessionHistoryItem}
       onClick={() =>
-        props.customClickEvent(props.id, rotation, partner, dateTime)
+        props.customClickEvent(props.id, rotation, partner, dateTime, users)
       }
       onMouseEnter={(e) => onHover(e)}
       onMouseLeave={(e) => onLeave(e)}
@@ -128,7 +142,7 @@ const sessionHistory = (props) => {
           </Grid>
           <Grid item xs={9} className={classes.infoWrapper}>
             <ListItemText
-              primary={`Practiced with ${partner.firstname} ${partner.lastname}!`}
+              primary={`[Session #${props.data.isessionid}] Practiced with ${partner.firstname} ${partner.lastname}!`}
             />
             <ListItemText secondary={`1. ${rotation[0].title}`} />
             <ListItemText secondary={`2. ${rotation[1].title}`} />

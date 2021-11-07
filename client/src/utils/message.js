@@ -24,6 +24,8 @@ export const ERROR = {
   weakPassword:
     'Passwords must be longer than 8 characters and include alphabets, numbers, and special characters.',
   userNotFound: 'Current user cannot be retrieved.',
+  userDataRetrivalFailure:
+    'Unable to retrieve partner data, please contact administrator immediately.',
 }
 
 export const SUCCESS = {

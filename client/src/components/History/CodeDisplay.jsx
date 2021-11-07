@@ -3,15 +3,11 @@ import { Container, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
-// code editor imports
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
-
-require('codemirror/mode/python/python.js') // can choose language to highlight
-
+require('codemirror/mode/python/python.js')
 import { Controlled as CodeMirror } from 'react-codemirror2'
 
-// imports
 const useStyles = makeStyles(() => ({
   root: {
     height: '100%',

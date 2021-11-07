@@ -18,7 +18,6 @@ import AuthWrapper from '../../components/Authentication/AuthWrapper'
 import { useRouter } from 'next/router'
 import { fetchStorage } from '../../storage'
 import { getFeedbacks } from '../../api/feedback'
-// import SearchBar from '../../components/Search/SearchBar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -134,9 +133,6 @@ const Profile = () => {
       {!loading && (
         <HomeLayout currPage="Profile">
           <Container className={classes.root} maxWidth="lg">
-            {/* <Box className={classes.searchWrapper}>
-              <SearchBar />
-            </Box> */}
             <Grid container className={classes.gridWrapper}>
               <Grid item xs={4} className={classes.profileWrapper}>
                 <Avatar

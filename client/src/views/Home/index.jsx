@@ -133,16 +133,14 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const classes = useStyles()
   const [buttonClicked, setButtonClicked] = useState(-1)
-  // const loops = Array.from(Array(50).keys())
   const router = useRouter()
   const user = fetchStorage('user')
   const [historyList, setHistoryList] = useState([])
   const [modalRotation, setModalRotation] = useState()
   const [modalPartner, setModalPartner] = useState()
   const [modalDateTime, setModalDateTime] = useState()
-  const [users, setUsers] = useState([]) // user0 & user1
+  const [users, setUsers] = useState([])
 
-  // Temporary fix for undefined user on fresh load
   const [loadingUser, setLoadingUser] = useState(true)
 
   useEffect(() => {
@@ -181,7 +179,6 @@ const Home = () => {
   }
 
   const onDifficultySelection = (buttonNo, event) => {
-    // console.log(event.currentTarget.id)
     if (buttonClicked == -1) {
       setButtonClicked(buttonNo)
       document
@@ -216,15 +213,12 @@ const Home = () => {
 
   const handleLoadingClose = () => {
     setOpenLoading(false)
-
-    // Reset all our states
     setMatchSuccess(false)
     setShowRetry(false)
     resetButton()
   }
 
   const resetButton = () => {
-    // only reset if 1) user cancelled, 2) user does not retry
     document
       .getElementById(buttonClicked)
       .classList.remove(classes.activeButton)
@@ -235,27 +229,20 @@ const Home = () => {
     if (buttonClicked != -1) {
       const currDifficulty = buttonClicked
 
-      // Calling API
       handleLoadingOpen()
       createUserMatching({
         userId: user.userid,
         difficulty: currDifficulty,
       })
         .then((response) => {
-          console.log(response)
           const sessionId = response.data.iSessionId
           if (sessionId) {
-            // match success
             setMatchSuccess(true)
-            console.log(sessionId)
-
-            // generate interview
             router.push('/interview/' + sessionId)
           }
         })
         .catch((error) => {
           console.log(error)
-          // unable to match, try again
           setShowRetry(true)
         })
     } else {
@@ -264,11 +251,8 @@ const Home = () => {
   }
 
   const cancelMatching = () => {
-    // call API to remove
     deleteUserMatching(user.userid)
-      .then((response) => {
-        // Close Modal
-        console.log(response)
+      .then(() => {
         handleLoadingClose()
       })
       .catch((error) => {
@@ -307,6 +291,7 @@ const Home = () => {
           </Button>
         </Box>
       )}
+
       {/* Found Match */}
       {matchSuccess && !showRetry && (
         <Box className={classes.loadingModalWrapper}>
@@ -319,6 +304,7 @@ const Home = () => {
           </Typography>
         </Box>
       )}
+
       {/* Retry */}
       {showRetry && (
         <Box className={classes.loadingModalWrapper}>
@@ -462,8 +448,8 @@ const Home = () => {
             users={users}
           />
         </Modal>
-        {/* Loading Modal */}
 
+        {/* Loading Modal */}
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"

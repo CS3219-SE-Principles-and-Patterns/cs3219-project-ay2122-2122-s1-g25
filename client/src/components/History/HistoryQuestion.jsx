@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
-    // backgroundColor: 'pink',
     overflowY: 'auto',
   },
   gridWrapper: {

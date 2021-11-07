@@ -4,7 +4,7 @@ import { ListItem, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import HistoryQuestion from './HistoryQuestion'
-// import CodeEditor from '../Interview/CodeEditor'
+
 import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded'
 import ExpandMoreRoundedIcon from '@material-ui/icons/ExpandMoreRounded'
 

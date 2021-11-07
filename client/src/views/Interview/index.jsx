@@ -117,7 +117,9 @@ const Interview = () => {
     if (rotationNum === 0) {
       newRotation = 1
     } else {
-      newRotation = 0
+      // TODO: Future enhancement, to allow unlimited rotations.
+      toast.error(ERROR.rotationCompleted)
+      return
     }
 
     updateInterviewRotation(getInterviewSessionId(), {
@@ -169,7 +171,7 @@ const Interview = () => {
                 <Grid item xs={9} className={classes.gridLeft}>
                   <Box className={classes.codeWrapper}>
                     <CodeEditor
-                      // codeSocket={codeSocket}
+                      isInterviewee={userNum === rotationNum}
                       initialCode={interviewData.rotations[rotationNum].attempt}
                       editable={true}
                       iSessionId={getInterviewSessionId()}

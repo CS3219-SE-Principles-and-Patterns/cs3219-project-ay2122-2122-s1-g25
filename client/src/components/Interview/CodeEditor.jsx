@@ -4,22 +4,16 @@ import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { updateCode } from '../../api/interview'
 import { useDebouncedCallback } from 'use-debounce'
-const randomColor = require('randomcolor') // import the script
-// code editor imports
+const randomColor = require('randomcolor')
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material.css'
-
-require('codemirror/mode/python/python.js') // can choose language to highlight
-
+require('codemirror/mode/python/python.js')
 import { UnControlled as CodeMirrorEditor } from 'react-codemirror2'
-
-// import CodeMirror from 'codemirror'
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 import { CodemirrorBinding } from 'y-codemirror'
 import 'codemirror/mode/javascript/javascript.js'
 
-// imports
 const useStyles = makeStyles(() => ({
   root: {
     height: '100%',
@@ -32,32 +26,39 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-// make it dragabble in the future
 const CodeEditor = (props) => {
   CodeEditor.propTypes = {
     rotationNum: PropTypes.number,
     codeSocket: PropTypes.object,
     initialCode: PropTypes.string,
     editable: PropTypes.bool,
+    isInterviewee: PropTypes.bool,
     iSessionId: PropTypes.string,
     user: PropTypes.string,
   }
 
   const classes = useStyles()
-  const { rotationNum, user, initialCode, editable, iSessionId } = props
+  const {
+    rotationNum,
+    user,
+    initialCode,
+    editable,
+    iSessionId,
+    isInterviewee,
+  } = props
   const [EditorRef, setEditorRef] = useState(null)
+
   const debounced = useDebouncedCallback((value) => {
     const data = {
       rotationNum: rotationNum,
       attempt: value,
     }
-    console.log(data)
     updateCode(iSessionId, data)
   }, 2000)
 
   const handleChange = (editor, data, value) => {
-    if (editable) {
-      console.log('handling change ')
+    // The interviewee does the saving of code attempt
+    if (editable && isInterviewee) {
       debounced(value)
     }
   }
@@ -67,7 +68,6 @@ const CodeEditor = (props) => {
   }
 
   useEffect(() => {
-    console.log('doing smth w editor ref')
     if (EditorRef) {
       const ydoc = new Y.Doc()
       const provider = new WebrtcProvider(iSessionId, ydoc)
@@ -81,7 +81,7 @@ const CodeEditor = (props) => {
       const binding = new CodemirrorBinding(yText, EditorRef, awareness, {
         yUndoManager,
       })
-      console.log(binding)
+      console.log('Codemirror Binding ', binding)
       return () => {
         if (provider) {
           provider.disconnect()

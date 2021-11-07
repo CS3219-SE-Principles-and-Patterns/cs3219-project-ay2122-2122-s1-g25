@@ -32,12 +32,13 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "axios": "^0.22.0",
-    "codemirror": "^5.63.1",
+    "codemirror": "^5.63.3",
     "firebase": "^8.3.3",
     "next": "^9.4.4",
     "peerjs": "^1.3.2",
     "prismjs": "^1.25.0",
     "prop-types": "^15.7.2",
+    "randomcolor": "^0.6.2",
     "react": "^16.13.1",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^16.13.1",
@@ -47,7 +48,10 @@
     "simple-peer": "^9.11.0",
     "socket.io-client": "^4.2.0",
     "styled-components": "^5.1.1",
-    "use-debounce": "^7.0.0"
+    "use-debounce": "^7.0.0",
+    "y-codemirror": "^2.1.1",
+    "y-webrtc": "^10.2.0",
+    "yjs": "^13.5.16"
   },
   "devDependencies": {
     "@types/node": "^16.10.2",

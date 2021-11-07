@@ -18,12 +18,7 @@ import {
 } from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
-import {
-  chatSocket,
-  rotationSocket,
-  codeSocket,
-  videoSocket,
-} from '../../config/socket'
+import { chatSocket, rotationSocket, videoSocket } from '../../config/socket'
 import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() => ({
@@ -110,10 +105,6 @@ const Interview = () => {
           room: getInterviewSessionId(),
           user: user.firstname,
         })
-        codeSocket.emit('joinRoom', {
-          room: getInterviewSessionId(),
-          user: user.firstname,
-        })
         setLoading(false)
       }
     }
@@ -131,7 +122,9 @@ const Interview = () => {
     if (rotationNum === 0) {
       newRotation = 1
     } else {
-      newRotation = 0
+      // TODO: Future enhancement, to allow unlimited rotations.
+      toast.error(ERROR.rotationCompleted)
+      return
     }
 
     updateInterviewRotation(getInterviewSessionId(), {
@@ -196,11 +189,11 @@ const Interview = () => {
               <Grid item xs={9} className={classes.gridLeft}>
                 <Box className={classes.codeWrapper}>
                   <CodeEditor
-                    codeSocket={codeSocket}
                     initialCode={interviewData.rotations[rotationNum].attempt}
                     editable={true}
                     iSessionId={getInterviewSessionId()}
                     rotationNum={rotationNum}
+                    user={user.firstname}
                   />
                 </Box>
                 <Box

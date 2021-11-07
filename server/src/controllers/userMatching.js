@@ -38,32 +38,25 @@ exports.createUserMatching = async (req, res) => {
       difficulty,
       interviewSessionId
     );
-    // loop through for 30 seconds to find a match
     let tries = 0;
     let iSessionId = null;
     while (tries < 7) {
       const currentUserMatching = await userMatching.getUserMatching(userId);
       if (currentUserMatching.rows.length == 0) {
-        // user has cancelled matching before 30s timeout
         break;
       } else if (currentUserMatching.rows[0].interviewsessionid) {
-        // user has been chosen by another user
         iSessionId = currentUserMatching.rows[0].interviewsessionid;
         break;
       } else if (tries == 6) {
-        // 30s timeout reached
         const deletedUserMatching = await userMatching.deleteUserMatching(
           userId
         );
         return res.status(503).json(deletedUserMatching.rows);
       } else {
-        // user searches for an available user
         const userMatch = new UserMatching();
-        // gets all UserMatchings with interviewSessionId = null (excluding currentUserMatching)
         const availableUserMatchings =
           await userMatch.getAllAvailableUserMatching(userId, difficulty);
         if (availableUserMatchings.rows.length > 0) {
-          // get match with the first (oldest) entry
           let matchedId = availableUserMatchings.rows[0].userid;
           iSessionId = await exports.initialiseInterviewSession(
             userId,
@@ -75,7 +68,6 @@ exports.createUserMatching = async (req, res) => {
           await userMatch.updateUserMatching(matchedId, iSessionId);
           break;
         }
-        // no available users
         await sleep(5000);
         tries++;
       }

@@ -8,15 +8,6 @@ exports.getUser = async (req, res) => {
     } catch (err) {
         res.status(400).json({ errMsg: err })
     }
-    //     const userId = req.params.id
-    //     const User = new Users()
-    //     await User.getUser(userId)
-    //         .then(res => {
-    //             return res.status(200).json(res)
-    //         })
-    //         .catch(err => {
-    //             return res.status(400).json(err)
-    //         })
 }
 
 exports.createUser = async (req, res) => {

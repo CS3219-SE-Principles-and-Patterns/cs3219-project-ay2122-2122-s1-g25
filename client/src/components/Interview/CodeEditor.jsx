@@ -32,22 +32,13 @@ const CodeEditor = (props) => {
     codeSocket: PropTypes.object,
     initialCode: PropTypes.string,
     editable: PropTypes.bool,
-    isInterviewee: PropTypes.bool,
     iSessionId: PropTypes.string,
     user: PropTypes.string,
   }
 
   const classes = useStyles()
-  const {
-    rotationNum,
-    user,
-    initialCode,
-    editable,
-    iSessionId,
-    isInterviewee,
-  } = props
+  const { rotationNum, user, initialCode, editable, iSessionId } = props
   const [EditorRef, setEditorRef] = useState(null)
-
   const debounced = useDebouncedCallback((value) => {
     const data = {
       rotationNum: rotationNum,
@@ -57,8 +48,7 @@ const CodeEditor = (props) => {
   }, 2000)
 
   const handleChange = (editor, data, value) => {
-    // The interviewee does the saving of code attempt
-    if (editable && isInterviewee) {
+    if (editable) {
       debounced(value)
     }
   }
@@ -95,8 +85,8 @@ const CodeEditor = (props) => {
     <Container disableGutters className={classes.root} maxWidth="xl">
       <Box className={classes.editorWrapper}>
         <CodeMirrorEditor
-          onChange={handleChange}
           value={initialCode}
+          onChange={handleChange}
           autoCursor={false}
           options={{
             lineWrapping: true,

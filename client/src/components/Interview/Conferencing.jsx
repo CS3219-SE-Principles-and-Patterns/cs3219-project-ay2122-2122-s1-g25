@@ -59,6 +59,9 @@ const Conferencing = (props) => {
 
   const [myStream, setMyStream] = useState()
 
+  const [partnerId, setPartnerId] = useState()
+  const [receivedCall, setReceivedCall] = useState(false)
+
   useEffect(() => {
     import('peerjs').then(({ default: Peer }) => {
       navigator.mediaDevices
@@ -75,6 +78,11 @@ const Conferencing = (props) => {
               userId: user.userid,
               userName: user.firstname + ' ' + user.lastname,
             })
+          })
+
+          videoSocket.on('user-connected', (userId) => {
+            setReceivedCall(true)
+            setPartnerId(userId)
           })
 
           // create a new peer
@@ -99,21 +107,23 @@ const Conferencing = (props) => {
         })
       })
 
-      videoSocket.on('user-connected', (userId) => {
-        console.log('Person coming: ', userId)
-        connectToPartner(userId, myStream)
-      })
+      if (receivedCall) {
+        console.log('Person coming: ', partnerId)
+        connectToPartner(partnerId, myStream)
+      } else {
+        videoSocket.on('user-connected', (userId) => {
+          console.log('Person coming: ', userId)
+          connectToPartner(userId, myStream)
+        })
+      }
     }
   }, [importComplete, myStream])
 
   const connectToPartner = (userId, stream) => {
-    console.log('9')
     try {
       const call = peer.call(userId, stream)
-      console.log('10')
       console.log('Sending call!')
       call.on('stream', (userVideoStream) => {
-        console.log('11')
         console.log("This my partner's stream")
         console.log(userVideoStream)
         partnerVideo.current.srcObject = userVideoStream

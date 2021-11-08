@@ -47,9 +47,10 @@ const Conferencing = (props) => {
     partnerName: PropTypes.string,
     user: PropTypes.object,
     passStreamData: PropTypes.func,
+    passMyPeer: PropTypes.func,
   }
 
-  const { interviewSessionId, videoSocket, user } = props
+  const { interviewSessionId, videoSocket, user, passMyPeer } = props
   const myName = user?.firstname + ' ' + user?.lastname
   const userVideo = useRef()
   const partnerVideo = useRef()
@@ -70,6 +71,7 @@ const Conferencing = (props) => {
       })
 
       // create a new peer
+      passMyPeer(newPeer)
       setPeer(newPeer)
       setImportComplete(true)
     })
@@ -103,13 +105,17 @@ const Conferencing = (props) => {
   }, [importComplete])
 
   const connectToPartner = (userId, stream) => {
-    const call = peer.call(userId, stream)
-    console.log('Sending call!')
-    call.on('stream', (userVideoStream) => {
-      console.log("This my partner's stream")
-      console.log(userVideoStream)
-      partnerVideo.current.srcObject = userVideoStream
-    })
+    try {
+      const call = peer.call(userId, stream)
+      console.log('Sending call!')
+      call.on('stream', (userVideoStream) => {
+        console.log("This my partner's stream")
+        console.log(userVideoStream)
+        partnerVideo.current.srcObject = userVideoStream
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (

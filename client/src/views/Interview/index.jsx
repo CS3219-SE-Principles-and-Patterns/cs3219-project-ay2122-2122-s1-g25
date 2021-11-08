@@ -173,6 +173,7 @@ const Interview = () => {
   }
 
   const [videoStream, setVideoStream] = useState()
+  const [myPeer, setMyPeer] = useState()
 
   return (
     <AuthWrapper>
@@ -183,6 +184,7 @@ const Interview = () => {
           isInterviewee={userNum === rotationNum}
           handleRotation={handleRotation}
           videoStream={videoStream}
+          myPeer={myPeer}
         >
           <Container className={classes.root} disableGutters maxWidth="xl">
             <Grid container className={classes.gridWrapper}>
@@ -217,6 +219,7 @@ const Interview = () => {
                     videoSocket={videoSocket}
                     user={user}
                     passStreamData={setVideoStream}
+                    passMyPeer={setMyPeer}
                   />
                 </Box>
                 <Box className={classes.chatWrapper}>

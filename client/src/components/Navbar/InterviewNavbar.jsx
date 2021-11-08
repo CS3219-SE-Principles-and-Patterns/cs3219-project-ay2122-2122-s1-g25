@@ -75,13 +75,14 @@ const FeedbackNavbar = () => {
 const InterviewNavbar = (props) => {
   const classes = useStyles()
   const router = useRouter()
-  const { isInterviewee, handleRotation, videoStream } = props
+  const { isInterviewee, handleRotation, videoStream, myPeer } = props
 
   InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
     isInterviewee: PropTypes.bool,
     handleRotation: PropTypes.func,
     videoStream: PropTypes.object,
+    myPeer: PropTypes.object,
   }
 
   const getRole = () => {
@@ -104,6 +105,10 @@ const InterviewNavbar = (props) => {
   const closeStream = () => {
     if (videoStream) {
       videoStream.getTracks().forEach((track) => track.stop())
+    }
+
+    if (myPeer) {
+      myPeer.destroy()
     }
   }
 

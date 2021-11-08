@@ -47,69 +47,90 @@ const Conferencing = (props) => {
     partnerName: PropTypes.string,
     user: PropTypes.object,
     passStreamData: PropTypes.func,
+    passMyPeer: PropTypes.func,
   }
 
-  const { interviewSessionId, videoSocket, user } = props
+  const { interviewSessionId, videoSocket, user, passMyPeer } = props
   const myName = user?.firstname + ' ' + user?.lastname
   const userVideo = useRef()
   const partnerVideo = useRef()
   const [peer, setPeer] = useState()
   const [importComplete, setImportComplete] = useState()
 
+  const [myStream, setMyStream] = useState()
+
+  const [partnerId, setPartnerId] = useState()
+  const [receivedCall, setReceivedCall] = useState(false)
+
   useEffect(() => {
     import('peerjs').then(({ default: Peer }) => {
-      const newPeer = new Peer(user.userid)
-
-      newPeer.on('open', () => {
-        console.log('Joining Room')
-        videoSocket.emit('joinRoom', {
-          roomId: interviewSessionId,
-          userId: user.userid,
-          userName: user.firstname + ' ' + user.lastname,
-        })
-      })
-
-      // create a new peer
-      setPeer(newPeer)
-      setImportComplete(true)
-    })
-  }, [])
-
-  useEffect(() => {
-    if (importComplete) {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
         .then((stream) => {
+          setMyStream(stream)
           props.passStreamData(stream)
 
-          if (userVideo.current) {
-            userVideo.current.srcObject = stream
-          }
-
-          peer.on('call', (call) => {
-            console.log('Receiving call!')
-            call.answer(stream)
-            call.on('stream', (userVideoStream) => {
-              partnerVideo.current.srcObject = userVideoStream
+          const newPeer = new Peer(user.userid)
+          newPeer.on('open', () => {
+            console.log('Joining Room')
+            videoSocket.emit('joinRoom', {
+              roomId: interviewSessionId,
+              userId: user.userid,
+              userName: user.firstname + ' ' + user.lastname,
             })
           })
 
           videoSocket.on('user-connected', (userId) => {
-            console.log('Person coming: ', userId)
-            connectToPartner(userId, stream)
+            setReceivedCall(true)
+            setPartnerId(userId)
           })
+
+          // create a new peer
+          passMyPeer(newPeer)
+          setPeer(newPeer)
+          setImportComplete(true)
         })
+    })
+  }, [])
+
+  useEffect(() => {
+    if (importComplete && myStream) {
+      if (userVideo.current) {
+        userVideo.current.srcObject = myStream
+      }
+
+      peer.on('call', (call) => {
+        console.log('Receiving call!')
+        call.answer(myStream)
+        call.on('stream', (userVideoStream) => {
+          partnerVideo.current.srcObject = userVideoStream
+        })
+      })
+
+      if (receivedCall) {
+        console.log('Person coming: ', partnerId)
+        connectToPartner(partnerId, myStream)
+      } else {
+        videoSocket.on('user-connected', (userId) => {
+          console.log('Person coming: ', userId)
+          connectToPartner(userId, myStream)
+        })
+      }
     }
-  }, [importComplete])
+  }, [importComplete, myStream])
 
   const connectToPartner = (userId, stream) => {
-    const call = peer.call(userId, stream)
-    console.log('Sending call!')
-    call.on('stream', (userVideoStream) => {
-      console.log("This my partner's stream")
-      console.log(userVideoStream)
-      partnerVideo.current.srcObject = userVideoStream
-    })
+    try {
+      const call = peer.call(userId, stream)
+      console.log('Sending call!')
+      call.on('stream', (userVideoStream) => {
+        console.log("This my partner's stream")
+        console.log(userVideoStream)
+        partnerVideo.current.srcObject = userVideoStream
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (

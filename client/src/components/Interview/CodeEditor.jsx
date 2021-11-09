@@ -27,6 +27,7 @@ require('codemirror/mode/javascript/javascript.js') //javascript
 require('codemirror/mode/css/css.js') // css
 require('codemirror/mode/go/go.js')
 require('codemirror/mode/markdown/markdown.js')
+require('codemirror/mode/sql/sql.js')
 
 // import { Controlled as CodeMirror } from 'react-codemirror2'
 
@@ -123,7 +124,7 @@ const CodeEditor = (props) => {
     <Container disableGutters className={classes.root} maxWidth="xl">
       <Box className={classes.headerWrapper}>
         <Typography variant="subtitle2" className={classes.codingPadTitle}>
-          Coding Pad
+          Collaborative Editor
         </Typography>
         <FormControl className={classes.formControl}>
           <Select
@@ -138,6 +139,7 @@ const CodeEditor = (props) => {
             <MenuItem value={'css'}>CSS</MenuItem>
             <MenuItem value={'go'}>Go</MenuItem>
             <MenuItem value={'markdown'}>Markdown</MenuItem>
+            <MenuItem value={'sql'}>SQL</MenuItem>
           </Select>
         </FormControl>
       </Box>

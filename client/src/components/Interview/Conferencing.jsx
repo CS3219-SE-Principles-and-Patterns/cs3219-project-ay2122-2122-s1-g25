@@ -72,7 +72,6 @@ const Conferencing = (props) => {
 
           const newPeer = new Peer(user.userid)
           newPeer.on('open', () => {
-            console.log('Joining Room')
             videoSocket.emit('joinRoom', {
               roomId: interviewSessionId,
               userId: user.userid,
@@ -100,7 +99,6 @@ const Conferencing = (props) => {
       }
 
       peer.on('call', (call) => {
-        console.log('Receiving call!')
         call.answer(myStream)
         call.on('stream', (userVideoStream) => {
           partnerVideo.current.srcObject = userVideoStream
@@ -108,11 +106,9 @@ const Conferencing = (props) => {
       })
 
       if (receivedCall) {
-        console.log('Person coming: ', partnerId)
         connectToPartner(partnerId, myStream)
       } else {
         videoSocket.on('user-connected', (userId) => {
-          console.log('Person coming: ', userId)
           connectToPartner(userId, myStream)
         })
       }
@@ -122,10 +118,7 @@ const Conferencing = (props) => {
   const connectToPartner = (userId, stream) => {
     try {
       const call = peer.call(userId, stream)
-      console.log('Sending call!')
       call.on('stream', (userVideoStream) => {
-        console.log("This my partner's stream")
-        console.log(userVideoStream)
         partnerVideo.current.srcObject = userVideoStream
       })
     } catch (err) {

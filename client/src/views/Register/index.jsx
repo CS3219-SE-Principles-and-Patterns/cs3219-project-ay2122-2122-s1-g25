@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     textAlign: 'center',
     width: 400,
-    // overflow: 'scroll',
     overflow: 'auto',
   },
   form: {
@@ -89,7 +88,6 @@ const Register = () => {
               toast.success(SUCCESS.register)
             })
             .catch(() => {
-              // TODO: implement a more effective error handler, possibly let outer promise catch it
               toast.error(ERROR.userCreationFailure, {
                 duration: 15000,
               })

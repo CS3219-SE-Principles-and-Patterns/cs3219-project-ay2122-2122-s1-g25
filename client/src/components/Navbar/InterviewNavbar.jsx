@@ -1,10 +1,9 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Button, Container, Grid, Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import toast, { Toaster } from 'react-hot-toast'
-import { SocketContext } from '../Interview/SocketContext'
 import { updateInterviewCompletion } from '../../api/interview'
 import { ERROR } from '../../utils/message'
 
@@ -76,12 +75,14 @@ const FeedbackNavbar = () => {
 const InterviewNavbar = (props) => {
   const classes = useStyles()
   const router = useRouter()
-  const { isInterviewee, handleRotation } = props
+  const { isInterviewee, handleRotation, videoStream, myPeer } = props
 
   InterviewNavbar.propTypes = {
     currPage: PropTypes.string,
     isInterviewee: PropTypes.bool,
     handleRotation: PropTypes.func,
+    videoStream: PropTypes.object,
+    myPeer: PropTypes.object,
   }
 
   const getRole = () => {
@@ -92,15 +93,23 @@ const InterviewNavbar = (props) => {
     handleRotation()
   }
 
-  const { leaveCall } = useContext(SocketContext)
-
   const exitInterview = () => {
-    leaveCall() // close camera & stuff
     const pathname = window.location.pathname
     const iSessionId = pathname.substring(pathname.lastIndexOf('/') + 1)
+    closeStream() // from conferencing
     updateInterviewCompletion(iSessionId, { completion: true })
       .then(() => router.push(`/feedback?iSession=${iSessionId}`))
       .catch(() => toast.error(ERROR.interviewCloseFailure))
+  }
+
+  const closeStream = () => {
+    if (videoStream) {
+      videoStream.getTracks().forEach((track) => track.stop())
+    }
+
+    if (myPeer) {
+      myPeer.destroy()
+    }
   }
 
   function Role() {
@@ -145,5 +154,4 @@ const InterviewNavbar = (props) => {
   )
 }
 
-// export default navbar
 export { InterviewNavbar, FeedbackNavbar }

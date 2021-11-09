@@ -12,6 +12,7 @@ export const ERROR = {
   interviewFetchFailure:
     'Failed to fetch interview session. Please check if session is valid.',
   rotationFailure: 'Rotation failed.',
+  rotationCompleted: 'Rotation of roles can only happen once.',
   feedbackFailure: 'Failed to submit feedback.',
   partnerFetchFailure: 'Failed to retrieve interview partner data.',
   interviewInvalidAlert: 'Interview session does not exist.',
@@ -23,6 +24,8 @@ export const ERROR = {
   weakPassword:
     'Passwords must be longer than 8 characters and include alphabets, numbers, and special characters.',
   userNotFound: 'Current user cannot be retrieved.',
+  userDataRetrivalFailure:
+    'Unable to retrieve partner data, please contact administrator immediately.',
 }
 
 export const SUCCESS = {

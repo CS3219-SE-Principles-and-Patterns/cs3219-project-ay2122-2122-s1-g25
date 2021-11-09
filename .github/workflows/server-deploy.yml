@@ -11,25 +11,39 @@ env:
   SERVICE_NAME: upskill-server
   RUN_REGION: asia-southeast1
   SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
+
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn
+        working-directory: server
+      - run: yarn test
+        working-directory: server
   deploy:
+    needs: test
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@master
         with:
           version: "290.0.1"
           service_account_key: ${{ secrets.GCP_SA_KEY_JSON }}
           project_id: upskill-prod
-
       # Build and push image to Google Container Registry
       - name: Build
         run: gcloud builds submit --tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
         working-directory: server
-
       - name: Deploy
         run: gcloud run deploy $SERVICE_NAME --image gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA --platform managed --allow-unauthenticated --region $RUN_REGION
         working-directory: server

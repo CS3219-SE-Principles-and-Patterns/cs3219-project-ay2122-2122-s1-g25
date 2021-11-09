@@ -43,7 +43,6 @@ const ResetPassword = () => {
     },
   })
   const onSubmit = (data) => {
-    console.log(data)
     const { email } = data
     if (email) {
       firebase

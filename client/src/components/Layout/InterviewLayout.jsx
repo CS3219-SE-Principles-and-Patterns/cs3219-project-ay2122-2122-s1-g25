@@ -21,7 +21,14 @@ const useStyles = makeStyles(() => ({
 
 const HomeLayout = (props) => {
   const classes = useStyles()
-  const { children, currPage, isInterviewee, handleRotation } = props
+  const {
+    children,
+    currPage,
+    isInterviewee,
+    handleRotation,
+    videoStream,
+    myPeer,
+  } = props
 
   const Role = () => {
     if (currPage == 'interview') {
@@ -29,6 +36,8 @@ const HomeLayout = (props) => {
         <InterviewNavbar
           isInterviewee={isInterviewee}
           handleRotation={handleRotation}
+          videoStream={videoStream}
+          myPeer={myPeer}
         />
       )
     } else {
@@ -56,6 +65,8 @@ HomeLayout.propTypes = {
   currPage: PropTypes.string.isRequired,
   isInterviewee: PropTypes.bool,
   handleRotation: PropTypes.func,
+  videoStream: PropTypes.object,
+  myPeer: PropTypes.object,
 }
 
 export default HomeLayout

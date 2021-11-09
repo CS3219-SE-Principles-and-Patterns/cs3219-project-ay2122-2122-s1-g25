@@ -46,9 +46,7 @@ const sessionHistory = (props) => {
     data: PropTypes.object,
   }
 
-  // History
   useEffect(() => {
-    // get partner details
     if (user.userid === props.data.user0) {
       setPartner({
         userid: props.data.user1,
@@ -101,14 +99,12 @@ const sessionHistory = (props) => {
       })
   }, [])
 
-  // get info before load
   useEffect(() => {
     if (rotation && partner && difficulty && dateTime && users) {
       setLoading(false)
     }
   }, [rotation, partner, difficulty, dateTime, users])
 
-  // other functions
   const onHover = (event) => {
     document
       .getElementById(event.currentTarget.id)
@@ -142,7 +138,7 @@ const sessionHistory = (props) => {
           </Grid>
           <Grid item xs={9} className={classes.infoWrapper}>
             <ListItemText
-              primary={`Practiced with ${partner.firstname} ${partner.lastname}!`}
+              primary={`[Session #${props.data.isessionid}] Practiced with ${partner.firstname} ${partner.lastname}!`}
             />
             <ListItemText secondary={`1. ${rotation[0].title}`} />
             <ListItemText secondary={`2. ${rotation[1].title}`} />

@@ -11,11 +11,14 @@ import dynamic from 'next/dynamic'
 const CodeEditor = dynamic(import('../../components/Interview/CodeEditor'), {
   ssr: false,
 })
-import { ContextProvider } from '../../components/Interview/SocketContext'
-import { getInterview, updateInterviewRotation } from '../../api/interview'
+import {
+  getInterview,
+  updateInterviewRotation,
+  getPartnerDetails,
+} from '../../api/interview'
 import { fetchStorage } from '../../storage'
 import { ERROR, SUCCESS } from '../../utils/message'
-import { chatSocket, rotationSocket, codeSocket } from '../../config/socket'
+import { chatSocket, rotationSocket, videoSocket } from '../../config/socket'
 import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() => ({
@@ -72,6 +75,8 @@ const Interview = () => {
   const user = fetchStorage('user')
 
   const [userNum, setUserNum] = useState()
+  const [partnerId, setPartnerId] = useState()
+  const [partnerName, setPartnerName] = useState('')
   const [rotationNum, setRotationNum] = useState()
 
   useEffect(() => {
@@ -100,10 +105,6 @@ const Interview = () => {
           room: getInterviewSessionId(),
           user: user.firstname,
         })
-        codeSocket.emit('joinRoom', {
-          room: getInterviewSessionId(),
-          user: user.firstname,
-        })
         setLoading(false)
       }
     }
@@ -121,7 +122,9 @@ const Interview = () => {
     if (rotationNum === 0) {
       newRotation = 1
     } else {
-      newRotation = 0
+      // TODO: Future enhancement, to allow unlimited rotations.
+      toast.error(ERROR.rotationCompleted)
+      return
     }
 
     updateInterviewRotation(getInterviewSessionId(), {
@@ -137,7 +140,6 @@ const Interview = () => {
     getInterview(iSessionId)
       .then((res) => {
         setInterviewData(res.data)
-        console.log(res.data)
       })
       .catch(() => toast.error(ERROR.interviewInitialisationFailure))
   }
@@ -152,58 +154,82 @@ const Interview = () => {
     const user0 = interviewData?.interviewSession?.user0
     const user1 = interviewData?.interviewSession?.user1
     if (userId === user0) {
+      setPartnerId(user1)
+      getPartnerDetails(user1)
+        .then((res) => {
+          setPartnerName(res.data[0].firstname + ' ' + res.data[0].lastname)
+        })
+        .catch(() => toast.error(ERROR.userDataRetrivalFailure))
       return 0
     } else if (userId === user1) {
+      setPartnerId(user0)
+      getPartnerDetails(user0)
+        .then((res) => {
+          setPartnerName(res.data[0].firstname + ' ' + res.data[0].lastname)
+        })
+        .catch(() => toast.error(ERROR.userDataRetrivalFailure))
       return 1
     }
   }
 
+  const [videoStream, setVideoStream] = useState()
+  const [myPeer, setMyPeer] = useState()
+
   return (
     <AuthWrapper>
       <Toaster position="top-right" />
-      <ContextProvider>
-        {!loading && (
-          <InterviewLayout
-            currPage="interview"
-            isInterviewee={userNum === rotationNum}
-            handleRotation={handleRotation}
-          >
-            <Container className={classes.root} disableGutters maxWidth="xl">
-              <Grid container className={classes.gridWrapper}>
-                <Grid item xs={9} className={classes.gridLeft}>
-                  <Box className={classes.codeWrapper}>
-                    <CodeEditor
-                      codeSocket={codeSocket}
-                      initialCode={interviewData.rotations[rotationNum].attempt}
-                      editable={true}
-                      iSessionId={getInterviewSessionId()}
-                      rotationNum={rotationNum}
-                    />
-                  </Box>
-                  <Box
-                    className={classes.questionWrapper}
-                    border={1}
-                    borderColor="black"
-                  >
-                    <AlgorithmQuestion
-                      question={interviewData?.rotations[rotationNum]}
-                      isInterviewee={userNum === rotationNum}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={3} className={classes.gridRight}>
-                  <Box className={classes.videoWrapper}>
-                    <Conferencing />
-                  </Box>
-                  <Box className={classes.chatWrapper}>
-                    <ChatBox chatSocket={chatSocket} user={user} />
-                  </Box>
-                </Grid>
+      {!loading && (
+        <InterviewLayout
+          currPage="interview"
+          isInterviewee={userNum === rotationNum}
+          handleRotation={handleRotation}
+          videoStream={videoStream}
+          myPeer={myPeer}
+        >
+          <Container className={classes.root} disableGutters maxWidth="xl">
+            <Grid container className={classes.gridWrapper}>
+              <Grid item xs={9} className={classes.gridLeft}>
+                <Box className={classes.codeWrapper}>
+                  <CodeEditor
+                    initialCode={interviewData.rotations[rotationNum].attempt}
+                    editable={true}
+                    iSessionId={getInterviewSessionId()}
+                    rotationNum={rotationNum}
+                    user={user.firstname}
+                  />
+                </Box>
+                <Box
+                  className={classes.questionWrapper}
+                  border={1}
+                  borderColor="black"
+                >
+                  <AlgorithmQuestion
+                    question={interviewData?.rotations[rotationNum]}
+                    isInterviewee={userNum === rotationNum}
+                  />
+                </Box>
               </Grid>
-            </Container>
-          </InterviewLayout>
-        )}
-      </ContextProvider>
+              <Grid item xs={3} className={classes.gridRight}>
+                <Box className={classes.videoWrapper}>
+                  <Conferencing
+                    interviewSessionId={getInterviewSessionId()}
+                    isInterviewee={userNum === rotationNum}
+                    partnerId={partnerId}
+                    partnerName={partnerName}
+                    videoSocket={videoSocket}
+                    user={user}
+                    passStreamData={setVideoStream}
+                    passMyPeer={setMyPeer}
+                  />
+                </Box>
+                <Box className={classes.chatWrapper}>
+                  <ChatBox chatSocket={chatSocket} user={user} />
+                </Box>
+              </Grid>
+            </Grid>
+          </Container>
+        </InterviewLayout>
+      )}
     </AuthWrapper>
   )
 }

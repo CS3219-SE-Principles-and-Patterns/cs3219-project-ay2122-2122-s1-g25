@@ -3,6 +3,9 @@
 Greetings, this repository contains the source code of our project. For the client side, `NextJS` is used to develop static UI assets, together with the renowed `Material-UI` styling library. For the server side,  `ExpressJS` is used to develop APIs which interact with our `PostgreSQL` database.
 
 ## Instructions for setup:
+**Note to teaching team**: In order to set up this project locally, there is a need to
+place .env files in both the client and server folder. We did not commit them as it probably isn't good practice to do so. Please let us know if you need them. :)
+
 1. Ensure Docker, Docker Compose, Yarn and PSQL are installed in your workstation
 2. Clone this repository
   

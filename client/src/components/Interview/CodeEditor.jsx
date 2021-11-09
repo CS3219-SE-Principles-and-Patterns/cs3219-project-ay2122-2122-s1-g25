@@ -107,10 +107,9 @@ const CodeEditor = (props) => {
       })
       const yText = ydoc.getText('codemirror')
       const yUndoManager = new Y.UndoManager(yText)
-      const binding = new CodemirrorBinding(yText, EditorRef, awareness, {
+      new CodemirrorBinding(yText, EditorRef, awareness, {
         yUndoManager,
       })
-      console.log('Codemirror Binding ', binding)
       return () => {
         if (provider) {
           provider.disconnect()
